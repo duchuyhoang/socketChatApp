@@ -1,0 +1,23 @@
+$color-primary-dark: #4c90b5;
+$color-primary-main: #5aa4cc;
+$color-primary-light: #aadaf3;
+$color-blue-light: #e9f8ff;
+$color-white: #ffffff;
+
+$color-primary-200: #e4f2fa;
+
+.light-blue-button {
+  color: $color-primary-main !important;
+  background: $color-blue-light !important;
+  &:hover {
+    background: $color-primary-200 !important;
+  }
+}
+
+.dark-blue-button {
+  color: $color-white !important;
+  background: $color-primary-main !important;
+  &:hover {
+    background: $color-primary-dark !important;
+  }
+}
