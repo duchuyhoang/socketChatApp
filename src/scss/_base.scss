@@ -17,7 +17,13 @@ html {
 body {
     font-family: "Open Sans", sans-serif;
     font-size: 14px;
+    line-height: 1.7;
     overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    display: inline-block;
 }
 
 img {
@@ -49,4 +55,28 @@ img {
             grid-template-columns: repeat($number, 1fr);
         }
     }
+}
+
+.btn {
+    outline: none;
+    border: none;
+    padding: 1.5rem 3rem;
+    border-radius: 1rem;
+    background-color: #397ef6;
+    color: #fff;
+    font-weight: 700;
+    width: 100%;
+    cursor: pointer;
+
+    @include flex(center, center);
+
+    svg {
+        margin-right: 1rem;
+    }
+}
+
+.btn--white {
+    background-color: #fff;
+    border: 1px solid #397ef6;
+    color: #397ef6;
 }

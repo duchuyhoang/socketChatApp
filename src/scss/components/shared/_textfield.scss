@@ -1,0 +1,30 @@
+.text-field {
+    display: block;
+    position: relative;
+    span {
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+    & > input {
+        width: 100%;
+        margin-top: 5px;
+        outline: none;
+        border: 1px solid #777;
+        border-radius: 5px;
+        padding: 1rem;
+        padding-right: 4rem;
+    }
+    svg {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1rem;
+        cursor: pointer;
+    }
+
+    &.error {
+        & > input {
+            border-color: red;
+        }
+    }
+}

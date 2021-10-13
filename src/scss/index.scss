@@ -3,3 +3,14 @@
 @import "./variable";
 @import "./mixin";
 @import "./base";
+
+//top level components
+@import "./components/layout";
+
+//pages
+@import "./components/pages/sign-in";
+
+//shared
+@import "./components/shared/textfield";
+@import "./components/shared/upload";
+@import "./components/shared/checkbox";

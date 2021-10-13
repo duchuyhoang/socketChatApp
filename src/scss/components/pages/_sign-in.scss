@@ -1,0 +1,46 @@
+.sign-in {
+    background-color: #fff;
+    box-shadow: $box-shadow;
+    padding: 2rem;
+    border-radius: 5px;
+
+    &__top {
+        h1 {
+            font-size: 30px;
+            font-weight: 700;
+        }
+        small {
+            color: #777;
+
+            a {
+                margin-left: 5px;
+                color: #397ef6;
+            }
+        }
+    }
+
+    .sign-in__form {
+        width: 42rem;
+        margin-bottom: 2rem;
+        &__content {
+            margin: 2rem 0;
+
+            & > * ~ * {
+                margin-top: 2rem;
+            }
+            &__title {
+                font-size: 16px;
+                font-weight: 600;
+                text-transform: capitalize;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}
+
+.input-field {
+    &__error {
+        color: red;
+        font-size: 12px;
+    }
+}
