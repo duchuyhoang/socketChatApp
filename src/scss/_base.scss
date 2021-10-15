@@ -62,7 +62,7 @@ img {
     border: none;
     padding: 1.5rem 3rem;
     border-radius: 1rem;
-    background-color: #397ef6;
+    background-color: $color-primary-dark;
     color: #fff;
     font-weight: 700;
     width: 100%;
@@ -77,6 +77,6 @@ img {
 
 .btn--white {
     background-color: #fff;
-    border: 1px solid #397ef6;
-    color: #397ef6;
+    border: 1px solid $color-primary-dark;
+    color: $color-primary-dark;
 }

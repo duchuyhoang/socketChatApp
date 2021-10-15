@@ -10,9 +10,9 @@ function App() {
         <Route path='/home'>
           <Redirect to='/' />
         </Route>
-        <Route path='/' exact component={Home} />
         <Route path='/login' component={SignIn} />
         <Route path='/signup' component={SignUp} />
+        <Route path='/' component={Home} />
       </Switch>
     </div>
   );

@@ -1,0 +1,26 @@
+.avatar {
+    @include box(5rem);
+    border-radius: 100rem;
+    position: relative;
+    border: 1px solid #fff;
+
+    img {
+        width: 100%;
+        border-radius: 100rem;
+    }
+
+    &.avatar--l {
+        @include box(6rem);
+    }
+
+    &.online::after {
+        content: "";
+        position: absolute;
+        @include box(1rem);
+        border-radius: 100rem;
+        border: 1px solid #fff;
+        background-color: #15a85f;
+        bottom: -2px;
+        right: 5px;
+    }
+}

@@ -11,7 +11,7 @@
     }
 
     input:checked ~ &__checkmark {
-        background-color: #397ef6;
+        background-color: $color-primary-main;
     }
     input:checked ~ &__checkmark::before {
         opacity: 1;
@@ -21,7 +21,7 @@
     &__checkmark {
         display: inline-block;
         @include box(1.5rem);
-        border: 1px solid #397ef6;
+        border: 1px solid $color-primary-main;
         position: relative;
         margin-right: 1.5rem;
         border-radius: 2px;

@@ -9,8 +9,12 @@
 
 //pages
 @import "./components/pages/sign-in";
+@import "./components/pages/home/home";
+@import "./components/pages/home/sidebar-nav";
 
 //shared
 @import "./components/shared/textfield";
 @import "./components/shared/upload";
 @import "./components/shared/checkbox";
+@import "./components/shared/avatar";
+@import "./components/shared/modal";

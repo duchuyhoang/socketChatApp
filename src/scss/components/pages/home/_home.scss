@@ -1,0 +1,16 @@
+.container {
+    @include flex(flex-start, stretch);
+    height: 100vh;
+    max-height: 100vh;
+
+    & > .sidebar-nav {
+        width: 415px;
+        flex-shrink: 0;
+        height: 100%;
+    }
+
+    & > .main {
+        flex-grow: 1;
+        height: 100%;
+    }
+}

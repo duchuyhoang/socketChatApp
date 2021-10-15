@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import man from '../../../assets/images/man.png';
 import woman from '../../../assets/images/woman.png';
-import Layout from '../../Layout';
+import Layout from '../../components/Layout';
 import Checkbox from '../../shared/Checkbox';
 import Grid from '../../shared/Grid';
 import SVGIcon from '../../shared/SVGIcon';

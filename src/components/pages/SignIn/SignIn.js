@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import Layout from '../../Layout';
+import Layout from '../../components/Layout';
 import SVGIcon from '../../shared/SVGIcon';
 import TextField from '../../shared/TextField';
 import * as yup from 'yup';

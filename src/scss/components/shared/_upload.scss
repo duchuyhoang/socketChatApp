@@ -18,7 +18,7 @@
         input[type="file"]::before {
             content: "Choose your avatar";
             display: inline-block;
-            background-color: #397ef6;
+            background-color: $color-primary-dark;
             color: #fff;
             border-radius: 5px;
             width: 100%;
