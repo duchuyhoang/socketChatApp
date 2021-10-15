@@ -10,3 +10,9 @@ export const NOTIFICATION_SOCKET=io(`${SOCKET_CHAT_HOST}${SOCKET_NAMESPACE.NOTIF
 
 
 
+export const refreshSocket=()=>{
+    // MAIN_SOCKET.removeAllListeners();
+    USER_SOCKET.removeAllListeners();
+    CONVERSATION_SOCKET.removeAllListeners();
+    NOTIFICATION_SOCKET.removeAllListeners();
+}

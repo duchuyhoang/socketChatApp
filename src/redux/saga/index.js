@@ -5,6 +5,7 @@ import {AuthTypes} from "../reducer/auth";
 
 export default function* rootSaga(){
     yield all([
-        takeLatest(AuthTypes.LOGIN_REQUEST,AuthSaga.login)
+        takeLatest(AuthTypes.LOGIN_REQUEST,AuthSaga.login),
+        takeLatest(AuthTypes.RELOGIN,AuthSaga.relogin)
     ])
 }
