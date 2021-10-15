@@ -27,12 +27,19 @@ const SOCKET_ON_ACTIONS = {
     ON_TYPING: "ON_TYPING",
     ON_AUTHENTICATE:"ON_AUTHENTICATE"
   };
-
+  const HttpStatusCode= {
+    SUCCESS : 200,
+    BAD_REQUEST : 400,
+    UNAUTHORIZED : 401,
+    NOT_FOUND : 404,
+    NETWORK_ERROR : 500,
+  }
 
 
 export {
     SOCKET_CHAT_HOST,
     SOCKET_NAMESPACE,
     SOCKET_ON_ACTIONS,
-    SOCKET_EMIT_ACTIONS
+    SOCKET_EMIT_ACTIONS,
+    HttpStatusCode
 }

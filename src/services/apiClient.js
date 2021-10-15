@@ -75,7 +75,6 @@ axiosApi.interceptors.response.use(
 );
 
 const setNewHeader = (responseData) => {
-    console.log(responseData);
   axiosApi.defaults.headers["Authorization"] =
     "Bearer " + responseData.accessToken;
   setCookie(

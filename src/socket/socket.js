@@ -1,6 +1,6 @@
 import {SOCKET_CHAT_HOST,SOCKET_NAMESPACE} from "../common/constant";
 import {baseConfig} from "./baseConfig";
-
+import {io} from "socket.io-client";
 export const MAIN_SOCKET=io(SOCKET_CHAT_HOST,{...baseConfig,autoConnect:true});
 
 export const USER_SOCKET=io(`${SOCKET_CHAT_HOST}${SOCKET_NAMESPACE.USER}`,baseConfig)
