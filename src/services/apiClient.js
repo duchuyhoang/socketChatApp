@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SOCKET_CHAT_HOST } from "../common/constant";
-import {getCookie, setCookie} from "../common/functions";
+import { getCookie, setCookie } from "../common/functions";
 const axiosApi = axios.create({
   baseURL: SOCKET_CHAT_HOST,
   // withCredentials: true,
@@ -20,7 +20,7 @@ axiosApi.interceptors.response.use(
   (response) => {
     const isLoginUrl = ["authen/login", "authen/re_login"];
     // console.log("response", response)
-    if (response.config.url === "authen/login") {
+    if (isLoginUrl.indexOf(response.config.url) !== -1) {
       setNewHeader(response.data);
       // axiosApi.defaults.headers["Authorization"]="Bearer "+response.data.accessToken;
     }
@@ -75,7 +75,6 @@ axiosApi.interceptors.response.use(
 );
 
 const setNewHeader = (responseData) => {
-    console.log(responseData);
   axiosApi.defaults.headers["Authorization"] =
     "Bearer " + responseData.accessToken;
   setCookie(
@@ -83,9 +82,8 @@ const setNewHeader = (responseData) => {
     responseData.refreshToken || getCookie("cn11_refresh_token"),
     100
   );
-//   setCookie("cn11_access_token", responseData.accessToken, 100);
+  //   setCookie("cn11_access_token", responseData.accessToken, 100);
   setCookie("cn11_access_token", responseData.accessToken, 100);
-
 };
 
 const mergeConfigHeader = async (config = null) => {
@@ -100,12 +98,12 @@ const mergeConfigHeader = async (config = null) => {
 
 export async function get(url, data = {}, config = {}) {
   const headers = mergeConfigHeader(config);
-  return axiosApi.get(url,  data, {headers} );
+  return axiosApi.get(url, data, { headers });
 }
 
 export async function post(url, data = {}, config = {}) {
   const headers = mergeConfigHeader(config);
-  return axiosApi.post(url, data, {headers});
+  return axiosApi.post(url, data, { headers });
 }
 
 export async function postMultipart(url, data = {}, config = {}) {
