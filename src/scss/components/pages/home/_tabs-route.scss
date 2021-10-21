@@ -1,0 +1,69 @@
+.tabs {
+    padding: 2rem 0;
+    width: 100%;
+    border-right: 1px solid $color-gray;
+    height: 100%;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $color-blue-light;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $color-primary-light;
+    }
+
+    &__top {
+        padding: 0 1rem;
+        width: 100%;
+        @include flex(center);
+        padding-bottom: 2rem;
+        border-bottom: 1px solid $color-gray;
+
+        & > * ~ * {
+            margin-left: 5px;
+        }
+        &__search {
+            position: relative;
+            flex-grow: 1;
+
+            input {
+                height: 30px;
+                line-height: 30px;
+                background-color: $color-gray;
+                border: 1px solid $color-gray;
+                font-size: 15px;
+                border-radius: 16px;
+                outline: none;
+                padding: 0 3rem;
+                width: 100%;
+
+                &:focus {
+                    background-color: #fff;
+                    border-color: $color-primary-main;
+                }
+            }
+
+            svg {
+                position: absolute;
+                top: 50%;
+                left: 1rem;
+                transform: translateY(-50%);
+            }
+        }
+
+        &__item {
+            @include box(3rem);
+            border-radius: 100rem;
+            @include flex(center, center);
+            cursor: pointer;
+            transition: 0.3s ease;
+
+            &:hover {
+                background-color: $color-gray;
+            }
+        }
+    }
+}

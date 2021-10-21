@@ -1,0 +1,36 @@
+.message {
+    margin-top: 1rem;
+    &__filter {
+        @include flex(center, space-between);
+        font-size: 13px;
+        padding: 0 1rem;
+        p {
+            flex-shrink: 0;
+            cursor: pointer;
+            display: inline-block;
+            color: #777;
+
+            &:hover {
+                color: $color-primary-dark;
+            }
+        }
+    }
+
+    &__content {
+        margin-top: 1rem;
+        ul {
+            li {
+                a {
+                    display: block;
+
+                    & > .message-item {
+                        padding: 0 1rem;
+                    }
+                }
+                a:active {
+                    color: inherit;
+                }
+            }
+        }
+    }
+}

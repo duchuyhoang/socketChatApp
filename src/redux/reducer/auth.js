@@ -1,20 +1,22 @@
-import { createActions, createReducer } from "reduxsauce";
-import { parseJwt } from "../../common/functions";
-import { createSelector } from "reselect";
+import { createActions, createReducer } from 'reduxsauce';
+import { createSelector } from 'reselect';
+import { parseJwt } from '../../common/functions';
 const { Types, Creators } = createActions({
-  loginRequest: ["payload"],
-  loginSucceed: ["payload"],
-  relogin: ["payload"],
-  reloginSucceed: ["payload"],
-  setConversationSocketReady: ["payload"],
-  setNotificationSocketReady: ["payload"],
-  setUserSocketReady: ["payload"],
+  loginRequest: ['payload'],
+  loginSucceed: ['payload'],
+  loginFailed: ['payload'],
+  relogin: ['payload'],
+  reloginSucceed: ['payload'],
+  setConversationSocketReady: ['payload'],
+  setNotificationSocketReady: ['payload'],
+  setUserSocketReady: ['payload'],
 });
 
 export const AUTH_INITIAL_STATE = {
   user: null,
   accessToken: null,
   refreshToken: null,
+  error: null,
   socketReadyFlags: {
     conversation: false,
     notification: false,
@@ -22,8 +24,9 @@ export const AUTH_INITIAL_STATE = {
   },
 };
 
+//selector
 const selectSelf = (state) => state.auth;
-const selectAccessToken = createSelector(
+export const selectAccessToken = createSelector(
   selectSelf,
   (state) => state.accessToken
 );
@@ -32,18 +35,36 @@ const selectAllSocketFlags = createSelector(
   (state) => state.socketReadyFlags
 );
 
+export const selectAuthError = createSelector(
+  selectSelf,
+  (state) => state.error
+);
+
+//Action
 const handleLoginSucceed = (state, { payload }) => {
   return {
     ...state,
     user: parseJwt(payload.accessToken),
+    error: null,
     accessToken: payload.accessToken,
     refreshToken: payload.refreshToken,
+  };
+};
+
+const handleLoginFailed = (state, { payload }) => {
+  return {
+    ...state,
+    error:
+      payload.status === 401
+        ? 'Email hoặc mật khẩu không đúng!'
+        : 'Connect failed!',
   };
 };
 
 const handleReloginSucceed = (state, { payload }) => {
   return {
     ...state,
+    error: null,
     accessToken: payload.accessToken,
   };
 };
@@ -94,6 +115,7 @@ export const selectSocketConnectionSuccess = createSelector(
 
 export const AuthReducer = createReducer(AUTH_INITIAL_STATE, {
   [AuthTypes.LOGIN_SUCCEED]: handleLoginSucceed,
+  [AuthTypes.LOGIN_FAILED]: handleLoginFailed,
   [AuthTypes.SET_CONVERSATION_SOCKET_READY]: setConversationSocketReady,
   [AuthTypes.SET_NOTIFICATION_SOCKET_READY]: setNotificationSocketReady,
   [AuthTypes.SET_USER_SOCKET_READY]: setUserSocketReady,

@@ -1,0 +1,50 @@
+.message-item {
+    @include flex(center, stretch);
+    cursor: pointer;
+    transition: 0.3s ease;
+
+    &:hover {
+        background-color: $color-blue-light;
+    }
+    &.active {
+        background-color: $color-blue-light;
+    }
+
+    &__avatar,
+    &__time {
+        flex-shrink: 0;
+    }
+
+    &__avatar {
+        padding: 1rem 0;
+    }
+
+    &__content {
+        flex-grow: 1;
+        padding-left: 1rem;
+
+        &.hight-light &__name {
+            font-weight: 700;
+        }
+        &.hight-light &__message {
+            font-weight: 600;
+        }
+    }
+
+    &__time {
+        padding-left: 1rem;
+        @include flex(flex-end);
+        flex-direction: column;
+
+        &__count {
+            width: 2rem;
+            height: 1.5rem;
+            border-radius: 1rem;
+            background-color: #db342e;
+            color: #fff;
+            @include flex(center, center);
+            font-weight: 600;
+            font-size: 12px;
+        }
+    }
+}

@@ -1,0 +1,52 @@
+.snackbar {
+    position: fixed;
+    top: 3rem;
+    right: 3rem;
+    z-index: 99;
+    @include flex(center);
+    width: max-content;
+    min-width: 30rem;
+    height: 5rem;
+    border-radius: 5px;
+    padding: 0 1.5rem;
+    visibility: hidden;
+
+    svg {
+        align-items: flex-start;
+        fill: #fff;
+        & > * {
+            fill: #fff;
+        }
+    }
+
+    p {
+        display: inline-block;
+        flex-grow: 1;
+        color: #fff;
+        font-weight: 600;
+        font-size: 15px;
+        margin-left: 1.5rem;
+    }
+
+    &.show {
+        visibility: visible;
+        animation: toLeft 0.5s, toRight 0.5s 3.5s, ease;
+    }
+}
+
+@keyframes toLeft {
+    0% {
+        transform: translateX(200%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+@keyframes toRight {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(200%);
+    }
+}

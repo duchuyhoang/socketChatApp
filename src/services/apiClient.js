@@ -1,35 +1,35 @@
-import axios from "axios";
-import { SOCKET_CHAT_HOST } from "../common/constant";
-import { getCookie, setCookie } from "../common/functions";
+import axios from 'axios';
+import { SOCKET_CHAT_HOST } from '../common/constant';
+import { getCookie, setCookie } from '../common/functions';
 const axiosApi = axios.create({
   baseURL: SOCKET_CHAT_HOST,
   // withCredentials: true,
-  responseType: "json",
+  responseType: 'json',
   timeout: 10000,
 });
 axiosApi.interceptors.request.use((request) => {
-  const accessToken = getCookie("cn11_access_token") || null;
-  const accessHeader = "Bearer " + accessToken;
+  const accessToken = getCookie('cn11_access_token') || null;
+  const accessHeader = 'Bearer ' + accessToken;
 
-  request.headers["Authorization"] = accessHeader;
+  request.headers['Authorization'] = accessHeader;
 
   return request;
 });
 
 axiosApi.interceptors.response.use(
   (response) => {
-    const isLoginUrl = ["authen/login", "authen/re_login"];
-    // console.log("response", response)
+    const isLoginUrl = ['authen/login', 'authen/re_login'];
+    // console.log('response', response);
     if (isLoginUrl.indexOf(response.config.url) !== -1) {
       setNewHeader(response.data);
       // axiosApi.defaults.headers["Authorization"]="Bearer "+response.data.accessToken;
     }
 
-    if (response.config.url === "authen/signup") {
-      axiosApi.defaults.headers["Authorization"] =
-        "Bearer " + response.data.accessToken;
-      setCookie("cn11_refresh_token", response.data.accessToken, 100);
-      setCookie("cn11_access_token", response.data.refreshToken, 100);
+    if (response.config.url === 'authen/signup') {
+      axiosApi.defaults.headers['Authorization'] =
+        'Bearer ' + response.data.accessToken;
+      setCookie('cn11_refresh_token', response.data.accessToken, 100);
+      setCookie('cn11_access_token', response.data.refreshToken, 100);
     }
 
     return response;
@@ -43,16 +43,17 @@ axiosApi.interceptors.response.use(
     if (
       errorResponse &&
       errorResponse.status === 401 &&
-      originalRequest.url !== "authen/refresh_token"
+      originalRequest.url !== 'authen/refresh_token'
     ) {
       if (originalRequest.retries_times <= 2) {
         try {
-          const responseRefresh = await axiosApi.post("authen/refresh_token", {
-            refresh_token: getCookie("cn11_refresh_token"),
+          const responseRefresh = await axiosApi.post('authen/refresh_token', {
+            refresh_token: getCookie('cn11_refresh_token'),
           });
+
           setNewHeader(responseRefresh.data);
 
-          if (originalRequest.url === "authen/re_login") {
+          if (originalRequest.url === 'authen/re_login') {
             return responseRefresh;
           } else {
             const responseData = await axiosApi(originalRequest);
@@ -62,8 +63,8 @@ axiosApi.interceptors.response.use(
         } catch (e) {
           //   console.clear()
           // console.log("rejected");
-          setCookie("cn11_refresh_token", null, 0);
-          setCookie("cn11_access_token", null, 0);
+          setCookie('cn11_refresh_token', null, 0);
+          setCookie('cn11_access_token', null, 0);
 
           return Promise.reject(err);
         }
@@ -75,15 +76,15 @@ axiosApi.interceptors.response.use(
 );
 
 const setNewHeader = (responseData) => {
-  axiosApi.defaults.headers["Authorization"] =
-    "Bearer " + responseData.accessToken;
+  axiosApi.defaults.headers['Authorization'] =
+    'Bearer ' + responseData.accessToken;
   setCookie(
-    "cn11_refresh_token",
-    responseData.refreshToken || getCookie("cn11_refresh_token"),
+    'cn11_refresh_token',
+    responseData.refreshToken || getCookie('cn11_refresh_token'),
     100
   );
   //   setCookie("cn11_access_token", responseData.accessToken, 100);
-  setCookie("cn11_access_token", responseData.accessToken, 100);
+  setCookie('cn11_access_token', responseData.accessToken, 100);
 };
 
 const mergeConfigHeader = async (config = null) => {
@@ -109,7 +110,7 @@ export async function post(url, data = {}, config = {}) {
 export async function postMultipart(url, data = {}, config = {}) {
   const headers = mergeConfigHeader({
     ...config,
-    "Content-Type": "application/x-www-form-urlencoded",
+    'Content-Type': 'application/x-www-form-urlencoded',
   });
 
   return axiosApi.post(url, { data, headers });

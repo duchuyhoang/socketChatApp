@@ -1,52 +1,46 @@
-import { Redirect, Route, Switch, useHistory } from 'react-router';
-import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router';
 import Home from './components/pages/Home/Home';
 import SignIn from './components/pages/SignIn/SignIn';
 import SignUp from './components/pages/SignUp/SignUp';
-import { login, getUserFriendList } from './services/apiMap';
-import {
-  MAIN_SOCKET,
-  USER_SOCKET,
-  CONVERSATION_SOCKET,
-  NOTIFICATION_SOCKET,
-} from './socket/socket';
-import { SOCKET_EMIT_ACTIONS, SOCKET_ON_ACTIONS } from './common/constant';
-import { getCookie } from './common/functions';
-import { useDispatch } from 'react-redux';
-import { AuthActions } from './redux/reducer/auth';
-import { useAuth } from './components/hooks/useAuth';
-import { useSocketConnection } from './components/hooks/useSocketConnection';
-function App() {
-  const history = useHistory();
-  const dispatch = useDispatch();
+import LoadingFullScreen from './components/shared/LoadingFullScreen';
+import PrivateRoute from './components/PrivateRoute';
+import Snackbar from './components/shared/Snackbar';
+import { selectNotification } from './redux/reducer/ui';
+import { useEffect, useRef } from 'react';
 
-  const authInfos = useAuth();
-  const socketConnectionStatus = useSocketConnection();
+function App() {
+  const loading = useSelector((state) => state.ui.isLoading);
+  const notification = useSelector(selectNotification);
+  const notifyRef = useRef(null);
 
   useEffect(() => {
-    console.log(socketConnectionStatus);
-  }, [socketConnectionStatus]);
+    if (!notifyRef.current) return;
+    notifyRef.current.showSnackbar();
+  }, [notification]);
 
-  const login = () => {
-    dispatch(
-      AuthActions.loginRequest({
-        password: '10032000',
-        email: 'huyred1003@gmail.com',
-      })
-    );
-  };
   return (
-    <div>
-      <button onClick={login}>Login in</button>
+    <>
+      {loading && <LoadingFullScreen />}
+      {notification && (
+        <Snackbar
+          message={notification.message}
+          type={notification.status}
+          ref={notifyRef}
+        />
+      )}
       <Switch>
-        <Route path='/home'>
-          <Redirect to='/' />
+        <Route path='/' exact>
+          <Redirect to='/home' />
         </Route>
+        <Route path='/home' component={Home} />
         <Route path='/login' component={SignIn} />
         <Route path='/signup' component={SignUp} />
-        <Route path='/' component={Home} />
+        <Route path='*'>
+          <Redirect to='home' />
+        </Route>
       </Switch>
-    </div>
+    </>
   );
 }
 

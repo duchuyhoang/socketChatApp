@@ -3,6 +3,18 @@
     box-shadow: $box-shadow;
     padding: 2rem;
     border-radius: 5px;
+    max-height: 80rem;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $color-blue-light;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $color-primary-light;
+    }
 
     &__top {
         h1 {

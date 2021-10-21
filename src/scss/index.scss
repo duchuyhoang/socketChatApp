@@ -6,11 +6,9 @@
 
 //top level components
 @import "./components/layout";
-
-//pages
-@import "./components/pages/sign-in";
-@import "./components/pages/home/home";
-@import "./components/pages/home/sidebar-nav";
+@import "./components/message-item";
+@import "./components/card-message";
+@import "./components/update-profile";
 
 //shared
 @import "./components/shared/textfield";
@@ -18,3 +16,15 @@
 @import "./components/shared/checkbox";
 @import "./components/shared/avatar";
 @import "./components/shared/modal";
+@import "./components/shared/popover";
+@import "./components/shared/select";
+@import "./components/shared/loading-full-screen";
+@import "./components/shared/snackbar";
+
+//pages
+@import "./components/pages/sign-in";
+@import "./components/pages/home/home";
+@import "./components/pages/home/sidebar-nav";
+@import "./components/pages/home/tabs-route";
+@import "./components/pages/home/tab-message";
+@import "./components/pages/home/main";

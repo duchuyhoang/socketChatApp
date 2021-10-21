@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 
 const Helmet = ({ title, children, ...rest }) => {
   document.title = title;
@@ -8,7 +8,7 @@ const Helmet = ({ title, children, ...rest }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  return <div {...rest}>{children}</div>;
+  return children;
 };
 
 Helmet.propTypes = {

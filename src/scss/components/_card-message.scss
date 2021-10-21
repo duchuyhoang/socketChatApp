@@ -1,0 +1,18 @@
+.card-chat {
+    background-color: $color-blue-light;
+    padding: 1.2rem;
+    @include flex();
+    flex-direction: column;
+    width: fit-content;
+    border-radius: 1rem;
+    margin-bottom: 4px;
+
+    &__text {
+    }
+
+    &__time {
+        font-size: 12px;
+        color: #777;
+        margin-top: 1rem;
+    }
+}

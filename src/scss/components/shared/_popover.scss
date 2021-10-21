@@ -1,0 +1,43 @@
+.popover-root {
+    position: relative;
+    cursor: pointer;
+}
+
+.popover {
+    position: absolute;
+    background-color: #fff;
+    width: max-content;
+    z-index: 9;
+    top: calc(100%);
+    left: 1rem;
+    padding: 1rem 0;
+    box-shadow: $box-shadow;
+    border-radius: 5px;
+
+    &.v1 {
+        ul {
+            width: 150px;
+            li {
+                cursor: pointer;
+                padding: 1rem;
+                @include flex(center);
+                transition: 0.3s ease;
+                span {
+                    display: block;
+                    margin-left: 1rem;
+                }
+
+                &:hover {
+                    background-color: rgba(119, 119, 119, 0.2);
+                }
+
+                &.hight-light {
+                    color: red;
+                    svg {
+                        fill: red;
+                    }
+                }
+            }
+        }
+    }
+}
