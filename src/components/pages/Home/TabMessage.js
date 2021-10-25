@@ -1,9 +1,11 @@
 import React from 'react';
-import MessageItem from '../../components/MessageItem';
-import Select from '../../shared/Select';
+import { useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
 import man from '../../../assets/images/man.png';
 import woman from '../../../assets/images/woman.png';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { selectListConversation } from '../../../redux/reducer/conversation';
+import MessageItem from '../../components/MessageItem';
+import Select from '../../shared/Select';
 const listMessage = [
   {
     id: 1,
@@ -40,8 +42,22 @@ const listMessage = [
   },
 ];
 
+const transformListMessage = (list) => {
+  return list.map((item) => {
+    return {
+      id: item.id_room,
+      avatar: item.creator_avatar,
+      name: item.creator_name,
+    };
+  });
+};
+
 const TabMessage = () => {
   const { url } = useRouteMatch();
+  const listMessage = transformListMessage(
+    useSelector(selectListConversation) || []
+  );
+
   return (
     <div className='message'>
       <div className='message__filter'>

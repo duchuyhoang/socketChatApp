@@ -1,0 +1,40 @@
+.tabs__top__search {
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+
+    input {
+        height: 30px;
+        line-height: 30px;
+        background-color: $color-gray;
+        border: 1px solid $color-gray;
+        font-size: 15px;
+        border-radius: 16px;
+        outline: none;
+        padding: 0 3rem;
+        width: 100%;
+
+        &:focus {
+            background-color: #fff;
+            border-color: $color-primary-main;
+        }
+    }
+
+    svg {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+    }
+
+    &__result {
+        position: absolute;
+        margin-top: 1rem;
+        z-index: 100;
+        min-width: 100%;
+        min-height: 10rem;
+        background-color: #fff;
+        border: 1px solid $color-gray;
+        box-shadow: $box-shadow;
+    }
+}

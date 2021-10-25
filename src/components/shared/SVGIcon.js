@@ -40,6 +40,7 @@ const mapIcon = {
   error: Error,
   warning: Warning,
   close: Close,
+  info: Info,
 };
 
 const SVGIcon = ({ name, width = '16px', height = width, ...rest }) => {

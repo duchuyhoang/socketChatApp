@@ -34,6 +34,7 @@ const handleNotificationSuccess = (state, { payload }) => {
     notification: {
       status: 'success',
       message: payload.message,
+      time: Date.now(),
     },
   };
 };
@@ -43,6 +44,7 @@ const handleNotificationFailed = (state, { payload }) => {
     notification: {
       status: 'error',
       message: payload.message,
+      time: Date.now(),
     },
   };
 };

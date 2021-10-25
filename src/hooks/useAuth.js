@@ -6,14 +6,14 @@ export const useAuth = (handleReconnectSocket = false) => {
   const userInfo = useSelector((state) => state.auth.user);
   const isLogin = useSelector(selectIsLogin);
   const dispatch = useDispatch();
-  //   useEffect(() => {}, []);
 
   useEffect(() => {
     const accessToken = getCookie('cn11_access_token');
+
     if (!userInfo && accessToken) {
       dispatch(AuthActions.relogin());
     }
-  }, [dispatch, userInfo]);
+  }, [dispatch]);
 
   return {
     userInfo,

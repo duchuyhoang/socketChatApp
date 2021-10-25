@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAuth } from '../../../hooks/useAuth';
 import { AuthActions, selectAuthError } from '../../../redux/reducer/auth';
-import { login } from '../../../services/apiMap';
 import Helmet from '../../components/Helmet';
 import Layout from '../../components/Layout';
 import SVGIcon from '../../shared/SVGIcon';

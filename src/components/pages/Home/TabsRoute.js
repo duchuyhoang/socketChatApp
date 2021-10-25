@@ -1,5 +1,6 @@
 import React from 'react';
 import SVGIcon from '../../shared/SVGIcon';
+import Search from './Search';
 import TabListFriend from './TabListFriend';
 import TabMessage from './TabMessage';
 
@@ -15,10 +16,7 @@ const TabsRoute = (props) => {
   return (
     <div className='tabs'>
       <div className='tabs__top'>
-        <div className='tabs__top__search'>
-          <input type='text' id='' placeholder='Tìm kiếm' />
-          <SVGIcon name='search' />
-        </div>
+        <Search />
         <div className='tabs__top__item'>
           <SVGIcon name='addUser' />
         </div>

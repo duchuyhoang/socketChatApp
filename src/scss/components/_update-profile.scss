@@ -19,4 +19,19 @@
             cursor: pointer;
         }
     }
+
+    &__content {
+        padding: 2rem;
+
+        form > * ~ * {
+            margin-top: 1rem;
+        }
+
+        &__item {
+            button {
+                width: 10rem;
+                margin-left: auto;
+            }
+        }
+    }
 }

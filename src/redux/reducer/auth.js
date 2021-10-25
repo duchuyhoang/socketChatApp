@@ -1,12 +1,18 @@
 import { createActions, createReducer } from 'reduxsauce';
 import { createSelector } from 'reselect';
-import { parseJwt } from '../../common/functions';
+import { parseJwt, setCookie, getCookie } from '../../common/functions';
 const { Types, Creators } = createActions({
   loginRequest: ['payload'],
   loginSucceed: ['payload'],
   loginFailed: ['payload'],
   relogin: ['payload'],
   reloginSucceed: ['payload'],
+  signOut: ['payload'],
+
+  editUser: ['payload'],
+  editUserSucceed: ['payload'],
+  editUserFailed: ['payload'],
+
   setConversationSocketReady: ['payload'],
   setNotificationSocketReady: ['payload'],
   setUserSocketReady: ['payload'],
@@ -26,21 +32,53 @@ export const AUTH_INITIAL_STATE = {
 
 //selector
 const selectSelf = (state) => state.auth;
-export const selectAccessToken = createSelector(
-  selectSelf,
-  (state) => state.accessToken
-);
+
 const selectAllSocketFlags = createSelector(
   selectSelf,
   (state) => state.socketReadyFlags
 );
+
+export const selectAccessToken = createSelector(
+  selectSelf,
+  (state) => state.accessToken
+);
+
+export const selectRefreshToken = createSelector(
+  selectSelf,
+  (state) => state.refreshToken
+);
+
+export const selectUser = createSelector(selectSelf, (state) => state.user);
 
 export const selectAuthError = createSelector(
   selectSelf,
   (state) => state.error
 );
 
-//Action
+export const selectIsLogin = createSelector(
+  selectAccessToken,
+  (accessToken) => {
+    if (accessToken) {
+      const parsedToken = parseJwt(accessToken);
+      const now = Date.now();
+      return parsedToken.exp * 1000 > now ? true : false;
+    }
+    return false;
+  }
+);
+
+export const selectSocketConnectionSuccess = createSelector(
+  selectAllSocketFlags,
+  (socketFlags) => {
+    const socketList = { ...socketFlags };
+    Object.keys(socketFlags).map((key) => {
+      if (!socketList[key]) delete socketList[key];
+    });
+    return Object.keys(socketFlags).length === Object.keys(socketFlags).length;
+  }
+);
+
+//reducer
 const handleLoginSucceed = (state, { payload }) => {
   return {
     ...state,
@@ -64,11 +102,36 @@ const handleLoginFailed = (state, { payload }) => {
 const handleReloginSucceed = (state, { payload }) => {
   return {
     ...state,
+    user: parseJwt(payload.accessToken),
     error: null,
     accessToken: payload.accessToken,
+    refreshToken: getCookie('cn11_refresh_token'),
   };
 };
 
+const handleSignOut = (state) => {
+  setCookie('cn11_refresh_token', null, 0);
+  setCookie('cn11_access_token', null, 0);
+  return {
+    ...AUTH_INITIAL_STATE,
+  };
+};
+
+const handleEditUserSucceed = (state, { payload }) => {
+  return {
+    ...state,
+    error: null,
+    user: payload.data,
+  };
+};
+const handleEditUserFailed = (state) => {
+  return {
+    ...state,
+    error: 'Some thing went wrong! Connect failed?',
+  };
+};
+
+//socket
 const setConversationSocketReady = (state) => {
   return {
     ...state,
@@ -91,33 +154,15 @@ const setUserSocketReady = (state) => {
 export const AuthTypes = Types;
 export const AuthActions = Creators;
 
-export const selectIsLogin = createSelector(
-  selectAccessToken,
-  (accessToken) => {
-    if (accessToken) {
-      const parsedToken = parseJwt(accessToken);
-      const now = Date.now();
-      return parsedToken.exp * 1000 > now ? true : false;
-    } else return false;
-  }
-);
-
-export const selectSocketConnectionSuccess = createSelector(
-  selectAllSocketFlags,
-  (socketFlags) => {
-    const socketList = { ...socketFlags };
-    Object.keys(socketFlags).map((key) => {
-      if (!socketList[key]) delete socketList[key];
-    });
-    return Object.keys(socketFlags).length === Object.keys(socketFlags).length;
-  }
-);
-
 export const AuthReducer = createReducer(AUTH_INITIAL_STATE, {
   [AuthTypes.LOGIN_SUCCEED]: handleLoginSucceed,
   [AuthTypes.LOGIN_FAILED]: handleLoginFailed,
+  [AuthTypes.RELOGIN_SUCCEED]: handleReloginSucceed,
+  [AuthTypes.SIGN_OUT]: handleSignOut,
+  [AuthTypes.EDIT_USER_SUCCEED]: handleEditUserSucceed,
+  [AuthTypes.EDIT_USER_FAILED]: handleEditUserFailed,
+
   [AuthTypes.SET_CONVERSATION_SOCKET_READY]: setConversationSocketReady,
   [AuthTypes.SET_NOTIFICATION_SOCKET_READY]: setNotificationSocketReady,
   [AuthTypes.SET_USER_SOCKET_READY]: setUserSocketReady,
-  [AuthTypes.RELOGIN_SUCCEED]: handleReloginSucceed,
 });

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
@@ -12,19 +12,27 @@ import Grid from '../../shared/Grid';
 import SVGIcon from '../../shared/SVGIcon';
 import TextField from '../../shared/TextField';
 import Upload from '../../shared/Upload';
+import { useDispatch } from 'react-redux';
+import { SignupAction } from '../../../redux/reducer/signup';
+import { useSelector } from 'react-redux';
 
 const defaultValues = {
   email: '',
   name: '',
   phone: '',
-  gender: 0,
+  sex: 0,
   password: '',
   retypePassword: '',
 };
 
-function SignUp(props) {
+function SignUp({ history }) {
   const [isMale, setIsMale] = useState(true);
   const [avatar, setAvatar] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const errorSignup = useSelector((state) => state.signup.error);
 
   const schema = yup
     .object({
@@ -58,6 +66,7 @@ function SignUp(props) {
   });
 
   const handleSignUp = (values) => {
+    setIsSubmitted(true);
     const signupData = new FormData();
     signupData.append('singleImage', avatar);
 
@@ -66,7 +75,13 @@ function SignUp(props) {
     }
 
     signupData.delete('retypePassword');
+
+    dispatch(SignupAction.signup(signupData));
   };
+
+  useEffect(() => {
+    if (isSubmitted && !errorSignup) history.push('/login');
+  }, [isSubmitted, errorSignup, history]);
 
   return (
     <Helmet title='Signup'>
@@ -91,7 +106,7 @@ function SignUp(props) {
                 <Grid col={2}>
                   <Controller
                     control={control}
-                    name='gender'
+                    name='sex'
                     defaultValue={0}
                     render={({ field: { onChange, value } }) => (
                       <>
@@ -231,6 +246,14 @@ function SignUp(props) {
                 )}
               />
             </div>
+            {errorSignup && (
+              <div
+                className='input-field__error'
+                style={{ textAlign: 'center', marginBottom: '1rem' }}
+              >
+                {errorSignup}
+              </div>
+            )}
             <button className='btn' type='submit'>
               Sign up
             </button>

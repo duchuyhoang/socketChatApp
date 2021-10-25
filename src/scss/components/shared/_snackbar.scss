@@ -2,7 +2,7 @@
     position: fixed;
     top: 3rem;
     right: 3rem;
-    z-index: 99;
+    z-index: 999;
     @include flex(center);
     width: max-content;
     min-width: 30rem;
@@ -30,7 +30,7 @@
 
     &.show {
         visibility: visible;
-        animation: toLeft 0.5s, toRight 0.5s 3.5s, ease;
+        animation: toLeft 0.5s, toRight 0.5s 3.5s, ease forwards;
     }
 }
 
@@ -48,5 +48,6 @@
     }
     100% {
         transform: translateX(200%);
+        display: none;
     }
 }

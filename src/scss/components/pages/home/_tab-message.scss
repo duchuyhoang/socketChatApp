@@ -22,10 +22,6 @@
             li {
                 a {
                     display: block;
-
-                    & > .message-item {
-                        padding: 0 1rem;
-                    }
                 }
                 a:active {
                     color: inherit;

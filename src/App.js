@@ -29,11 +29,12 @@ function App() {
           ref={notifyRef}
         />
       )}
+
       <Switch>
         <Route path='/' exact>
           <Redirect to='/home' />
         </Route>
-        <Route path='/home' component={Home} />
+        <PrivateRoute path='/home' component={Home} />
         <Route path='/login' component={SignIn} />
         <Route path='/signup' component={SignUp} />
         <Route path='*'>

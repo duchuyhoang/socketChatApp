@@ -2,6 +2,7 @@
     @include flex(center, stretch);
     cursor: pointer;
     transition: 0.3s ease;
+    padding: 0 1rem;
 
     &:hover {
         background-color: $color-blue-light;

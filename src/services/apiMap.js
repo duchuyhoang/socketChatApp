@@ -1,5 +1,6 @@
 import { get, post } from './apiClient';
 
+//auth
 export const login = (payload) => {
   return post('authen/login', payload);
 };
@@ -11,6 +12,29 @@ export const signup = (payload) => {
 export const relogin = (payload) => {
   return post('authen/re_login', payload);
 };
+
+export const refreshToken = (payload) => {
+  return post('authen/refresh_token', payload);
+};
+
+//User
 export const getUserFriendList = (payload) => {
   return get('user/friendList');
+};
+
+export const editUser = (payload) => {
+  return post('user/editUser', payload);
+};
+
+export const searchUser = (payload) => {
+  return get(`user/searchUser?${payload.queryParams}`);
+};
+
+//conversation
+export const getConversations = (payload) => {
+  return get('conversation/getConversations');
+};
+
+export const getSpecificConversation = (payload) => {
+  return get(`conversation/getSpecificConversation/${payload.id_conversation}`);
 };

@@ -25,34 +25,6 @@
         & > * ~ * {
             margin-left: 5px;
         }
-        &__search {
-            position: relative;
-            flex-grow: 1;
-
-            input {
-                height: 30px;
-                line-height: 30px;
-                background-color: $color-gray;
-                border: 1px solid $color-gray;
-                font-size: 15px;
-                border-radius: 16px;
-                outline: none;
-                padding: 0 3rem;
-                width: 100%;
-
-                &:focus {
-                    background-color: #fff;
-                    border-color: $color-primary-main;
-                }
-            }
-
-            svg {
-                position: absolute;
-                top: 50%;
-                left: 1rem;
-                transform: translateY(-50%);
-            }
-        }
 
         &__item {
             @include box(3rem);

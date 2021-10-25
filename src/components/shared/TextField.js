@@ -2,7 +2,13 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import SVGIcon from './SVGIcon';
 
-const TextField = ({ label, type = 'text', inputChange, error, ...rest }) => {
+const TextField = ({
+  label,
+  type = 'text',
+  inputChange = () => {},
+  error,
+  ...rest
+}) => {
   const [typeInput, setTypeInput] = useState(type);
 
   return (
@@ -22,7 +28,7 @@ const TextField = ({ label, type = 'text', inputChange, error, ...rest }) => {
 };
 
 TextField.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   label: PropTypes.string,
   error: PropTypes.bool,
 };

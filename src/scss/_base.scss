@@ -24,6 +24,9 @@ body {
 a {
     text-decoration: none;
     display: inline-block;
+    &:link {
+        color: inherit;
+    }
 }
 
 img {
@@ -60,7 +63,7 @@ img {
 .btn {
     outline: none;
     border: none;
-    padding: 1.5rem 3rem;
+    padding: 1.5rem;
     border-radius: 1rem;
     background-color: $color-primary-dark;
     color: #fff;
@@ -72,6 +75,11 @@ img {
 
     svg {
         margin-right: 1rem;
+    }
+
+    &:disabled {
+        background-color: $color-gray;
+        pointer-events: none;
     }
 }
 
