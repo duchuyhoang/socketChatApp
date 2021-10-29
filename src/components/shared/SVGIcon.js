@@ -20,6 +20,9 @@ import { ReactComponent as Error } from '../../assets/icons/error.svg';
 import { ReactComponent as Warning } from '../../assets/icons/warning.svg';
 import { ReactComponent as Info } from '../../assets/icons/info.svg';
 import { ReactComponent as Close } from '../../assets/icons/close.svg';
+import { ReactComponent as MicroPhone } from '../../assets/icons/microphone.svg';
+import { ReactComponent as MicroPhoneOff } from '../../assets/icons/micoff.svg';
+
 
 const mapIcon = {
   google: Google,
@@ -41,6 +44,8 @@ const mapIcon = {
   warning: Warning,
   close: Close,
   info: Info,
+  microphone:MicroPhone,
+  micoff: MicroPhoneOff
 };
 
 const SVGIcon = ({ name, width = '16px', height = width, ...rest }) => {

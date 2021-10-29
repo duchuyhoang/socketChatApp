@@ -1,0 +1,133 @@
+// useEffect(()=>{
+  // if(myStream?.getAudioTracks()[0].enabled!==undefined){
+  //   // setSoundOpen(myStream?.getAudioTracks()[0].enabled||false)
+  // }
+  // },[myStream?.getAudioTracks()[0].enabled])
+
+  //   const createPeer = useCallback(
+  //     (userSocketId, stream) => {
+  //       const peer = new Peer({
+  //         initiator: true,
+  //         trickle: false,
+  //         stream,
+  //       });
+
+  //       peer.on("signal", (signal) => {
+  //         CALL_SOCKET.emit(SOCKET_EMIT_ACTIONS.ON_SEND_OFFER_SIGNAL, {
+  //           receiverSockerId: userSocketId,
+  //           stream,
+  //           signal,
+  //           id_room: id_conversation,
+  //           callerSocketId: CALL_SOCKET.id,
+  //         });
+  //       });
+  //       return peer;
+  //     },
+  //     [id_conversation]
+  //   );
+
+  //   const addPeer = (offerSignal, receiverSocketId,stream) => {
+  //     const peer = new Peer({
+  //       initiator: false,
+  //       trickle: false,
+  //       stream
+  //     });
+
+  //     peer.signal(offerSignal);
+
+  //     peer.on("signal", (answerSignal) => {
+  //       CALL_SOCKET.emit(SOCKET_EMIT_ACTIONS.ON_SEND_ANSWER_SIGNAL, {
+  //         signal: answerSignal,
+  //         receiverSocketId,
+  //         callerSocketId: CALL_SOCKET.id,
+  //       });
+  //     });
+  //     return peer;
+  //   };
+
+  //   useEffect(() => {
+  //     CALL_SOCKET.connect();
+
+  //     const gotMedia = (stream) => {
+  //       const video = document.createElement("video");
+
+  //       if ("srcObject" in video) {
+  //         video.srcObject = stream;
+  //       } else {
+  //         video.src = window.URL.createObjectURL(stream); // for older browsers
+  //       }
+
+  //       videoGrid.current.appendChild(video);
+  //       video.play();
+
+  //       CALL_SOCKET.emit(SOCKET_EMIT_ACTIONS.ON_GET_LIST_USER_IN_ROOM, {
+  //         id_conversation,
+  //       });
+
+  //       CALL_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_LIST_USER_RESPONSE, (list_user) => {
+  //         const peers = [];
+  //         list_user.socketList.map((userSocketId) => {
+  //           const peer = createPeer(userSocketId, stream);
+  //           peers.push({
+  //             socketId: userSocketId,
+  //             peer: peer,
+  //           });
+  //         });
+  //         setListPeers(peers);
+  //       });
+  //     };
+
+  //     navigator.mediaDevices
+  //       .getUserMedia({
+  //         video: true,
+  //         audio: false,
+  //       })
+  //       .then(gotMedia)
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+
+  //     // CALL_SOCKET.ON("disconnect", () => {});
+
+  //     return () => {
+  //       // CALL_SOCKET.disconnect();
+  //       CALL_SOCKET.off(SOCKET_EMIT_ACTIONS.ON_GET_LIST_USER_IN_ROOM);
+  //       CALL_SOCKET.off(SOCKET_ON_ACTIONS.EMIT_LIST_USER_RESPONSE);
+  //     };
+  //   }, []);
+
+  //   useEffect(() => {
+  //     CALL_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_SIGNAL_OFFER, (payload) => {
+  //       const { signal: offerSignal, callerSocketId,stream } = payload;
+  //       const peer = addPeer(offerSignal, callerSocketId,stream);
+  //       const newPeer = {
+  //         socketId: callerSocketId,
+  //         peer,
+  //       };
+  //       setListPeers([...listPeers, newPeer]);
+  //     });
+
+  //     return () => {
+  //       CALL_SOCKET.off(SOCKET_ON_ACTIONS.EMIT_SIGNAL_OFFER);
+  //     };
+  //   }, [listPeers]);
+
+  //   useEffect(() => {
+  //     CALL_SOCKET.on(
+  //       SOCKET_ON_ACTIONS.EMIT_SIGNAL_ANSWER,
+  //       ({ signal, callerSocketId }) => {
+  //         const foundedPeer = listPeers.find(
+  //           (peer) => peer.socketId === callerSocketId
+  //         );
+  //         if (foundedPeer) {
+  //           console.log("co");
+  //           foundedPeer.peer.signal(signal);
+  //         }
+  //       }
+  //     );
+
+  // return ()=>{
+  //   CALL_SOCKET.off(SOCKET_ON_ACTIONS.EMIT_SIGNAL_ANSWER)
+  // }
+
+  //   }, [listPeers]);
