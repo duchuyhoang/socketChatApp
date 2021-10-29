@@ -8,7 +8,7 @@ import {
   SOCKET_CHAT_HOST,
   SOCKET_NAMESPACE,
 } from "../../../common/constant";
-import { useSocketConnection } from "../../hooks/useSocketConnection";
+import { useSocketConnection } from "../../../hooks/useSocketConnection";
 import { baseConfig } from "../../../socket/baseConfig";
 import useWindowUnloadEffect from "../../hooks/useWindowRefresh";
 import SVGIcon from "../../shared/SVGIcon";

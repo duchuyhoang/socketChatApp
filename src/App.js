@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router';
+import { Redirect, Route, Switch,useHistory } from 'react-router';
 import Home from './components/pages/Home/Home';
 import SignIn from './components/pages/SignIn/SignIn';
 import SignUp from './components/pages/SignUp/SignUp';
@@ -20,8 +20,8 @@ import { SOCKET_EMIT_ACTIONS, SOCKET_ON_ACTIONS } from './common/constant';
 import { getCookie } from './common/functions';
 import { useDispatch } from 'react-redux';
 import { AuthActions } from './redux/reducer/auth';
-import { useAuth } from './components/hooks/useAuth';
-import { useSocketConnection } from './components/hooks/useSocketConnection';
+import { useAuth } from './hooks/useAuth';
+import { useSocketConnection } from './hooks/useSocketConnection';
 
 
 function App() {
