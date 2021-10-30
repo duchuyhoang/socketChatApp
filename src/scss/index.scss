@@ -12,6 +12,12 @@
 @import "./components/chat-list";
 @import "./components/upload-images";
 
+//pages
+@import "./components/pages/sign-in";
+@import "./components/pages/home/home";
+@import "./components/pages/home/sidebar-nav";
+@import "./components/pages/chatVideo/video";
+
 //shared
 @import "./components/shared/textfield";
 @import "./components/shared/upload";
