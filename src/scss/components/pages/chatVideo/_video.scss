@@ -1,0 +1,33 @@
+.videoContainer {
+  position: relative;
+  height: 250px;
+  width: 350px;
+  border-radius: 10px;
+  & video {
+    height: 100%;
+    // width: 100%;
+    border-radius: 5px;
+  }
+  .videoControlWrapper {
+    position: absolute;
+    visibility: hidden;
+    left: 0px;
+    bottom: 0px;
+    height: 30px;
+    padding: 5px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.5s all;
+    color: red;
+    z-index:100;
+    @include flex(flex-start);
+  }
+
+  &:hover .videoControlWrapper {
+    visibility: visible;
+  }
+
+  // .videoControlWrapperOpen{
+
+  // }
+}
