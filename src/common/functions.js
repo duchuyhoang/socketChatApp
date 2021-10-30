@@ -42,3 +42,50 @@ export function checkTokenValid(accessToken) {
     return parsedToken.exp * 1000 > now ? true : false;
   } else return false;
 }
+
+export const transformListMessages = (listMessages) => {
+  if (!listMessages || listMessages.length < 1) return [];
+  return listMessages
+    .sort(
+      (a, b) => new Date(a.message_create_at) - new Date(b.message_create_at)
+    )
+    .reduce((prev, cur) => {
+      const lastPrev = prev.at(-1);
+      if (lastPrev && +cur.id_user === lastPrev.idUser) {
+        lastPrev.messages.push({
+          type: cur.type,
+          idMessage: cur.id_message,
+          content: cur.content,
+          url: cur.url,
+        });
+        lastPrev.createAt = cur.message_create_at;
+      } else {
+        prev.push({
+          idUser: +cur.id_user,
+          avatar: cur.avatar,
+          gender: cur.sex,
+          messages: [
+            {
+              type: cur.type,
+              idMessage: cur.id_message,
+              content: cur.content,
+              url: cur.url,
+            },
+          ],
+          createAt: cur.message_create_at,
+        });
+      }
+      return prev;
+    }, []);
+};
+
+export const getTypeMessage = (text = '', images = [], icon = null) => {
+  if (icon) return 3;
+  if (text !== '') {
+    if (images?.length > 0) return 4;
+    return 0;
+  } else {
+    if (images?.length > 0) return 1;
+    return -1;
+  }
+};

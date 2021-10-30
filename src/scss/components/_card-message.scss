@@ -1,5 +1,4 @@
 .card-chat {
-    background-color: $color-blue-light;
     padding: 1.2rem;
     @include flex();
     flex-direction: column;
@@ -14,5 +13,9 @@
         font-size: 12px;
         color: #777;
         margin-top: 1rem;
+    }
+    img {
+        max-width: 20rem;
+        max-height: 20rem;
     }
 }

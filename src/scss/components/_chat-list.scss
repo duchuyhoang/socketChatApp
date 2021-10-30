@@ -1,0 +1,31 @@
+.chat-list {
+    padding: 0 1rem;
+    width: 100%;
+    height: 100%;
+    &__item {
+        padding: 1rem 0;
+        @include flex(flex-start);
+
+        ul {
+            @include flex();
+            flex-direction: column;
+            padding: 0 1rem;
+        }
+
+        & .card-chat {
+            background-color: #fff;
+        }
+
+        &--me {
+            flex-direction: row-reverse;
+
+            ul {
+                align-items: flex-end;
+            }
+
+            .card-chat {
+                background-color: $color-blue-light;
+            }
+        }
+    }
+}

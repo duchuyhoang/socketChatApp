@@ -1,4 +1,4 @@
-import { all, takeLatest, debounce } from 'redux-saga/effects';
+import { all, takeLatest, debounce, takeEvery } from 'redux-saga/effects';
 import { AuthSaga } from './authSaga';
 import { AuthTypes } from '../reducer/auth';
 import { SignupTypes } from '../reducer/signup';
@@ -29,5 +29,7 @@ export default function* rootSaga() {
       ConversationTypes.GET_SPECIFIC_CONVERSATION,
       ConversationSaga.getSpecificConversation
     ),
+    takeLatest(ConversationTypes.GET_MESSAGES, ConversationSaga.getMessages),
+    takeEvery(ConversationTypes.SEND_MESSAGE, ConversationSaga.sendMessage),
   ]);
 }

@@ -1,46 +1,46 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useRouteMatch } from 'react-router-dom';
-import man from '../../../assets/images/man.png';
-import woman from '../../../assets/images/woman.png';
+// import man from '../../../assets/images/man.png';
+// import woman from '../../../assets/images/woman.png';
 import { selectListConversation } from '../../../redux/reducer/conversation';
 import MessageItem from '../../components/MessageItem';
 import Select from '../../shared/Select';
-const listMessage = [
-  {
-    id: 1,
-    name: 'Hoa Ngo',
-    avatar: man,
-    lassMessage: {
-      form: '',
-      content: 'I love u 💕',
-    },
-    sendingTime: Date.now(),
-    countUnreadMessage: 5,
-  },
-  {
-    id: 2,
-    name: 'Hoàng Đức Huy',
-    avatar: woman,
-    lassMessage: {
-      form: '',
-      content: 'I love u 💕',
-    },
-    sendingTime: Date.now(),
-    countUnreadMessage: 1,
-  },
-  {
-    id: 3,
-    name: 'Hoa Ngo 2',
-    avatar: man,
-    lassMessage: {
-      form: 'You:',
-      content: 'I love u 💕',
-    },
-    sendingTime: Date.now(),
-    countUnreadMessage: 0,
-  },
-];
+// const listMessage = [
+//   {
+//     id: 1,
+//     name: 'Hoa Ngo',
+//     avatar: man,
+//     lassMessage: {
+//       form: '',
+//       content: 'I love u 💕',
+//     },
+//     sendingTime: Date.now(),
+//     countUnreadMessage: 5,
+//   },
+//   {
+//     id: 2,
+//     name: 'Hoàng Đức Huy',
+//     avatar: woman,
+//     lassMessage: {
+//       form: '',
+//       content: 'I love u 💕',
+//     },
+//     sendingTime: Date.now(),
+//     countUnreadMessage: 1,
+//   },
+//   {
+//     id: 3,
+//     name: 'Hoa Ngo 2',
+//     avatar: man,
+//     lassMessage: {
+//       form: 'You:',
+//       content: 'I love u 💕',
+//     },
+//     sendingTime: Date.now(),
+//     countUnreadMessage: 0,
+//   },
+// ];
 
 const transformListMessage = (list) => {
   return list.map((item) => {

@@ -1,9 +1,12 @@
 import { createActions, createReducer } from 'reduxsauce';
 import { createSelector } from 'reselect';
+import { transformListMessages } from '../../common/functions';
 
 const CONVERSATION_INITIAL_STATE = {
   listConversation: null,
   mainConversationInfo: null,
+
+  messages: null,
 };
 
 const { Types, Creators } = createActions({
@@ -11,6 +14,12 @@ const { Types, Creators } = createActions({
   getConversationSucceed: ['payload'],
   getSpecificConversation: ['payload'],
   getSpecificConversationSucceed: ['payload'],
+
+  getMessages: ['payload'],
+  getMessagesSucceed: ['payload'],
+  insertMessages: ['payload'],
+  sendMessage: ['payload'],
+  sendMessageSucceed: ['payload'],
 });
 
 //selector
@@ -26,6 +35,10 @@ export const selectMainConversation = createSelector(
   (state) => state.mainConversationInfo
 );
 
+export const selectMessages = createSelector(selectSelf, (state) =>
+  transformListMessages(state.messages)
+);
+
 //reducer
 const handleGetConversationSucceed = (state, { payload }) => {
   return {
@@ -35,8 +48,29 @@ const handleGetConversationSucceed = (state, { payload }) => {
 };
 
 const handleGetSpecificConversationSucceed = (state, { payload }) => {
-  console.log('🚀 ~ payload', payload);
   return { ...state, mainConversationInfo: payload.data };
+};
+
+const handleGetMessagesSucceed = (state, { payload }) => {
+  return {
+    ...state,
+    messages: payload.data,
+  };
+};
+
+const handleInsertMessage = (state, { payload }) => {
+  let newList = state.messages;
+  if (Array.isArray(payload.data)) {
+    payload.data.forEach((item) => {
+      newList.push(item);
+    });
+  } else newList.push(payload.data);
+
+  return { ...state, messages: newList };
+};
+
+const handleSendMessageSucceed = (state, { payload }) => {
+  return { ...state };
 };
 
 export const ConversationTypes = Types;
@@ -46,4 +80,7 @@ export const ConversationReducer = createReducer(CONVERSATION_INITIAL_STATE, {
   [Types.GET_CONVERSATION_SUCCEED]: handleGetConversationSucceed,
   [Types.GET_SPECIFIC_CONVERSATION_SUCCEED]:
     handleGetSpecificConversationSucceed,
+  [Types.GET_MESSAGES_SUCCEED]: handleGetMessagesSucceed,
+  [Types.INSERT_MESSAGES]: handleInsertMessage,
+  [Types.SEND_MESSAGE_SUCCEED]: handleSendMessageSucceed,
 });

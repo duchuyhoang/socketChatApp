@@ -38,3 +38,12 @@ export const getConversations = (payload) => {
 export const getSpecificConversation = (payload) => {
   return get(`conversation/getSpecificConversation/${payload.id_conversation}`);
 };
+
+//message
+export const sendMessage = (payload) => {
+  return post('message/sendMessage', payload);
+};
+
+export const getMessage = (payload) => {
+  return get(`/message/getMessages?${payload.queryParams}`);
+};

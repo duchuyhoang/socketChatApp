@@ -1,6 +1,7 @@
 import { createActions, createReducer } from 'reduxsauce';
 import { createSelector } from 'reselect';
 import { parseJwt, setCookie, getCookie } from '../../common/functions';
+
 const { Types, Creators } = createActions({
   loginRequest: ['payload'],
   loginSucceed: ['payload'],

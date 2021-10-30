@@ -9,11 +9,9 @@ const Search = (props) => {
 
   const dispatch = useDispatch();
   const searchUser = useSelector(selectSearchUser) || [];
-  console.log('🚀 ~ searchUser', searchUser);
 
   useEffect(() => {
     if (!keyword || keyword.trim() === '') return;
-    console.log('🚀 ~ keyword.trim()', keyword.trim());
     dispatch(UserAction.searchUser({ keyword: keyword.trim() }));
   }, [keyword, dispatch]);
 

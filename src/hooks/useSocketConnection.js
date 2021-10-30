@@ -21,6 +21,7 @@ export const useSocketConnection = () => {
   const accessToken = useSelector((state) => state.auth.accessToken);
   const socketConnectSuccess = useSelector(selectSocketConnectionSuccess);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (accessToken && checkTokenValid(accessToken)) {
       // SOCKET_EMIT_ACTIONS.ON_AUTHENTICATE
@@ -53,12 +54,13 @@ export const useSocketConnection = () => {
       });
     } else {
       //   history.push("/login");
+      console.log('socket connect fail!');
     }
 
     return () => {
       refreshSocket();
     };
-  }, [accessToken]);
+  }, [accessToken, dispatch]);
 
   useEffect(() => {
     // Do something make loading hide etc
