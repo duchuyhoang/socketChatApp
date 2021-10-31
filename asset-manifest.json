@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/socketChatApp/static/css/main.b3a8032f.chunk.css",
-    "main.js": "/socketChatApp/static/js/main.9be1d564.chunk.js",
-    "main.js.map": "/socketChatApp/static/js/main.9be1d564.chunk.js.map",
+    "main.js": "/socketChatApp/static/js/main.86c41baa.chunk.js",
+    "main.js.map": "/socketChatApp/static/js/main.86c41baa.chunk.js.map",
     "runtime-main.js": "/socketChatApp/static/js/runtime-main.fd9c2fd8.js",
     "runtime-main.js.map": "/socketChatApp/static/js/runtime-main.fd9c2fd8.js.map",
-    "static/js/2.6714da95.chunk.js": "/socketChatApp/static/js/2.6714da95.chunk.js",
-    "static/js/2.6714da95.chunk.js.map": "/socketChatApp/static/js/2.6714da95.chunk.js.map",
+    "static/js/2.2b4989c8.chunk.js": "/socketChatApp/static/js/2.2b4989c8.chunk.js",
+    "static/js/2.2b4989c8.chunk.js.map": "/socketChatApp/static/js/2.2b4989c8.chunk.js.map",
     "index.html": "/socketChatApp/index.html",
     "static/css/main.b3a8032f.chunk.css.map": "/socketChatApp/static/css/main.b3a8032f.chunk.css.map",
-    "static/js/2.6714da95.chunk.js.LICENSE.txt": "/socketChatApp/static/js/2.6714da95.chunk.js.LICENSE.txt",
+    "static/js/2.2b4989c8.chunk.js.LICENSE.txt": "/socketChatApp/static/js/2.2b4989c8.chunk.js.LICENSE.txt",
     "static/media/add-user.09121f9f.svg": "/socketChatApp/static/media/add-user.09121f9f.svg",
     "static/media/attachment.756b4227.svg": "/socketChatApp/static/media/attachment.756b4227.svg",
     "static/media/book.2443ad18.svg": "/socketChatApp/static/media/book.2443ad18.svg",
@@ -36,8 +36,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.fd9c2fd8.js",
-    "static/js/2.6714da95.chunk.js",
+    "static/js/2.2b4989c8.chunk.js",
     "static/css/main.b3a8032f.chunk.css",
-    "static/js/main.9be1d564.chunk.js"
+    "static/js/main.86c41baa.chunk.js"
   ]
 }
