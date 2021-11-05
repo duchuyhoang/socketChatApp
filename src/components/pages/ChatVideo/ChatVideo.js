@@ -9,6 +9,7 @@ import {
   SOCKET_ON_ACTIONS,
   SOCKET_CHAT_HOST,
   SOCKET_NAMESPACE,
+  PEERJS_SERVER,
 } from '../../../common/constant';
 import { useSocketConnection } from '../../../hooks/useSocketConnection';
 import { baseConfig } from '../../../socket/baseConfig';
@@ -27,8 +28,12 @@ const Video = React.memo(
     const [videoEnable, setVideoEnable] = useState(false);
     useEffect(() => {
       call.on('stream', (remoteStream) => {
+        console.log('stream', remoteStream);
         videoRef.current.srcObject = remoteStream;
         setVideoStream(remoteStream);
+        console.log(remoteStream.getAudioTracks());
+        console.log(remoteStream.getVideoTracks());
+
         // if(type==="shareScreen")
         // setVideoAudioTrack();
         // else
@@ -88,6 +93,7 @@ const ChatVideo = () => {
   const [myScreenShare, setScreenShare] = useState(null);
   const videoGrid = useRef(null);
   const [refresh, setRefresh] = useState(false);
+  const [iceServer, setIceServer] = useState(null);
   const streamRef = useRef(null);
   const toggleSound = () => {
     // const newAudioTrack = myStream.getAudioTracks()[0].clone();
@@ -260,53 +266,131 @@ const ChatVideo = () => {
   };
 
   useEffect(() => {
-    CALL_SOCKET.connect();
+    window.onload = function () {
+      let xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function ($evt) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          let res = JSON.parse(xhr.responseText);
+          console.log(res);
+          console.log(res.v);
 
-    const newPeer = new Peer();
-    const newStreamPeer = new Peer();
-    newPeer.on('open', (id) => {
-      setMyPeerId(id);
-    });
+          setIceServer(res.v);
+        }
+      };
+      xhr.open(
+        'PUT',
+        'https://global.xirsys.net/_turn/duchuyhoang.github.io',
+        true
+      );
+      xhr.setRequestHeader(
+        'Authorization',
+        'Basic ' + btoa('huyhoang:41988f64-3b31-11ec-8906-0242ac130002')
+      );
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({ format: 'urls' }));
 
-    newStreamPeer.on('open', (id) => {
-      setMyStreamPeerId(id);
-    });
-
-    setMyPeer(newPeer);
-    setMyStreamPeer(newStreamPeer);
-
-    const getUserMedia =
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia;
-
-    getUserMedia(
-      {
-        video: true,
-        // audio: true,
-        audio: {
-          autoGainControl: false,
-          channelCount: 2,
-          echoCancellation: false,
-          latency: 0,
-          noiseSuppression: false,
-          sampleRate: 48000,
-          sampleSize: 16,
-          volume: 1,
-          // googNoiseSuppression:true,
-          // googEchoCancellation:true
-        },
-      },
-      gotMedia
-    );
-
-    return () => {
-      CALL_SOCKET.emit('socketLeave', {
-        id_room: id_conversation,
-        socketId: CALL_SOCKET.id,
-      });
+      // iceServers=
     };
   }, []);
+
+  useEffect(
+    () => {
+      // if(iceServer){
+      CALL_SOCKET.connect();
+      // console.log(iceServer.iceServers);
+      const newPeer = new Peer({
+        key: 'peerjs',
+        host: PEERJS_SERVER,
+        secure: true,
+        port: 443,
+        config: {
+          iceServers: [
+            {
+              username:
+                'Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==',
+              credential: '8e819244-3bf4-11ec-86f5-0242ac120004',
+              urls: [
+                'stun:hk-turn1.xirsys.com',
+                'turn:hk-turn1.xirsys.com:80?transport=udp',
+                'turn:hk-turn1.xirsys.com:3478?transport=udp',
+                'turn:hk-turn1.xirsys.com:80?transport=tcp',
+                'turn:hk-turn1.xirsys.com:3478?transport=tcp',
+                'turns:hk-turn1.xirsys.com:443?transport=tcp',
+                'turns:hk-turn1.xirsys.com:5349?transport=tcp',
+              ],
+            },
+          ],
+        },
+      });
+      const newStreamPeer = new Peer({
+        key: 'peerjs',
+        host: PEERJS_SERVER,
+        secure: true,
+        port: 443,
+        config: {
+          username:
+            'Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==',
+          credential: '8e819244-3bf4-11ec-86f5-0242ac120004',
+          urls: [
+            'stun:hk-turn1.xirsys.com',
+            'turn:hk-turn1.xirsys.com:80?transport=udp',
+            'turn:hk-turn1.xirsys.com:3478?transport=udp',
+            'turn:hk-turn1.xirsys.com:80?transport=tcp',
+            'turn:hk-turn1.xirsys.com:3478?transport=tcp',
+            'turns:hk-turn1.xirsys.com:443?transport=tcp',
+            'turns:hk-turn1.xirsys.com:5349?transport=tcp',
+          ],
+        },
+      });
+      newPeer.on('open', (id) => {
+        setMyPeerId(id);
+      });
+
+      newStreamPeer.on('open', (id) => {
+        setMyStreamPeerId(id);
+      });
+
+      setMyPeer(newPeer);
+      setMyStreamPeer(newStreamPeer);
+
+      const getUserMedia =
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia;
+
+      getUserMedia(
+        {
+          video: true,
+          // audio: true,
+          audio: {
+            autoGainControl: false,
+            channelCount: 2,
+            echoCancellation: false,
+            latency: 0,
+            noiseSuppression: false,
+            sampleRate: 48000,
+            sampleSize: 16,
+            volume: 1,
+            // googNoiseSuppression:true,
+            // googEchoCancellation:true
+          },
+        },
+        gotMedia
+      );
+      // }
+
+      return () => {
+        if (iceServer)
+          CALL_SOCKET.emit('socketLeave', {
+            id_room: id_conversation,
+            socketId: CALL_SOCKET.id,
+          });
+      };
+    },
+    [
+      // iceServer
+    ]
+  );
 
   // Handle share screen
   useEffect(() => {

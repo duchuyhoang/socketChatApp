@@ -23,6 +23,9 @@ function App() {
     notifyRef.current.showSnackbar();
   }, [notification]);
 
+
+
+
   return (
     <>
       {loading && <LoadingFullScreen />}
