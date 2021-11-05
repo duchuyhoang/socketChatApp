@@ -15,9 +15,12 @@ const MessageItem = (props) => {
         <Avatar img={avatar} isOnline={true} />
       </div>
       <div className={`message-item__content ${active ? 'hight-light' : ''}`}>
-        <div className='message-item__content__name'>{item.name}</div>
+        <div className='message-item__content__name'>
+          {item.name}
+          {props.statusMakeFriend && <button className='btn'>Kết bạn</button>}
+        </div>
         <div className='message-item__content__message'>
-          <span>{item.lassMessage?.form} </span>
+          <span>{item.lassMessage?.form}</span>
           {item.lassMessage?.content}
         </div>
       </div>

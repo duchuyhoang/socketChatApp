@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import man from '../../assets/images/man.png';
 import woman from '../../assets/images/woman.png';
 import { SOCKET_ON_ACTIONS } from '../../common/constant';
-import {
-  ConversationAction,
-  selectMessages,
-} from '../../redux/reducer/conversation';
+import { MessageActions, selectMessages } from '../../redux/reducer/message';
 import { CONVERSATION_SOCKET } from '../../socket/socket';
 import Avatar from '../shared/Avatar';
 import CardChat from './CardChat';
@@ -19,15 +16,21 @@ const ChatList = ({ author }) => {
 
   //listen socket
   useEffect(() => {
-    CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_MESSAGE, (response) => {
+    const listener = (response) => {
       const { data } = response;
+      if (+data.id_user === author) return;
       dispatch(
-        ConversationAction.insertMessages({
+        MessageActions.insertListenMessages({
           data,
         })
       );
-    });
-  }, [dispatch]);
+    };
+    CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_MESSAGE, listener);
+
+    return () => {
+      CONVERSATION_SOCKET.off(SOCKET_ON_ACTIONS.EMIT_MESSAGE, listener);
+    };
+  }, []);
 
   useEffect(() => {
     contentRef.current.scrollTop = contentRef.current.scrollHeight;
@@ -60,6 +63,7 @@ const ChatList = ({ author }) => {
                           type={message.type}
                           createTime={time}
                           img={message.url}
+                          status={message.status}
                         >
                           {message.content}
                         </CardChat>

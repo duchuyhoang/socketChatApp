@@ -23,7 +23,9 @@ export const AuthSaga = {
     } catch (err) {
       const errorResponse = err.response;
 
-      yield put(AuthActions.loginFailed({ status: errorResponse.status }));
+      yield put(
+        AuthActions.loginFailed({ status: errorResponse?.status || 400 })
+      );
       yield all([
         put(UiActions.setLoading(false)),
         put(UiActions.notificationFailed({ message: 'Đăng nhập thất bại!' })),
@@ -33,12 +35,26 @@ export const AuthSaga = {
 
   *relogin(action) {
     try {
+      yield put(UiActions.setLoading(true));
+
       const response = yield call(() => relogin(action.payload || {}));
 
       if (response.status === HttpStatusCode.SUCCESS) {
-        yield put(AuthActions.reloginSucceed(response.data));
+        yield all([
+          put(AuthActions.reloginSucceed(response.data)),
+          put(UiActions.setLoading(false)),
+        ]);
       }
-    } catch (err) {}
+    } catch (err) {
+      yield all([
+        put(UiActions.setLoading(false)),
+        put(
+          UiActions.handleNotificationWaring({
+            message: 'Vui lòng đăng nhập lại!',
+          })
+        ),
+      ]);
+    }
   },
 
   *signup(action) {

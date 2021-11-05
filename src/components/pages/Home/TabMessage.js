@@ -3,9 +3,13 @@ import { useSelector } from 'react-redux';
 import { Link, useRouteMatch } from 'react-router-dom';
 // import man from '../../../assets/images/man.png';
 // import woman from '../../../assets/images/woman.png';
-import { selectListConversation } from '../../../redux/reducer/conversation';
+import {
+  selectConversationLoading,
+  selectListConversation,
+} from '../../../redux/reducer/conversation';
 import MessageItem from '../../components/MessageItem';
 import Select from '../../shared/Select';
+import SpinLoading from '../../shared/SpinLoading';
 // const listMessage = [
 //   {
 //     id: 1,
@@ -58,6 +62,8 @@ const TabMessage = () => {
     useSelector(selectListConversation) || []
   );
 
+  const isLoading = useSelector(selectConversationLoading);
+
   return (
     <div className='message'>
       <div className='message__filter'>
@@ -72,6 +78,7 @@ const TabMessage = () => {
         <p>Đánh dấu là đã đọc</p>
       </div>
       <div className='message__content'>
+        {isLoading && <SpinLoading />}
         <ul>
           {listMessage.map((item) => (
             <li key={item.id}>

@@ -10,6 +10,7 @@ const { Types, Creators } = createActions({
   setLoading: ['payload'],
   notificationSuccess: ['payload'],
   notificationFailed: ['payload'],
+  notificationWarning: ['payload'],
 });
 
 export const UiActions = Creators;
@@ -19,6 +20,10 @@ const selectSelf = (state) => state.ui;
 export const selectNotification = createSelector(
   selectSelf,
   (state) => state.notification
+);
+export const selectFullscreenLoading = createSelector(
+  selectSelf,
+  (state) => state.isLoading
 );
 
 const handleSetLoading = (state, { payload }) => {
@@ -48,9 +53,20 @@ const handleNotificationFailed = (state, { payload }) => {
     },
   };
 };
+const handleNotificationWaring = (state, { payload }) => {
+  return {
+    ...state,
+    notification: {
+      status: 'warning',
+      message: payload.message,
+      time: Date.now(),
+    },
+  };
+};
 
 export const UiReducer = createReducer(UI_INITIAL_STATE, {
   [Types.SET_LOADING]: handleSetLoading,
   [Types.NOTIFICATION_SUCCESS]: handleNotificationSuccess,
   [Types.NOTIFICATION_FAILED]: handleNotificationFailed,
+  [Types.NOTIFICATION_WARNING]: handleNotificationWaring,
 });

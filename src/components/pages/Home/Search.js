@@ -24,7 +24,11 @@ const Search = (props) => {
     );
   else {
     result = searchUser.map((item) => (
-      <MessageItem item={item} key={item.id_user} />
+      <MessageItem
+        item={item}
+        key={item.id_user}
+        statusMakeFriend={item.can_make_friend_request}
+      />
     ));
   }
 

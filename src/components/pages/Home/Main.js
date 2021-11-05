@@ -8,12 +8,16 @@ import { selectUser } from '../../../redux/reducer/auth';
 import {
   ConversationAction,
   selectMainConversation,
+  selectMessageLoading,
 } from '../../../redux/reducer/conversation';
+import { MessageActions } from '../../../redux/reducer/message';
 import ChatList from '../../components/ChatList';
 import UploadFiles from '../../components/UploadFiles';
 import Avatar from '../../shared/Avatar';
 import Popover from '../../shared/Popover';
+import SpinLoading from '../../shared/SpinLoading';
 import SVGIcon from '../../shared/SVGIcon';
+import { v4 } from 'uuid';
 
 const Main = ({ match }) => {
   const {
@@ -49,9 +53,25 @@ const Main = ({ match }) => {
     const type = getTypeMessage(content, listImages);
     if (type === -1) return;
 
+    //display message before call sendMessage api.
+    const idPreview = v4();
+    dispatch(
+      MessageActions.insertPreviewMessages({
+        type: type,
+        content: content,
+        listImages: listImages.map((item) => item.previewSrc),
+        idUser: +user.id_user,
+        avatar: user.avatar,
+        sex: user.sex,
+        idPreview,
+      })
+    );
+
+    //message data
     const dataMessage = new FormData();
     dataMessage.append('type', type);
     dataMessage.append('content', content);
+    dataMessage.append('id_preview', idPreview);
     dataMessage.append('id_conversation', conversationInfo.id_room);
 
     if (listImages.length === 1) {
@@ -61,12 +81,16 @@ const Main = ({ match }) => {
         dataMessage.append('multipleImage', image.toUpload);
       });
     }
+    dispatch(MessageActions.sendMessage({ data: dataMessage, idPreview }));
 
-    dispatch(ConversationAction.sendMessage(dataMessage));
-
+    //cleanup
     inputRef.current.value = '';
     clearImages();
   };
+
+  const isLoading = useSelector(selectMessageLoading);
+
+  if (isLoading) return <SpinLoading />;
 
   return (
     <main className='main'>
@@ -79,7 +103,7 @@ const Main = ({ match }) => {
         <div className='main__top__action'></div>
       </div>
 
-      <ChatList author={user.id_user} />
+      <ChatList author={+user.id_user} />
 
       <div className='main__bottom'>
         {listImages.length < 1 ? (

@@ -5,8 +5,7 @@ import { transformListMessages } from '../../common/functions';
 const CONVERSATION_INITIAL_STATE = {
   listConversation: null,
   mainConversationInfo: null,
-
-  messages: null,
+  isLoading: false,
 };
 
 const { Types, Creators } = createActions({
@@ -15,11 +14,7 @@ const { Types, Creators } = createActions({
   getSpecificConversation: ['payload'],
   getSpecificConversationSucceed: ['payload'],
 
-  getMessages: ['payload'],
-  getMessagesSucceed: ['payload'],
-  insertMessages: ['payload'],
-  sendMessage: ['payload'],
-  sendMessageSucceed: ['payload'],
+  setConversationLoading: ['payload'],
 });
 
 //selector
@@ -35,8 +30,14 @@ export const selectMainConversation = createSelector(
   (state) => state.mainConversationInfo
 );
 
-export const selectMessages = createSelector(selectSelf, (state) =>
-  transformListMessages(state.messages)
+export const selectMessageLoading = createSelector(
+  selectSelf,
+  (state) => state.isLoading
+);
+
+export const selectConversationLoading = createSelector(
+  selectSelf,
+  (state) => !!!state.listConversation
 );
 
 //reducer
@@ -51,26 +52,11 @@ const handleGetSpecificConversationSucceed = (state, { payload }) => {
   return { ...state, mainConversationInfo: payload.data };
 };
 
-const handleGetMessagesSucceed = (state, { payload }) => {
+const handleSetLoading = (state, { payload }) => {
   return {
     ...state,
-    messages: payload.data,
+    isLoading: payload,
   };
-};
-
-const handleInsertMessage = (state, { payload }) => {
-  let newList = state.messages;
-  if (Array.isArray(payload.data)) {
-    payload.data.forEach((item) => {
-      newList.push(item);
-    });
-  } else newList.push(payload.data);
-
-  return { ...state, messages: newList };
-};
-
-const handleSendMessageSucceed = (state, { payload }) => {
-  return { ...state };
 };
 
 export const ConversationTypes = Types;
@@ -80,7 +66,5 @@ export const ConversationReducer = createReducer(CONVERSATION_INITIAL_STATE, {
   [Types.GET_CONVERSATION_SUCCEED]: handleGetConversationSucceed,
   [Types.GET_SPECIFIC_CONVERSATION_SUCCEED]:
     handleGetSpecificConversationSucceed,
-  [Types.GET_MESSAGES_SUCCEED]: handleGetMessagesSucceed,
-  [Types.INSERT_MESSAGES]: handleInsertMessage,
-  [Types.SEND_MESSAGE_SUCCEED]: handleSendMessageSucceed,
+  [Types.SET_CONVERSATION_LOADING]: handleSetLoading,
 });

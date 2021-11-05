@@ -36,9 +36,9 @@ export const useUploadImages = () => {
 
   const clearImages = () => {
     setListImage([]);
-    listImages.forEach((image) => {
-      URL.revokeObjectURL(image.previewSrc);
-    });
+    // listImages.forEach((image) => {
+    //   URL.revokeObjectURL(image.previewSrc);
+    // });
   };
 
   return {

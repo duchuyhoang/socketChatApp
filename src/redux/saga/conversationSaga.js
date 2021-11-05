@@ -2,11 +2,10 @@ import { call, put } from '@redux-saga/core/effects';
 import { HttpStatusCode } from '../../common/constant';
 import {
   getConversations,
-  getMessage,
   getSpecificConversation,
-  sendMessage,
 } from '../../services/apiMap';
 import { ConversationAction } from '../reducer/conversation';
+import { MessageSaga } from './messageSaga';
 
 export const ConversationSaga = {
   *getConversation() {
@@ -21,6 +20,7 @@ export const ConversationSaga = {
 
   *getSpecificConversation({ payload }) {
     try {
+      yield put(ConversationAction.setConversationLoading(true));
       const response = yield call(() =>
         getSpecificConversation({ id_conversation: payload.id })
       );
@@ -28,39 +28,17 @@ export const ConversationSaga = {
       if (response.status === HttpStatusCode.SUCCESS) {
         yield put(ConversationAction.getSpecificConversationSucceed(response));
 
-        const limit = 20;
-        const offset = +response.data.conversationInfo.message_count - limit;
-
         //get first list message when click room
-        yield put(
-          ConversationAction.getMessages({
-            offset: offset > 0 ? offset : 0,
-            limit: limit,
+        yield call(MessageSaga.getMessages, {
+          payload: {
+            offset: 0,
+            limit: 20,
             id_conversation: response.data.conversationInfo.id_room,
-          })
-        );
+          },
+        });
+
+        yield put(ConversationAction.setConversationLoading(false));
       }
     } catch (err) {}
-  },
-
-  *getMessages({ payload }) {
-    try {
-      const queryParams = new URLSearchParams({ ...payload });
-
-      const response = yield call(() => getMessage({ queryParams }));
-      if (response.status === HttpStatusCode.SUCCESS) {
-        yield put(ConversationAction.getMessagesSucceed(response.data));
-      }
-    } catch (error) {}
-  },
-
-  *sendMessage({ payload }) {
-    try {
-      const response = yield call(() => sendMessage(payload));
-      if (response.status === HttpStatusCode.SUCCESS) {
-        console.log('🚀 ~ response send mess', response);
-        yield put(ConversationAction.sendMessageSucceed(response.data));
-      }
-    } catch (error) {}
   },
 };

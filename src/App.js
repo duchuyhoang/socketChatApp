@@ -1,35 +1,23 @@
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, Route, Switch,useHistory } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
+import ChatVideo from './components/pages/ChatVideo/ChatVideo';
 import Home from './components/pages/Home/Home';
 import SignIn from './components/pages/SignIn/SignIn';
 import SignUp from './components/pages/SignUp/SignUp';
-import LoadingFullScreen from './components/shared/LoadingFullScreen';
 import PrivateRoute from './components/PrivateRoute';
+import LoadingFullScreen from './components/shared/LoadingFullScreen';
 import Snackbar from './components/shared/Snackbar';
-import { selectNotification } from './redux/reducer/ui';
-import { useEffect, useRef } from 'react';
-import ChatVideo from "./components/pages/ChatVideo/ChatVideo"
-import { login, getUserFriendList } from './services/apiMap';
 import {
-  MAIN_SOCKET,
-  USER_SOCKET,
-  CONVERSATION_SOCKET,
-  NOTIFICATION_SOCKET,
-} from './socket/socket';
-import { SOCKET_EMIT_ACTIONS, SOCKET_ON_ACTIONS } from './common/constant';
-import { getCookie } from './common/functions';
-import { useDispatch } from 'react-redux';
-import { AuthActions } from './redux/reducer/auth';
-import { useAuth } from './hooks/useAuth';
-import { useSocketConnection } from './hooks/useSocketConnection';
-
+  selectFullscreenLoading,
+  selectNotification,
+} from './redux/reducer/ui';
 
 function App() {
-  const loading = useSelector((state) => state.ui.isLoading);
+  const loading = useSelector(selectFullscreenLoading);
   const notification = useSelector(selectNotification);
   const notifyRef = useRef(null);
-  const history = useHistory();
-  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!notifyRef.current) return;
     notifyRef.current.showSnackbar();
@@ -57,10 +45,8 @@ function App() {
         <Route path='*'>
           <Redirect to='home' />
         </Route>
-        
-        <Route path='/' component={Home} />
-       
 
+        <Route path='/' component={Home} />
       </Switch>
     </>
   );

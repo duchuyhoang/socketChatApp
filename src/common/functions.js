@@ -1,3 +1,5 @@
+import { MESSAGE_STATUS, MESSAGE_TYPE } from './constant';
+
 export function setCookie(cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
@@ -53,23 +55,25 @@ export const transformListMessages = (listMessages) => {
       const lastPrev = prev.at(-1);
       if (lastPrev && +cur.id_user === lastPrev.idUser) {
         lastPrev.messages.push({
-          type: cur.type,
+          type: +cur.type,
           idMessage: cur.id_message,
           content: cur.content,
           url: cur.url,
+          status: cur.status ?? MESSAGE_STATUS.FULFILLED,
         });
         lastPrev.createAt = cur.message_create_at;
       } else {
         prev.push({
           idUser: +cur.id_user,
           avatar: cur.avatar,
-          gender: cur.sex,
+          gender: +cur.sex,
           messages: [
             {
-              type: cur.type,
+              type: +cur.type,
               idMessage: cur.id_message,
               content: cur.content,
               url: cur.url,
+              status: cur.status ?? MESSAGE_STATUS.FULFILLED,
             },
           ],
           createAt: cur.message_create_at,
@@ -80,12 +84,16 @@ export const transformListMessages = (listMessages) => {
 };
 
 export const getTypeMessage = (text = '', images = [], icon = null) => {
-  if (icon) return 3;
+  if (icon) return MESSAGE_TYPE.ICON;
   if (text !== '') {
-    if (images?.length > 0) return 4;
-    return 0;
+    if (images?.length > 0) return MESSAGE_TYPE.TEXT_AND_IMAGE;
+    return MESSAGE_TYPE.TEXT;
   } else {
-    if (images?.length > 0) return 1;
+    if (images?.length > 0) return MESSAGE_TYPE.IMAGE;
     return -1;
   }
+};
+
+export const getMessageById = (list, id) => {
+  return list.filter((item) => item.id === id);
 };

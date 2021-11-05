@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   NavLink,
+  Redirect,
   Route,
   Switch,
   useRouteMatch,
-  Redirect,
 } from 'react-router-dom';
+import man from '../../../assets/images/man.png';
 import woman from '../../../assets/images/woman.png';
+import { AuthActions, selectUser } from '../../../redux/reducer/auth';
+import { UiActions } from '../../../redux/reducer/ui';
 import UpdateProfile from '../../components/UpdateProfile';
 import Avatar from '../../shared/Avatar';
 import Modal from '../../shared/Modal';
 import Popover from '../../shared/Popover';
 import SVGIcon from '../../shared/SVGIcon';
 import TabsRoute from './TabsRoute';
-import man from '../../../assets/images/man.png';
-import { useDispatch } from 'react-redux';
-import { AuthActions, selectUser } from '../../../redux/reducer/auth';
-import { UiActions } from '../../../redux/reducer/ui';
-import { useSelector } from 'react-redux';
 
 const SidebarNav = (props) => {
   const { url, path } = useRouteMatch();

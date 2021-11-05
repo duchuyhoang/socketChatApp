@@ -1,11 +1,13 @@
-import { all, takeLatest, debounce, takeEvery } from 'redux-saga/effects';
-import { AuthSaga } from './authSaga';
+import { all, debounce, takeEvery, takeLatest } from 'redux-saga/effects';
 import { AuthTypes } from '../reducer/auth';
-import { SignupTypes } from '../reducer/signup';
-import { UserSaga } from './userSaga';
-import { UserTypes } from '../reducer/user';
 import { ConversationTypes } from '../reducer/conversation';
+import { MessageTypes } from '../reducer/message';
+import { SignupTypes } from '../reducer/signup';
+import { UserTypes } from '../reducer/user';
+import { AuthSaga } from './authSaga';
 import { ConversationSaga } from './conversationSaga';
+import { MessageSaga } from './messageSaga';
+import { UserSaga } from './userSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -29,7 +31,9 @@ export default function* rootSaga() {
       ConversationTypes.GET_SPECIFIC_CONVERSATION,
       ConversationSaga.getSpecificConversation
     ),
-    takeLatest(ConversationTypes.GET_MESSAGES, ConversationSaga.getMessages),
-    takeEvery(ConversationTypes.SEND_MESSAGE, ConversationSaga.sendMessage),
+
+    //message
+    takeLatest(MessageTypes.GET_MESSAGES, MessageSaga.getMessages),
+    takeEvery(MessageTypes.SEND_MESSAGE, MessageSaga.sendMessage),
   ]);
 }
