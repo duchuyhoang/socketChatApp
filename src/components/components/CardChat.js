@@ -1,8 +1,8 @@
 import React from 'react';
 import Moment from 'react-moment';
 import { MESSAGE_STATUS } from '../../common/constant';
-
-const CardChat = ({ type, children, createTime, img, status, ...rest }) => {
+import {Sticker} from "./Sticker/Sticker";
+const CardChat = ({ type, children, createTime, img, status,icon, ...rest }) => {
   return (
     <div
       className={`card-chat ${
@@ -16,6 +16,16 @@ const CardChat = ({ type, children, createTime, img, status, ...rest }) => {
           {children}
           <img src={img} alt='' />
         </p>
+      )}
+      {type ===2 && (
+       <Sticker
+       framesPerRow={icon.blocksOfHeight}
+       framesPerColumn={icon.blocksOfWidth}
+       src={icon.iconUrl}
+       width={icon.width}
+       height={icon.height}
+       totalFrames={icon.totalFrames}
+       />
       )}
 
       {createTime && (

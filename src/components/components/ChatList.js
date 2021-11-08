@@ -11,7 +11,6 @@ import CardChat from './CardChat';
 const ChatList = ({ author }) => {
   const contentRef = useRef();
   let listMessages = useSelector(selectMessages);
-
   const dispatch = useDispatch();
 
   //listen socket
@@ -64,6 +63,7 @@ const ChatList = ({ author }) => {
                           createTime={time}
                           img={message.url}
                           status={message.status}
+                          icon={message.icon}
                         >
                           {message.content}
                         </CardChat>
