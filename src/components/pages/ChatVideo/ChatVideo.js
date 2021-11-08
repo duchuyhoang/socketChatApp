@@ -1,21 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { CONVERSATION_SOCKET, CALL_SOCKET } from '../../../socket/socket';
-import { useParams } from 'react-router';
-import Peer from 'peerjs';
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { CONVERSATION_SOCKET, CALL_SOCKET } from "../../../socket/socket";
+import { useParams } from "react-router";
+import Peer from "peerjs";
 import {
   SOCKET_EMIT_ACTIONS,
   SOCKET_ON_ACTIONS,
   SOCKET_CHAT_HOST,
   SOCKET_NAMESPACE,
   PEERJS_SERVER,
-} from '../../../common/constant';
-import { useSocketConnection } from '../../../hooks/useSocketConnection';
-import { baseConfig } from '../../../socket/baseConfig';
-import useWindowUnloadEffect from '../../hooks/useWindowRefresh';
-import SVGIcon from '../../shared/SVGIcon';
-
+} from "../../../common/constant";
+import { useSocketConnection } from "../../../hooks/useSocketConnection";
+import { baseConfig } from "../../../socket/baseConfig";
+import useWindowUnloadEffect from "../../hooks/useWindowRefresh";
+import SVGIcon from "../../shared/SVGIcon";
+import { useHistory } from "react-router";
+import Grid from "../../shared/Grid";
 const Video = React.memo(
   (props) => {
     const { socketId, call, socket, changeCount, mic, video, type } =
@@ -27,8 +28,8 @@ const Video = React.memo(
     const [videoScreenTrack, setVideoScreenTrack] = useState(null);
     const [videoEnable, setVideoEnable] = useState(false);
     useEffect(() => {
-      call.on('stream', (remoteStream) => {
-        console.log('stream', remoteStream);
+      call.on("stream", (remoteStream) => {
+        console.log("stream", remoteStream);
         videoRef.current.srcObject = remoteStream;
         setVideoStream(remoteStream);
         console.log(remoteStream.getAudioTracks());
@@ -45,26 +46,26 @@ const Video = React.memo(
     }, [call]);
 
     return (
-      <div className='videoContainer'>
-        <div className='videoControlWrapper'>
+      <div className="videoContainer">
+        <div className="videoControlWrapper">
           <div>
             {mic ? (
               <SVGIcon
-                style={{ fill: '#fff' }}
-                name='microphone'
-                width={'20'}
-                height={'20'}
+                style={{ fill: "#fff" }}
+                name="microphone"
+                width={"20"}
+                height={"20"}
               />
             ) : (
               <SVGIcon
-                style={{ fill: 'red' }}
-                name='micoff'
-                width={'20'}
-                height={'20'}
+                style={{ fill: "red" }}
+                name="micoff"
+                width={"20"}
+                height={"20"}
               />
             )}
           </div>
-          <div>Video {video ? <>Enable</> : 'Disabled'}</div>
+          <div>Video {video ? <>Enable</> : "Disabled"}</div>
         </div>
         <video ref={videoRef} autoPlay></video>
       </div>
@@ -91,10 +92,11 @@ const ChatVideo = () => {
   const [myStreamPeerId, setMyStreamPeerId] = useState(null);
   const [myStream, setMyStream] = useState(null);
   const [myScreenShare, setScreenShare] = useState(null);
-  const videoGrid = useRef(null);
+  const myVideoRef = useRef(null);
   const [refresh, setRefresh] = useState(false);
   const [iceServer, setIceServer] = useState(null);
   const streamRef = useRef(null);
+  const history = useHistory();
   const toggleSound = () => {
     // const newAudioTrack = myStream.getAudioTracks()[0].clone();
     // newAudioTrack.enabled = !audioTrack;
@@ -109,7 +111,7 @@ const ChatVideo = () => {
     myStream.getAudioTracks()[0].enabled = newAudioTrack;
     // setMyStream(newMediaStream)
     // audioTrack.enabled = !audioTrack.enabled;
-    CALL_SOCKET.emit('make change', {
+    CALL_SOCKET.emit("make change", {
       id_room: id_conversation,
       socketId: CALL_SOCKET.id,
       mic: newAudioTrack,
@@ -119,14 +121,16 @@ const ChatVideo = () => {
   };
 
   useWindowUnloadEffect(() => {
-    CALL_SOCKET.emit('socketLeave', {
+    CALL_SOCKET.emit("socketLeave", {
       id_room: id_conversation,
       socketId: CALL_SOCKET.id,
     });
+    myStream.getTracks()[0].stop();
+    stopShare();
   }, true);
 
   useEffect(() => {
-    CALL_SOCKET.on('user left', ({ socketId }) => {
+    CALL_SOCKET.on("user left", ({ socketId }) => {
       const newListCallConnection = [...listCallConnection];
 
       setListCallConnection(
@@ -136,9 +140,29 @@ const ChatVideo = () => {
       );
     });
     return () => {
-      CALL_SOCKET.off('user left');
+      CALL_SOCKET.off("user left");
     };
   }, [listCallConnection]);
+
+  useEffect(() => {
+    // if(myStream)
+    const listener = history.listen((location) => {
+      if (history.action === "POP") {
+        console.log(myStream.getTracks());
+        const listTrack = myStream.getTracks();
+        listTrack.forEach((track) => {
+          track.stop();
+        });
+
+        myStream.getTracks()[0].stop();
+        setMyStream(null);
+        stopShare();
+      }
+    });
+    return () => {
+      listener();
+    };
+  }, [myStream, myScreenShare]);
 
   const toggleVideo = () => {
     if (videoTrack) {
@@ -146,7 +170,7 @@ const ChatVideo = () => {
       videoTrack.enabled = !videoTrack.enabled;
       setRefresh((refresh) => !refresh);
       // setVideoTrack(videoTrack);
-      CALL_SOCKET.emit('make change', {
+      CALL_SOCKET.emit("make change", {
         id_room: id_conversation,
         socketId: CALL_SOCKET.id,
         mic: audioTrack,
@@ -156,15 +180,15 @@ const ChatVideo = () => {
   };
 
   const gotMedia = (stream) => {
-    const video = document.createElement('video');
+    const video = document.createElement("video");
     video.muted = true;
-    if ('srcObject' in video) {
+    if ("srcObject" in video) {
       video.srcObject = stream;
     } else {
       video.src = window.URL.createObjectURL(stream); // for older browsers
     }
 
-    videoGrid.current.appendChild(video);
+    myVideoRef.current.appendChild(video);
     video.play();
     setMyStream(stream);
 
@@ -200,9 +224,8 @@ const ChatVideo = () => {
       },
       (stream) => {
         // clear previous video
-        videoGrid.current.textContent = '';
+        myVideoRef.current.textContent = "";
         gotMedia(stream);
-        // setMyStream(stream);
       }
     );
   };
@@ -211,15 +234,15 @@ const ChatVideo = () => {
     navigator.mediaDevices
       .getDisplayMedia({
         video: {
-          cursor: 'always',
+          cursor: "always",
         },
         audio: false,
       })
       .then((stream) => {
         setScreenShare(stream);
         if (streamRef?.current) {
-          const videoScreen = document.createElement('video');
-          if ('srcObject' in videoScreen) {
+          const videoScreen = document.createElement("video");
+          if ("srcObject" in videoScreen) {
             videoScreen.srcObject = stream;
           } else {
             videoScreen.src = window.URL.createObjectURL(stream); // for older browsers
@@ -228,13 +251,16 @@ const ChatVideo = () => {
           videoScreen.play();
         }
         setTimeout(() => {
-          CALL_SOCKET.emit('start share screen', {
+          CALL_SOCKET.emit("start share screen", {
             id_room: id_conversation,
           });
         }, 500);
+
+        myVideoRef.current.classList.toggle("bottomToggleVideo");
+
       })
       .catch((err) => {
-        console.error('Error:' + err);
+        console.error("Error:" + err);
       });
   };
 
@@ -255,10 +281,10 @@ const ChatVideo = () => {
 
   const stopShare = () => {
     if (myScreenShare && CALL_SOCKET) {
-      streamRef.current.textContent = '';
+      streamRef.current.textContent = "";
       myScreenShare.getVideoTracks()[0].stop();
       setScreenShare(null);
-      CALL_SOCKET.emit('stop share', {
+      CALL_SOCKET.emit("stop share", {
         socketId: CALL_SOCKET.id,
         id_room: id_conversation,
       });
@@ -278,18 +304,25 @@ const ChatVideo = () => {
         }
       };
       xhr.open(
-        'PUT',
-        'https://global.xirsys.net/_turn/duchuyhoang.github.io',
+        "PUT",
+        "https://global.xirsys.net/_turn/duchuyhoang.github.io",
         true
       );
       xhr.setRequestHeader(
-        'Authorization',
-        'Basic ' + btoa('huyhoang:41988f64-3b31-11ec-8906-0242ac130002')
+        "Authorization",
+        "Basic " + btoa("huyhoang:41988f64-3b31-11ec-8906-0242ac130002")
       );
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({ format: 'urls' }));
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify({ format: "urls" }));
 
       // iceServers=
+    };
+
+    return () => {
+      // if (myStream) {
+      //   myStream.getTracks()[0].stop();
+      //   stopShare();
+      // }
     };
   }, []);
 
@@ -299,7 +332,7 @@ const ChatVideo = () => {
       CALL_SOCKET.connect();
       // console.log(iceServer.iceServers);
       const newPeer = new Peer({
-        key: 'peerjs',
+        key: "peerjs",
         host: PEERJS_SERVER,
         secure: true,
         port: 443,
@@ -307,46 +340,46 @@ const ChatVideo = () => {
           iceServers: [
             {
               username:
-                'Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==',
-              credential: '8e819244-3bf4-11ec-86f5-0242ac120004',
+                "Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==",
+              credential: "8e819244-3bf4-11ec-86f5-0242ac120004",
               urls: [
-                'stun:hk-turn1.xirsys.com',
-                'turn:hk-turn1.xirsys.com:80?transport=udp',
-                'turn:hk-turn1.xirsys.com:3478?transport=udp',
-                'turn:hk-turn1.xirsys.com:80?transport=tcp',
-                'turn:hk-turn1.xirsys.com:3478?transport=tcp',
-                'turns:hk-turn1.xirsys.com:443?transport=tcp',
-                'turns:hk-turn1.xirsys.com:5349?transport=tcp',
+                "stun:hk-turn1.xirsys.com",
+                "turn:hk-turn1.xirsys.com:80?transport=udp",
+                "turn:hk-turn1.xirsys.com:3478?transport=udp",
+                "turn:hk-turn1.xirsys.com:80?transport=tcp",
+                "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+                "turns:hk-turn1.xirsys.com:443?transport=tcp",
+                "turns:hk-turn1.xirsys.com:5349?transport=tcp",
               ],
             },
           ],
         },
       });
       const newStreamPeer = new Peer({
-        key: 'peerjs',
+        key: "peerjs",
         host: PEERJS_SERVER,
         secure: true,
         port: 443,
         config: {
           username:
-            'Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==',
-          credential: '8e819244-3bf4-11ec-86f5-0242ac120004',
+            "Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==",
+          credential: "8e819244-3bf4-11ec-86f5-0242ac120004",
           urls: [
-            'stun:hk-turn1.xirsys.com',
-            'turn:hk-turn1.xirsys.com:80?transport=udp',
-            'turn:hk-turn1.xirsys.com:3478?transport=udp',
-            'turn:hk-turn1.xirsys.com:80?transport=tcp',
-            'turn:hk-turn1.xirsys.com:3478?transport=tcp',
-            'turns:hk-turn1.xirsys.com:443?transport=tcp',
-            'turns:hk-turn1.xirsys.com:5349?transport=tcp',
+            "stun:hk-turn1.xirsys.com",
+            "turn:hk-turn1.xirsys.com:80?transport=udp",
+            "turn:hk-turn1.xirsys.com:3478?transport=udp",
+            "turn:hk-turn1.xirsys.com:80?transport=tcp",
+            "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+            "turns:hk-turn1.xirsys.com:443?transport=tcp",
+            "turns:hk-turn1.xirsys.com:5349?transport=tcp",
           ],
         },
       });
-      newPeer.on('open', (id) => {
+      newPeer.on("open", (id) => {
         setMyPeerId(id);
       });
 
-      newStreamPeer.on('open', (id) => {
+      newStreamPeer.on("open", (id) => {
         setMyStreamPeerId(id);
       });
 
@@ -381,7 +414,7 @@ const ChatVideo = () => {
 
       return () => {
         if (iceServer)
-          CALL_SOCKET.emit('socketLeave', {
+          CALL_SOCKET.emit("socketLeave", {
             id_room: id_conversation,
             socketId: CALL_SOCKET.id,
           });
@@ -395,17 +428,17 @@ const ChatVideo = () => {
   // Handle share screen
   useEffect(() => {
     if (CALL_SOCKET && myStreamPeer) {
-      CALL_SOCKET.on('share to', ({ socketList }) => {
+      CALL_SOCKET.on("share to", ({ socketList }) => {
         socketList.map((socketId) => {
-          CALL_SOCKET.emit('request share screen', {
+          CALL_SOCKET.emit("request share screen", {
             peerId: myStreamPeer._id,
             callerSocketId: CALL_SOCKET.id,
             receiverSocket: socketId,
-            type: 'shareScreen',
+            type: "shareScreen",
             mic: false,
             video: true,
             userInfo: {
-              name: 'Huy hoang',
+              name: "Huy hoang",
               age: 100,
             },
           });
@@ -413,9 +446,9 @@ const ChatVideo = () => {
       });
 
       CALL_SOCKET.on(
-        'user share screen',
+        "user share screen",
         ({ peerId, callerSocketId, userInfo, mic, video, type }) => {
-          CALL_SOCKET.emit('accept share screen', {
+          CALL_SOCKET.emit("accept share screen", {
             callerSocketId,
             socketId: CALL_SOCKET.id,
             peerId: myStreamPeerId,
@@ -425,46 +458,46 @@ const ChatVideo = () => {
     }
 
     return () => {
-      CALL_SOCKET.off('share to');
-      CALL_SOCKET.off('request share screen');
-      CALL_SOCKET.off('user accepted share screen');
+      CALL_SOCKET.off("share to");
+      CALL_SOCKET.off("request share screen");
+      CALL_SOCKET.off("user accepted share screen");
     };
   }, [CALL_SOCKET, myStreamPeer, myStreamPeerId]);
 
   useEffect(() => {
     if (CALL_SOCKET && myScreenShare) {
-      CALL_SOCKET.on('user accepted share screen', ({ socketId, peerId }) => {
+      CALL_SOCKET.on("user accepted share screen", ({ socketId, peerId }) => {
         myStreamPeer.call(peerId, myScreenShare, {
           metadata: {
             userInfo: {
-              name: 'huy',
+              name: "huy",
               age: 111,
             },
             socketId: CALL_SOCKET.id,
             mic: false,
             video: true,
-            type: 'shareScreen',
+            type: "shareScreen",
           },
         });
       });
 
       // Handler for click stop sharing button
-      myScreenShare.getVideoTracks()[0].addEventListener('ended', () => {
+      myScreenShare.getVideoTracks()[0].addEventListener("ended", () => {
         stopShare();
       });
     }
 
     return () => {
-      CALL_SOCKET.off('user accepted share screen');
+      CALL_SOCKET.off("user accepted share screen");
       if (myScreenShare) {
-        myScreenShare.removeEventListener('ended', () => {});
+        myScreenShare.removeEventListener("ended", () => {});
       }
     };
   }, [CALL_SOCKET, myScreenShare]);
 
   useEffect(() => {
     if (myStreamPeer) {
-      myStreamPeer.on('call', (call) => {
+      myStreamPeer.on("call", (call) => {
         // Just one way connection
         call.answer();
         setListCallConnection((oldList) => [
@@ -473,7 +506,7 @@ const ChatVideo = () => {
             call,
             mic: false,
             video: true,
-            type: 'shareScreen',
+            type: "shareScreen",
             userInfo: call.metadata.userInfo,
             changeCount: 0,
             socketId: call.metadata.socketId,
@@ -493,8 +526,8 @@ const ChatVideo = () => {
 
   useEffect(() => {
     if (CALL_SOCKET) {
-      CALL_SOCKET.off('something change').on(
-        'something change',
+      CALL_SOCKET.off("something change").on(
+        "something change",
         ({ id_room, socketId: changeSocketId, mic, video }) => {
           if (changeSocketId !== CALL_SOCKET.id) {
             const newList = [
@@ -517,13 +550,13 @@ const ChatVideo = () => {
         }
       );
 
-      CALL_SOCKET.off('user stop share').on(
-        'user stop share',
+      CALL_SOCKET.off("user stop share").on(
+        "user stop share",
         ({ socketId }) => {
           setListCallConnection((oldList) => [
             ...oldList.filter(
               (call) =>
-                !(call.socketId === socketId && call.type === 'shareScreen')
+                !(call.socketId === socketId && call.type === "shareScreen")
             ),
           ]);
         }
@@ -540,16 +573,16 @@ const ChatVideo = () => {
       CALL_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_LIST_USER_RESPONSE, (list_user) => {
         // const peers = [];
         list_user.socketList.map((userSocketId) => {
-          CALL_SOCKET.emit('request call', {
+          CALL_SOCKET.emit("request call", {
             peerId: myPeerId,
             streamPeerId: myStreamPeer._id,
             callerSocketId: CALL_SOCKET.id,
             receiverSocket: userSocketId,
-            type: 'videoChat',
+            type: "videoChat",
             mic: myStream.getAudioTracks()[0].enabled,
             video: myStream.getVideoTracks()[0].enabled,
             userInfo: {
-              name: 'Huy hoang',
+              name: "Huy hoang",
               age: 100,
             },
           });
@@ -558,7 +591,7 @@ const ChatVideo = () => {
       });
 
       CALL_SOCKET.on(
-        'user joined',
+        "user joined",
         ({
           callerSocketId,
           peerId,
@@ -593,13 +626,13 @@ const ChatVideo = () => {
             myStreamPeer.call(streamPeerId, myScreenShare, {
               metadata: {
                 userInfo: {
-                  name: 'huy',
+                  name: "huy",
                   age: 111,
                 },
                 socketId: CALL_SOCKET.id,
                 mic: false,
                 video: true,
-                type: 'shareScreen',
+                type: "shareScreen",
               },
             });
           }
@@ -609,7 +642,7 @@ const ChatVideo = () => {
     return () => {
       if (myPeerId && myStream) {
         CALL_SOCKET.off(SOCKET_ON_ACTIONS.EMIT_LIST_USER_RESPONSE);
-        CALL_SOCKET.off('user joined');
+        CALL_SOCKET.off("user joined");
       }
     };
   }, [myPeerId, myStream, myScreenShare, myStreamPeer]);
@@ -617,7 +650,7 @@ const ChatVideo = () => {
   // Handle call
   useEffect(() => {
     if (myPeerId && myPeer && myStream) {
-      myPeer.on('call', (call) => {
+      myPeer.on("call", (call) => {
         call.answer(myStream);
         setListCallConnection((oldList) => {
           const newList = oldList.filter(
@@ -626,12 +659,12 @@ const ChatVideo = () => {
           return [
             ...newList,
             {
-              socketId: call.metadata?.socketId || '',
+              socketId: call.metadata?.socketId || "",
               call,
-              userInfo: call.metadata.userInfo || { name: '', age: 0 },
+              userInfo: call.metadata.userInfo || { name: "", age: 0 },
               mic: call.metadata.mic,
               video: call.metadata.video,
-              type: 'videoChat',
+              type: "videoChat",
               changeCount: 0,
             },
           ];
@@ -640,22 +673,21 @@ const ChatVideo = () => {
     }
     return () => {
       if (myPeerId && myPeer && myStream) {
-        myPeer.off('call');
+        myPeer.off("call");
       }
     };
   }, [myPeerId, myPeer, myStream]);
 
   return (
     <>
-      <div ref={videoGrid}></div>
+      <div className="myVideoWrapper" ref={myVideoRef}></div>
       <div ref={streamRef}></div>
       {/* {audioTrack ? ( */}
-      <div>{audioTrack ? 'Mic on' : 'Mic off'}</div>
+      <div>{audioTrack ? "Mic on" : "Mic off"}</div>
       {/* ) : ( */}
       {/* "Dont see any mic plug in" */}
       {/* )} */}
 
-      <div>Hello adadda</div>
       <button onClick={toggleSound}>Audio</button>
 
       {myStream ? (
@@ -675,15 +707,23 @@ const ChatVideo = () => {
       ) : (
         <button onClick={screenShare}>Share screen</button>
       )}
-      {listCallConnection.map((callConnection, index) => (
-        <Video
-          connection={callConnection}
-          key={callConnection.type + '_' + callConnection.socketId}
-          socket={CALL_SOCKET}
-          mic={callConnection.mic}
-          video={callConnection.video}
-        />
-      ))}
+      <Grid col="2">
+        {listCallConnection.map((callConnection, index) => (
+          <Video
+            connection={callConnection}
+            key={callConnection.type + "_" + callConnection.socketId}
+            socket={CALL_SOCKET}
+            mic={callConnection.mic}
+            video={callConnection.video}
+          />
+        ))}
+      </Grid>
+
+{/* <div>
+  
+</div> */}
+
+
     </>
   );
 };

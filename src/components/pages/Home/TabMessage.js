@@ -66,7 +66,6 @@ const TabMessage = () => {
   const listMessage = transformListMessage(
     useSelector(selectListConversation) || []
   );
-console.log(listMessage);
   const isLoading = useSelector(selectConversationLoading);
 
   return (
