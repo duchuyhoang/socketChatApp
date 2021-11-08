@@ -17,6 +17,7 @@ import Avatar from '../../shared/Avatar';
 import Popover from '../../shared/Popover';
 import SpinLoading from '../../shared/SpinLoading';
 import SVGIcon from '../../shared/SVGIcon';
+import {IconCategoryList} from "../../components/Icon/IconCategoryList";
 import { v4 } from 'uuid';
 
 const Main = ({ match }) => {
@@ -109,7 +110,9 @@ const Main = ({ match }) => {
         {listImages.length < 1 ? (
           <div className='main__bottom__action'>
             <div className='main__action__item'>
-              <Popover root={<SVGIcon name='sticker' width='24px' />}></Popover>
+              <Popover root={<SVGIcon name='sticker' width='24px'/>}  type={'popover_icon'}>
+                <IconCategoryList />
+              </Popover>
             </div>
             <div className='main__action__item'>
               <UploadFiles

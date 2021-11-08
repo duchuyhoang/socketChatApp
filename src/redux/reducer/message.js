@@ -26,7 +26,6 @@ const selectSelf = (state) => state.message;
 
 export const selectMessages = createSelector(selectSelf, (state) => {
   const flatPreviewMessage = [];
-
   for (const [_, value] of Object.entries(state.previewMessages)) {
     flatPreviewMessage.push(value);
   }

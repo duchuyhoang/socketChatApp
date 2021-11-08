@@ -1,14 +1,15 @@
-import { all, debounce, takeEvery, takeLatest } from 'redux-saga/effects';
-import { AuthTypes } from '../reducer/auth';
-import { ConversationTypes } from '../reducer/conversation';
-import { MessageTypes } from '../reducer/message';
-import { SignupTypes } from '../reducer/signup';
-import { UserTypes } from '../reducer/user';
-import { AuthSaga } from './authSaga';
-import { ConversationSaga } from './conversationSaga';
-import { MessageSaga } from './messageSaga';
-import { UserSaga } from './userSaga';
-
+import { all, debounce, takeEvery, takeLatest } from "redux-saga/effects";
+import { AuthTypes } from "../reducer/auth";
+import { ConversationTypes } from "../reducer/conversation";
+import { MessageTypes } from "../reducer/message";
+import { SignupTypes } from "../reducer/signup";
+import { UserTypes } from "../reducer/user";
+import { StickerTypes } from "../reducer/sticker";
+import { AuthSaga } from "./authSaga";
+import { ConversationSaga } from "./conversationSaga";
+import { MessageSaga } from "./messageSaga";
+import { UserSaga } from "./userSaga";
+import { StickerSaga } from "./stickerSaga";
 export default function* rootSaga() {
   yield all([
     //auth
@@ -35,5 +36,15 @@ export default function* rootSaga() {
     //message
     takeLatest(MessageTypes.GET_MESSAGES, MessageSaga.getMessages),
     takeEvery(MessageTypes.SEND_MESSAGE, MessageSaga.sendMessage),
+
+    // sticker
+    takeLatest(
+      StickerTypes.GET_LIST_STICKER_CATEGORY,
+      StickerSaga.getStickerCategory
+    ),
+    takeLatest(
+      StickerTypes.GET_LIST_STICKER_BY_CATEGORY,
+      StickerSaga.getStickerByCategory
+    ),
   ]);
 }

@@ -1,18 +1,18 @@
-import { MESSAGE_STATUS, MESSAGE_TYPE } from './constant';
+import { MESSAGE_STATUS, MESSAGE_TYPE } from "./constant";
 
 export function setCookie(cname, cvalue, exdays) {
   var d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = 'expires=' + d.toUTCString();
-  document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+  var expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 export function getCookie(cname) {
-  var name = cname + '=';
-  var ca = document.cookie.split(';');
+  var name = cname + "=";
+  var ca = document.cookie.split(";");
   for (var i = 0; i < ca.length; i++) {
     var c = ca[i];
-    while (c.charAt(0) === ' ') {
+    while (c.charAt(0) === " ") {
       c = c.substring(1);
     }
     if (c.indexOf(name) === 0) {
@@ -23,15 +23,15 @@ export function getCookie(cname) {
 }
 
 export function parseJwt(token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   var jsonPayload = decodeURIComponent(
     atob(base64)
-      .split('')
+      .split("")
       .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
       })
-      .join('')
+      .join("")
   );
 
   return JSON.parse(jsonPayload);
@@ -59,6 +59,7 @@ export const transformListMessages = (listMessages) => {
           idMessage: cur.id_message,
           content: cur.content,
           url: cur.url,
+          icon: cur.icon,
           status: cur.status ?? MESSAGE_STATUS.FULFILLED,
         });
         lastPrev.createAt = cur.message_create_at;
@@ -73,6 +74,7 @@ export const transformListMessages = (listMessages) => {
               idMessage: cur.id_message,
               content: cur.content,
               url: cur.url,
+              icon: cur.icon,
               status: cur.status ?? MESSAGE_STATUS.FULFILLED,
             },
           ],
@@ -83,9 +85,9 @@ export const transformListMessages = (listMessages) => {
     }, []);
 };
 
-export const getTypeMessage = (text = '', images = [], icon = null) => {
+export const getTypeMessage = (text = "", images = [], icon = null) => {
   if (icon) return MESSAGE_TYPE.ICON;
-  if (text !== '') {
+  if (text !== "") {
     if (images?.length > 0) return MESSAGE_TYPE.TEXT_AND_IMAGE;
     return MESSAGE_TYPE.TEXT;
   } else {
