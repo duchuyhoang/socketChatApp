@@ -7,6 +7,7 @@ import {
   selectConversationLoading,
   selectListConversation,
 } from '../../../redux/reducer/conversation';
+// import {CONVERSATION_TYPE} from "../../../common/constant";
 import MessageItem from '../../components/MessageItem';
 import Select from '../../shared/Select';
 import SpinLoading from '../../shared/SpinLoading';
@@ -48,10 +49,14 @@ import SpinLoading from '../../shared/SpinLoading';
 
 const transformListMessage = (list) => {
   return list.map((item) => {
+    const {id_room,creator_avatar,creator_name,listAvatar,nextUserName,...rest}=item;
     return {
-      id: item.id_room,
-      avatar: item.creator_avatar,
-      name: item.creator_name,
+      ...rest,
+      id: id_room,
+      avatar:creator_avatar,
+      name: creator_name,
+      listAvatar: listAvatar.split("****"),
+      nextUserName:nextUserName
     };
   });
 };
@@ -61,7 +66,7 @@ const TabMessage = () => {
   const listMessage = transformListMessage(
     useSelector(selectListConversation) || []
   );
-
+console.log(listMessage);
   const isLoading = useSelector(selectConversationLoading);
 
   return (

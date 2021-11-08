@@ -1,62 +1,79 @@
 .message-item {
-    @include flex(center, stretch);
-    cursor: pointer;
-    transition: 0.3s ease;
-    padding: 0 1rem;
+  @include flex(center, stretch);
+  cursor: pointer;
+  transition: 0.3s ease;
+  padding: 0 1rem;
 
-    &:hover {
-        background-color: $color-blue-light;
+  &:hover {
+    background-color: $color-blue-light;
+  }
+  &.active {
+    background-color: $color-blue-light;
+  }
+
+  &__avatar,
+  &__time {
+    flex-shrink: 0;
+  }
+
+  &__avatar {
+    padding: 1rem 0;
+    width: 60px;
+    display: flex;
+    justify-content:center;
+  }
+
+  &__content {
+    flex-grow: 1;
+    padding-left: 1rem;
+
+    &.hight-light &__name {
+      font-weight: 700;
     }
-    &.active {
-        background-color: $color-blue-light;
+    &.hight-light &__message {
+      font-weight: 600;
     }
 
-    &__avatar,
-    &__time {
+    &__name {
+      @include flex(center, space-between);
+      color:#001a33;
+      button {
+        width: 6rem;
+        padding: 5px;
+        font-size: 1.2rem;
         flex-shrink: 0;
+        border-radius: 2px;
+      }
     }
+    &__message{
+      color:#72808e;
 
-    &__avatar {
-        padding: 1rem 0;
     }
+  }
 
-    &__content {
-        flex-grow: 1;
-        padding-left: 1rem;
+  &__time {
+    padding-left: 1rem;
+    @include flex(flex-end);
+    flex-direction: column;
 
-        &.hight-light &__name {
-            font-weight: 700;
-        }
-        &.hight-light &__message {
-            font-weight: 600;
-        }
-
-        &__name {
-            @include flex(center, space-between);
-            button {
-                width: 6rem;
-                padding: 5px;
-                font-size: 1.2rem;
-                flex-shrink: 0;
-                border-radius: 2px;
-            }
-        }
+    &__count {
+      width: 2rem;
+      height: 1.5rem;
+      border-radius: 1rem;
+      background-color: #db342e;
+      color: #fff;
+      @include flex(center, center);
+      font-weight: 600;
+      font-size: 12px;
     }
-
-    &__time {
-        padding-left: 1rem;
-        @include flex(flex-end);
-        flex-direction: column;
-
-        &__count {
-            width: 2rem;
-            height: 1.5rem;
-            border-radius: 1rem;
-            background-color: #db342e;
-            color: #fff;
-            @include flex(center, center);
-            font-weight: 600;
-            font-size: 12px;
-        }
+  }
+  .list-avatar-wrapper {
+    position: relative;
+    margin-right:20px;
+    .avatar:nth-child(2) {
+      position: absolute;
+      left:50%;
+      bottom:20%
     }
+  }
 }
