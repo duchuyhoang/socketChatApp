@@ -1,23 +1,21 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SOCKET_EMIT_ACTIONS, SOCKET_ON_ACTIONS } from '../common/constant';
-import {
-  selectIsLogin,
-  selectSocketConnectionSuccess,
-} from '../redux/reducer/auth';
-import { AuthActions } from '../redux/reducer/auth';
-import {
-  MAIN_SOCKET,
-  USER_SOCKET,
-  CONVERSATION_SOCKET,
-  NOTIFICATION_SOCKET,
-} from '../socket/socket';
-import { refreshSocket } from '../socket/socket';
 import { checkTokenValid } from '../common/functions';
+import {
+  selectSocketConnectionSuccess,
+  SocketActions,
+} from '../redux/reducer/socket';
+import { UiActions } from '../redux/reducer/ui';
+import {
+  CONVERSATION_SOCKET,
+  MAIN_SOCKET,
+  NOTIFICATION_SOCKET,
+  refreshSocket,
+  USER_SOCKET,
+} from '../socket/socket';
 
 export const useSocketConnection = () => {
-  const socketLists = useSelector((state) => state.auth.socketReadyFlags);
-  const isLogin = useSelector(selectIsLogin);
   const accessToken = useSelector((state) => state.auth.accessToken);
   const socketConnectSuccess = useSelector(selectSocketConnectionSuccess);
   const dispatch = useDispatch();
@@ -38,13 +36,13 @@ export const useSocketConnection = () => {
         CONVERSATION_SOCKET.connect();
 
         USER_SOCKET.on(SOCKET_ON_ACTIONS.SOCKET_READY, () => {
-          dispatch(AuthActions.setUserSocketReady());
+          dispatch(SocketActions.setUserSocketReady());
         });
         NOTIFICATION_SOCKET.on(SOCKET_ON_ACTIONS.SOCKET_READY, () => {
-          dispatch(AuthActions.setNotificationSocketReady());
+          dispatch(SocketActions.setNotificationSocketReady());
         });
         CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.SOCKET_READY, () => {
-          dispatch(AuthActions.setConversationSocketReady());
+          dispatch(SocketActions.setConversationSocketReady());
         });
       });
 
@@ -65,8 +63,15 @@ export const useSocketConnection = () => {
   useEffect(() => {
     // Do something make loading hide etc
     if (socketConnectSuccess) {
+      dispatch(
+        UiActions.notificationSuccess({ message: 'Socket loading succeed!' })
+      );
+    } else {
+      dispatch(
+        UiActions.notificationWarning({ message: 'Wait Socket loading....' })
+      );
     }
-  }, [socketConnectSuccess]);
+  }, [socketConnectSuccess, dispatch]);
 
   return socketConnectSuccess;
 };
