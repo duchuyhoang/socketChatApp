@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import MessageItem from '../../components/MessageItem';
+import MessageUser from '../../components/MessageUser';
+
+
 import SVGIcon from '../../shared/SVGIcon';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSearchUser, UserAction } from '../../../redux/reducer/user';
@@ -24,7 +27,7 @@ const Search = (props) => {
     );
   else {
     result = searchUser.map((item) => (
-      <MessageItem
+      <MessageUser
         item={item}
         key={item.id_user}
         statusMakeFriend={item.can_make_friend_request}

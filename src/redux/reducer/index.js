@@ -6,6 +6,7 @@ import { SignupReducer } from './signup';
 import { SocketReducer } from './socket';
 import { UiReducer } from './ui';
 import { UserReducer } from './user';
+import { StickerReducer } from './sticker';
 
 const rootReducer = combineReducers({
   auth: AuthReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   conversation: ConversationReducer,
   message: MessageReducer,
   socket: SocketReducer,
+  sticker: StickerReducer,
 });
 
 export default rootReducer;
