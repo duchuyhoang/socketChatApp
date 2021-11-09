@@ -1,5 +1,5 @@
-const SOCKET_CHAT_HOST = 'https://chat-app-socket-cn11.herokuapp.com';
-// const SOCKET_CHAT_HOST = "http://localhost:3001";
+// const SOCKET_CHAT_HOST = 'https://chat-app-socket-cn11.herokuapp.com';
+const SOCKET_CHAT_HOST = "http://localhost:3001";
 const PEERJS_SERVER = 'peerjs-cn11-server.herokuapp.com';
 
 const SOCKET_NAMESPACE = {
@@ -24,6 +24,7 @@ const SOCKET_ON_ACTIONS = {
   EMIT_LIST_USER_RESPONSE: 'EMIT_LIST_USER_RESPONSE',
   EMIT_SIGNAL_OFFER: 'EMIT_SIGNAL_OFFER',
   EMIT_SIGNAL_ANSWER: 'EMIT_SIGNAL_ANSWER',
+  USERS_JOIN_ROOM:"USERS_JOIN_ROOM",
 };
 
 const SOCKET_EMIT_ACTIONS = {
@@ -58,6 +59,12 @@ const MESSAGE_STATUS = {
   PENDING: 0,
   FULFILLED: 1,
 };
+
+const CONVERSATION_TYPE ={
+  SINGLE : 0,
+  GROUP : 1,
+}
+
 export {
   SOCKET_CHAT_HOST,
   SOCKET_NAMESPACE,
@@ -67,4 +74,5 @@ export {
   MESSAGE_TYPE,
   MESSAGE_STATUS,
   PEERJS_SERVER,
+  CONVERSATION_TYPE
 };

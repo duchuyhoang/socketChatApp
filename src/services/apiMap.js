@@ -39,6 +39,11 @@ export const getSpecificConversation = (payload) => {
   return get(`conversation/getSpecificConversation/${payload.id_conversation}`);
 };
 
+export const addUsersToConversation=(payload)=>{
+  console.log(payload);
+  return post(`conversation/addUsersToConversation`,payload);
+}
+
 //message
 export const sendMessage = (payload) => {
   return post("message/sendMessage", payload);

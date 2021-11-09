@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectListFriend } from '../../../redux/reducer/user';
-import MessageItem from '../../components/MessageItem';
+import MessageUser from '../../components/MessageUser';
 const TabListFriend = (props) => {
   const listFriend = useSelector(selectListFriend);
   if (!listFriend || listFriend.length < 1)
@@ -21,7 +21,7 @@ const TabListFriend = (props) => {
     <ul>
       {listFriend.map((item) => (
         <li key={item.id_user}>
-          <MessageItem item={item} />
+          <MessageUser item={item} />
         </li>
       ))}
     </ul>

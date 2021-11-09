@@ -13,6 +13,10 @@
     &.avatar--l {
         @include box(6rem);
     }
+    &.avatar--sm{
+        @include box(4rem);
+
+    }
 
     &.online::after {
         content: "";

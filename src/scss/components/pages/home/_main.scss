@@ -1,118 +1,171 @@
 .main {
-    @include flex();
-    flex-direction: column;
-    &__top {
-        @include flex(center);
-        padding: 1rem;
-        &__title {
-            flex-grow: 1;
-            margin-left: 1rem;
+  @include flex();
+  flex-direction: column;
 
-            h3 {
-                font-weight: 700;
-                font-size: 16px;
-            }
+  .callVideoIcon {
+    fill: #242526;
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  &__top {
+    @include flex(center, space-between);
+    padding: 1rem;
+    width: 100%;
+
+    &__title {
+      // flex-grow: 1;
+      @include flex(center);
+      margin-left: 1rem;
+
+      &__sub {
+        @include flex();
+        flex-direction: column;
+        margin-left: 10px;
+        h3 {
+          font-weight: 700;
+          font-size: 16px;
         }
+      }
     }
-    &__content {
-        background-color: $color-gray;
-        flex-grow: 1;
-        width: 100%;
-        overflow-y: auto;
-    }
 
-    &__bottom {
-        width: 100%;
-
-        &__action {
-            @include flex(center);
-            padding: 5px 0;
-            padding-left: 1rem;
-            &__item ~ &__item {
-                margin-left: 1rem;
-            }
-
-            &__item {
-                line-height: normal;
-            }
-        }
-
-        &__preview {
-            padding: 1rem;
-
-            ul {
-                @include flex(center, stretch);
-                flex-wrap: wrap;
-
-                li {
-                    margin-right: 1rem;
-                    margin-bottom: 1rem;
-                    @include box(10rem);
-                    position: relative;
-                    img {
-                        width: 100%;
-                        height: 100%;
-                    }
-                    span {
-                        display: inline-block;
-                        position: absolute;
-                        @include box(2rem);
-                        @include flex(center, center);
-                        background-color: rgb(255, 81, 0);
-                        top: 0;
-                        right: 0;
-                        cursor: pointer;
-                        box-shadow: $box-shadow;
-                        svg > * {
-                            fill: #fff;
-                        }
-                    }
-                }
-            }
-        }
-
-        .chat-box {
-            position: relative;
-            input {
-                width: 100%;
-                padding: 2rem 0;
-                padding-left: 2rem;
-                padding-right: 5rem;
-                outline: none;
-                border: none;
-                border-top: 1px solid $color-gray;
-
-                &:focus {
-                    border-color: $color-primary-dark;
-                }
-            }
-            button {
-                outline: none;
-                border: none;
-                background-color: #fff;
-            }
-            &__action {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                right: 2rem;
-            }
-        }
-    }
-    &__action__item {
-        line-height: normal;
+    &__action {
+      @include flex();
+      margin-right: 40px;
+      svg {
+        border-radius: 3px;
+        padding: 5px;
         cursor: pointer;
-        @include box(4rem);
+      }
+      svg:hover {
+        background: #eeeff2;
+      }
+    }
+  }
+  &__content {
+    background-color: $color-gray;
+    flex-grow: 1;
+    width: 100%;
+    overflow-y: auto;
+  }
 
-        border-radius: 5px;
-        transition: 0.3s ease;
-        & > * {
-            @include flex(center, center);
+  &__bottom {
+    width: 100%;
+
+    &__action {
+      @include flex(center);
+      padding: 5px 0;
+      padding-left: 1rem;
+      &__item ~ &__item {
+        margin-left: 1rem;
+      }
+
+      &__item {
+        line-height: normal;
+      }
+    }
+
+    &__preview {
+      padding: 1rem;
+
+      ul {
+        @include flex(center, stretch);
+        flex-wrap: wrap;
+
+        li {
+          margin-right: 1rem;
+          margin-bottom: 1rem;
+          @include box(10rem);
+          position: relative;
+          img {
             width: 100%;
             height: 100%;
+          }
+          span {
+            display: inline-block;
+            position: absolute;
+            @include box(2rem);
+            @include flex(center, center);
+            background-color: rgb(255, 81, 0);
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            box-shadow: $box-shadow;
+            svg > * {
+              fill: #fff;
+            }
+          }
         }
-        &:hover {
-            background-color: $color-gray;
-        }
+      }
     }
+
+    .chat-box {
+      position: relative;
+      input {
+        width: 100%;
+        padding: 2rem 0;
+        padding-left: 2rem;
+        padding-right: 5rem;
+        outline: none;
+        border: none;
+        border-top: 1px solid $color-gray;
+
+        &:focus {
+          border-color: $color-primary-dark;
+        }
+      }
+      button {
+        outline: none;
+        border: none;
+        background-color: #fff;
+      }
+      &__action {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 2rem;
+      }
+    }
+  }
+  &__action__item {
+    line-height: normal;
+    cursor: pointer;
+    @include box(4rem);
+
+    border-radius: 5px;
+    transition: 0.3s ease;
+    & > * {
+      @include flex(center, center);
+      width: 100%;
+      height: 100%;
+    }
+    &:hover {
+      background-color: $color-gray;
+    }
+  }
+
+.popover_add_user_box{
+  padding:10px;
+  border-radius:5px;
+  @include flex(center,flex-start);
+  flex-direction: column;
+  max-width: 300px;
+  min-height:400px;
+  left:-750%;
+
+& .title{
+  @include flex(center,center);
+  font-size: 16px;
+}
+
+& .closeIcon{
+  position: absolute;
+  right:10px;
+  top:10px;
+}
+
+
+
+}
+
 }

@@ -32,7 +32,11 @@ export default function* rootSaga() {
       ConversationTypes.GET_SPECIFIC_CONVERSATION,
       ConversationSaga.getSpecificConversation
     ),
-
+    takeLatest(
+      ConversationTypes.ADD_USER_TO_CONVERSATION,
+      ConversationSaga.addUsersToConversation
+    ),
+    
     //message
     takeLatest(MessageTypes.GET_MESSAGES, MessageSaga.getMessages),
     takeEvery(MessageTypes.SEND_MESSAGE, MessageSaga.sendMessage),
