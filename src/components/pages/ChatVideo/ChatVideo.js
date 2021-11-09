@@ -125,8 +125,10 @@ const ChatVideo = () => {
       id_room: id_conversation,
       socketId: CALL_SOCKET.id,
     });
-    myStream.getTracks()[0].stop();
-    stopShare();
+    if (myStream) {
+      myStream.getTracks()[0].stop();
+      stopShare();
+    }
   }, true);
 
   useEffect(() => {
@@ -148,13 +150,14 @@ const ChatVideo = () => {
     // if(myStream)
     const listener = history.listen((location) => {
       if (history.action === "POP") {
-        console.log(myStream.getTracks());
-        const listTrack = myStream.getTracks();
-        listTrack.forEach((track) => {
-          track.stop();
-        });
+        if (myStream) {
+          const listTrack = myStream.getTracks();
+          listTrack.forEach((track) => {
+            track.stop();
+          });
+        }
 
-        myStream.getTracks()[0].stop();
+        // myStream.getTracks()[0].stop();
         setMyStream(null);
         stopShare();
       }
@@ -187,8 +190,7 @@ const ChatVideo = () => {
     } else {
       video.src = window.URL.createObjectURL(stream); // for older browsers
     }
-
-    myVideoRef.current.appendChild(video);
+    if (myVideoRef.current) myVideoRef.current.appendChild(video);
     video.play();
     setMyStream(stream);
 
@@ -257,7 +259,6 @@ const ChatVideo = () => {
         }, 500);
 
         myVideoRef.current.classList.toggle("bottomToggleVideo");
-
       })
       .catch((err) => {
         console.error("Error:" + err);
@@ -719,11 +720,9 @@ const ChatVideo = () => {
         ))}
       </Grid>
 
-{/* <div>
+      {/* <div>
   
 </div> */}
-
-
     </>
   );
 };

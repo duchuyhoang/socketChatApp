@@ -9,7 +9,7 @@ export const useRoomChat = (id_room) => {
   useEffect(() => {
     if (id_room) {
       CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.USERS_JOIN_ROOM, (data) => {
-          dispatch(ConversationAction.addUserToConversation({
+          dispatch(ConversationAction.onUserAdd({
               id_room:id_room,
               listUser:data.listNewUser
           }))

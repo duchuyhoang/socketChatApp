@@ -2,18 +2,11 @@
   @include flex();
   flex-direction: column;
 
-.callVideoIcon{
-    fill:#242526;
-    padding:5px;
-    width: 40px!important;
-    border-radius: 3px;
-    cursor: pointer;
-    height: 40px !important;
-}
-.callVideoIcon:hover {
-    background:#eeeff2;
-
-}
+  .callVideoIcon {
+    fill: #242526;
+    width: 30px !important;
+    height: 30px !important;
+  }
 
   &__top {
     @include flex(center, space-between);
@@ -30,17 +23,23 @@
         flex-direction: column;
         margin-left: 10px;
         h3 {
-            font-weight: 700;
-            font-size: 16px;
-          }
+          font-weight: 700;
+          font-size: 16px;
+        }
       }
-
-     
     }
 
     &__action {
       @include flex();
       margin-right: 40px;
+      svg {
+        border-radius: 3px;
+        padding: 5px;
+        cursor: pointer;
+      }
+      svg:hover {
+        background: #eeeff2;
+      }
     }
   }
   &__content {
@@ -144,6 +143,29 @@
       background-color: $color-gray;
     }
   }
+
+.popover_add_user_box{
+  padding:10px;
+  border-radius:5px;
+  @include flex(center,flex-start);
+  flex-direction: column;
+  max-width: 300px;
+  min-height:400px;
+  left:-750%;
+
+& .title{
+  @include flex(center,center);
+  font-size: 16px;
+}
+
+& .closeIcon{
+  position: absolute;
+  right:10px;
+  top:10px;
 }
 
 
+
+}
+
+}

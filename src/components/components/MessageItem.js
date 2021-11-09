@@ -28,9 +28,10 @@ const MessageItem = (props) => {
   );
   // console.log(props);
   const listAvatar = useMemo(() => {
-    const listAvatar = item.listAvatar.map((_avatar) =>
+
+    const listAvatar = item.listAvatar?.map((_avatar) =>
       !_avatar ? man : _avatar
-    );
+    )||[];
 
     // listAvatar.splice(listAvatar.findIndex((_avatar) => _avatar === avatar),1);
     return listAvatar;

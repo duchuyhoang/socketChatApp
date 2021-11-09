@@ -1,0 +1,71 @@
+.search_friend_wrapper {
+  background-color: $color-blue-light !important;
+}
+
+.search_friend {
+  margin-top: 30px;
+  max-height: 60%;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $color-blue-light;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color-primary-light;
+  }
+
+  &__item {
+    @include flex(center, space-between);
+    padding: 5px;
+    background-color: transparent;
+    // color: #fff;
+    // margin-bottom:
+    border-radius: 3px;
+    &:hover {
+      background-color: $color-primary-dark;
+    }
+
+    &__name {
+      flex: 1;
+      text-align: left;
+      padding-left: 5px;
+    }
+
+    .avatar {
+      border-radius: 50%;
+      height: 32px;
+      width: 32px;
+    }
+  }
+}
+
+.searcWrapper {
+  @include flex();
+  flex-wrap: wrap;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $color-blue-light;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color-primary-light;
+  }
+  max-height: 200px;
+  overflow-y: auto;
+}
+.addUserBtn {
+  border-radius: 3px;
+  padding: 5px 10px;
+  background: $color-primary-light;
+  cursor: pointer;
+  border: none;
+  color:#fff;
+}
+.addUserBtn:hover{
+  background: $color-primary-dark;
+
+}

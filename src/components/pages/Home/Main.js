@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import man from "../../../assets/images/man.png";
 import woman from "../../../assets/images/woman.png";
@@ -19,14 +19,22 @@ import SpinLoading from "../../shared/SpinLoading";
 import SVGIcon from "../../shared/SVGIcon";
 import { v4 } from "uuid";
 import { useHistory } from "react-router";
-import {useRoomChat} from "./useRoomChat"
+import { useRoomChat } from "./useRoomChat";
+import { IconCategoryList } from "../../components/Icon/IconCategoryList";
+import Popup from "../../shared/Popup";
+import { CONVERSATION_TYPE } from "../../../common/constant";
+import { SearchFriend } from "../../components/SearchFriend";
 const Main = ({ match }) => {
   const {
     params: { idConversation },
   } = match;
-
+  const [addUserPopupOpen, setAddUserPopupOpen] = useState(false);
   useRoomChat(idConversation);
-  
+
+  useEffect(() => {
+    setAddUserPopupOpen(false);
+  }, [idConversation]);
+
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -42,7 +50,7 @@ const Main = ({ match }) => {
 
   const callVideo = () => {
     const newIdRoom = v4();
-    history.push(`/call/${newIdRoom}`)
+    history.push(`/call/${newIdRoom}`);
   };
 
   const avatar =
@@ -120,6 +128,41 @@ const Main = ({ match }) => {
             className="callVideoIcon"
             onClick={callVideo}
           />
+
+          {conversationInfo.type === CONVERSATION_TYPE.GROUP ? (
+            <Popup
+              isOpen={addUserPopupOpen}
+              type={"popover_add_user_box search_friend_wrapper"}
+              root={
+                <SVGIcon
+                  name="addUser"
+                  width="30"
+                  height="30"
+                  onClick={() => {
+                    setAddUserPopupOpen((prev) => !prev);
+                  }}
+                />
+              }
+            >
+              <>
+                <SVGIcon
+                  name="close"
+                  width="25"
+                  height="25"
+                  className="closeIcon"
+                  onClick={() => {
+                    setAddUserPopupOpen((prev) => !prev);
+                  }}
+                />
+                <div className="">
+                  <p className="title">Add user</p>
+                  <SearchFriend />
+                </div>
+              </>
+            </Popup>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
 
@@ -127,9 +170,12 @@ const Main = ({ match }) => {
 
       <div className="main__bottom">
         {listImages.length < 1 ? (
-          <div className='main__bottom__action'>
-            <div className='main__action__item'>
-              <Popover root={<SVGIcon name='sticker' width='24px'/>}  type={'popover_icon'}>
+          <div className="main__bottom__action">
+            <div className="main__action__item">
+              <Popover
+                root={<SVGIcon name="sticker" width="24px" />}
+                type={"popover_icon"}
+              >
                 <IconCategoryList />
               </Popover>
             </div>

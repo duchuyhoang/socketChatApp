@@ -16,6 +16,9 @@ const { Types, Creators } = createActions({
   getSpecificConversationSucceed: ["payload"],
 
   addUserToConversation: ["payload"],
+  addUserToConversationSucceed: ["payload"],
+
+  onUserAdd: ["payload"],
 
   setConversationLoading: ["payload"],
   setCurrentConversation: ["payload"],
@@ -70,13 +73,13 @@ const handleSetCurrentConversation = (state, { payload }) => {
   return { ...state, currentConversation: payload.id_room };
 };
 
-
-const handleAddUserToConversation=(state,{payload})=>{
-  console.log(payload);
-  console.log(state);
+const handleAddUserToConversation = (state, { payload }) => {
   return state;
-}
+};
 
+const onAddUserHandle=(state,{payload})=>{
+  return {...state,mainConversationInfo:{...state.mainConversationInfo,listUser:[...state.mainConversationInfo.listUser,...payload.listUser]}}
+}
 
 export const ConversationTypes = Types;
 export const ConversationAction = Creators;
@@ -88,5 +91,7 @@ export const ConversationReducer = createReducer(CONVERSATION_INITIAL_STATE, {
     handleGetSpecificConversationSucceed,
   [Types.SET_CONVERSATION_LOADING]: handleSetLoading,
   [Types.SET_CURRENT_CONVERSATION]: handleSetCurrentConversation,
-  [Types.ADD_USER_TO_CONVERSATION]:handleAddUserToConversation
+  [Types.ADD_USER_TO_CONVERSATION]: handleAddUserToConversation,
+  [Types.ADD_USER_TO_CONVERSATION_SUCCEED]: handleAddUserToConversation,
+  [Types.ON_USER_ADD]:onAddUserHandle
 });

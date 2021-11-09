@@ -1,11 +1,12 @@
-import { call, put } from '@redux-saga/core/effects';
-import { HttpStatusCode } from '../../common/constant';
+import { call, put } from "@redux-saga/core/effects";
+import { HttpStatusCode } from "../../common/constant";
 import {
   getConversations,
   getSpecificConversation,
-} from '../../services/apiMap';
-import { ConversationAction } from '../reducer/conversation';
-import { MessageSaga } from './messageSaga';
+  addUsersToConversation,
+} from "../../services/apiMap";
+import { ConversationAction } from "../reducer/conversation";
+import { MessageSaga } from "./messageSaga";
 
 export const ConversationSaga = {
   *getConversation() {
@@ -40,5 +41,16 @@ export const ConversationSaga = {
         yield put(ConversationAction.setConversationLoading(false));
       }
     } catch (err) {}
+  },
+
+  *addUsersToConversation({ payload }) {
+    console.log(payload);
+    try {
+      const response = yield call(() => addUsersToConversation({ ...payload }));
+      if (response.status === HttpStatusCode.SUCCESS) {
+      }
+    } catch (err) {
+
+    }
   },
 };

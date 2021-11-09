@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const Popover = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const popoverRef = useRef(null);
 
   const handleClick = () => {
