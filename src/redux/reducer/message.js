@@ -101,6 +101,21 @@ const handleInsertPreviewMessages = (state, { payload }) => {
     });
   }
 
+  if (payload.type === MESSAGE_TYPE.ICON) {
+    newMessage.push({
+      type: payload.type,
+      id_user: payload.idUser,
+      avatar: payload.avatar,
+      sex: payload.sex,
+      content: payload.content,
+      icon: payload.icon,
+      url: null,
+      message_create_at: Date.now(),
+      id_message: v4(),
+      status: MESSAGE_STATUS.PENDING,
+    });
+  }
+
   const newList = state.previewMessages;
   newList[payload.idPreview] = newMessage;
 

@@ -1,6 +1,6 @@
-import { createActions, createReducer } from "reduxsauce";
-import { createSelector } from "reselect";
-import { transformListMessages } from "../../common/functions";
+import { createActions, createReducer } from 'reduxsauce';
+import { createSelector } from 'reselect';
+import { transformListMessages } from '../../common/functions';
 
 const CONVERSATION_INITIAL_STATE = {
   listConversation: [],
@@ -11,20 +11,20 @@ const CONVERSATION_INITIAL_STATE = {
 
 const { Types, Creators } = createActions({
   getConversation: null,
-  getConversationSucceed: ["payload"],
-  getSpecificConversation: ["payload"],
-  getSpecificConversationSucceed: ["payload"],
+  getConversationSucceed: ['payload'],
+  getSpecificConversation: ['payload'],
+  getSpecificConversationSucceed: ['payload'],
 
-  addUserToConversation: ["payload"],
-  addUserToConversationSucceed: ["payload"],
+  addUserToConversation: ['payload'],
+  addUserToConversationSucceed: ['payload'],
 
-  onUserAdd: ["payload"],
-  onAddedToConversation: ["payload"],
+  onUserAdd: ['payload'],
+  onAddedToConversation: ['payload'],
 
-  setConversationLoading: ["payload"],
-  setCurrentConversation: ["payload"],
+  setConversationLoading: ['payload'],
+  setCurrentConversation: ['payload'],
 
-  createGroupChat: ["payload"],
+  createGroupChat: ['payload'],
 });
 
 //selector

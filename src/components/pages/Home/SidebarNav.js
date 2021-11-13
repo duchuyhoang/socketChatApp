@@ -64,6 +64,9 @@ const SidebarNav = (props) => {
             <NavLink to={`${url}/list-friend`}>
               <SVGIcon name='book' width='24px' />
             </NavLink>
+            <NavLink to={`${url}/notification`}>
+              <SVGIcon name='bell' width='24px' />
+            </NavLink>
           </nav>
         </div>
       </div>

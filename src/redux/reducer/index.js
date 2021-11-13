@@ -7,6 +7,7 @@ import { SocketReducer } from './socket';
 import { UiReducer } from './ui';
 import { UserReducer } from './user';
 import { StickerReducer } from './sticker';
+import { NotificationReducer } from './notification';
 
 const rootReducer = combineReducers({
   auth: AuthReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   message: MessageReducer,
   socket: SocketReducer,
   sticker: StickerReducer,
+  notification: NotificationReducer,
 });
 
 export default rootReducer;

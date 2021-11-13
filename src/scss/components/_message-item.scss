@@ -20,7 +20,7 @@
     padding: 1rem 0;
     width: 60px;
     display: flex;
-    justify-content:center;
+    justify-content: center;
   }
 
   &__content {
@@ -38,18 +38,23 @@
 
     &__name {
       @include flex(center, space-between);
-      color:#001a33;
+      color: #001a33;
+
       button {
-        width: 6rem;
+        width: 10rem;
         padding: 5px;
         font-size: 1.2rem;
         flex-shrink: 0;
         border-radius: 2px;
+        margin-left: 5px;
+        &.pending {
+          background-color: #ccc;
+          cursor: default;
+        }
       }
     }
-    &__message{
-      color:#72808e;
-
+    &__message {
+      color: #72808e;
     }
   }
 
@@ -71,11 +76,11 @@
   }
   .list-avatar-wrapper {
     position: relative;
-    margin-right:20px;
+    margin-right: 20px;
     .avatar:nth-child(2) {
       position: absolute;
-      left:50%;
-      bottom:20%
+      left: 50%;
+      bottom: 20%;
     }
   }
 }

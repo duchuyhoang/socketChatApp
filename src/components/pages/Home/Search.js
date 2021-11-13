@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import MessageItem from '../../components/MessageItem';
-import MessageUser from '../../components/MessageUser';
-
-
-import SVGIcon from '../../shared/SVGIcon';
 import { useDispatch, useSelector } from 'react-redux';
+import { getFriendStatus } from '../../../common/functions';
 import { selectSearchUser, UserAction } from '../../../redux/reducer/user';
+import MessageUser from '../../components/MessageUser';
+import Popover from '../../shared/Popover';
+import SVGIcon from '../../shared/SVGIcon';
+
 const Search = (props) => {
   const [isShowResult, setIsShowResult] = useState(false);
   const [keyword, setKeyword] = useState('');
@@ -27,35 +27,32 @@ const Search = (props) => {
     );
   else {
     result = searchUser.map((item) => (
-      <MessageUser
-        item={item}
-        key={item.id_user}
-        statusMakeFriend={item.can_make_friend_request}
-      />
+      <MessageUser item={item} key={item.id_user} />
     ));
   }
 
   return (
-    <div className='tabs__top__search'>
-      <input
-        type='text'
-        id=''
-        placeholder='Tìm kiếm'
-        onFocus={() => {
-          setIsShowResult(true);
-        }}
-        onBlur={() => {
-          setIsShowResult(false);
-        }}
-        onChange={(e) => setKeyword(e.target.value)}
-        value={keyword}
-      />
-      <SVGIcon name='search' />
-
+    <Popover
+      root={
+        <div className='tabs__top__search'>
+          <input
+            type='text'
+            id=''
+            placeholder='Tìm kiếm'
+            onFocus={() => {
+              setIsShowResult(true);
+            }}
+            onChange={(e) => setKeyword(e.target.value)}
+            value={keyword}
+          />
+          <SVGIcon name='search' />
+        </div>
+      }
+    >
       {isShowResult && (
         <div className='tabs__top__search__result'>{result}</div>
       )}
-    </div>
+    </Popover>
   );
 };
 

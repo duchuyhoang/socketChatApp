@@ -1,0 +1,101 @@
+.notification-item {
+    cursor: pointer;
+    transition: 0.3s ease;
+    padding: 1rem;
+
+    &:hover {
+        background-color: $color-blue-light;
+    }
+    &.active {
+        background-color: $color-blue-light;
+    }
+
+    &__avatar,
+    &__time {
+        flex-shrink: 0;
+    }
+
+    &__avatar {
+        padding: 1rem 0;
+        width: 60px;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__content {
+        flex-grow: 1;
+        padding-left: 1rem;
+
+        &.hight-light &__name {
+            font-weight: 700;
+        }
+        &.hight-light &__message {
+            font-weight: 600;
+        }
+
+        &__name {
+            @include flex(center, space-between);
+            color: #001a33;
+
+            button {
+                width: 10rem;
+                padding: 5px;
+                font-size: 1.2rem;
+                flex-shrink: 0;
+                border-radius: 2px;
+                margin-left: 5px;
+                &.pending {
+                    background-color: #ccc;
+                    cursor: default;
+                }
+            }
+        }
+        &__message {
+            color: #72808e;
+        }
+    }
+
+    &__flex {
+        @include flex(flex-start, stretch);
+    }
+    &__confirm {
+        @include flex(flex-start, stretch);
+        margin-top: 1rem;
+
+        .btn ~ .btn {
+            margin-left: 1rem;
+        }
+        .btn {
+            padding: 1rem;
+            font-size: 12px;
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    &__time {
+        padding-left: 1rem;
+        flex-direction: column;
+
+        &__count {
+            width: 2rem;
+            height: 1.5rem;
+            border-radius: 1rem;
+            background-color: #db342e;
+            color: #fff;
+            @include flex(center, center);
+            font-weight: 600;
+            font-size: 12px;
+        }
+    }
+    .list-avatar-wrapper {
+        position: relative;
+        margin-right: 20px;
+        .avatar:nth-child(2) {
+            position: absolute;
+            left: 50%;
+            bottom: 20%;
+        }
+    }
+}

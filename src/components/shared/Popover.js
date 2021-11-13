@@ -5,14 +5,12 @@ const Popover = (props) => {
   const popoverRef = useRef(null);
 
   const handleClick = () => {
-    // setIsOpen((prev) => !prev);
     setIsOpen(true);
-
   };
 
   useEffect(() => {
     const handleMousedown = (e) => {
-      // if (!popoverRef.current.contains(e.target)) setIsOpen(false);
+      if (!popoverRef.current.contains(e.target)) setIsOpen(false);
     };
 
     document.addEventListener('mousedown', handleMousedown);

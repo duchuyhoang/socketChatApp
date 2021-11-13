@@ -7,15 +7,16 @@
 .popover {
     position: absolute;
     background-color: #fff;
-    width: max-content;
-    z-index: 9;
+    z-index: 999;
     top: calc(100%);
-    left: 1rem;
-    padding: 1rem 0;
+    left: 0;
     box-shadow: $box-shadow;
     border-radius: 5px;
+    min-width: 100%;
+    margin-top: 5px;
 
     &.v1 {
+        left: 1rem;
         ul {
             width: 150px;
             li {
@@ -43,9 +44,8 @@
     }
 }
 
-.popover_icon{
-    top:-850%;
-    left:100%;
-    padding:10px
+.popover_icon {
+    top: -850%;
+    left: 100%;
+    padding: 10px;
 }
-

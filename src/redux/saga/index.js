@@ -1,15 +1,17 @@
-import { all, debounce, takeEvery, takeLatest } from "redux-saga/effects";
-import { AuthTypes } from "../reducer/auth";
-import { ConversationTypes } from "../reducer/conversation";
-import { MessageTypes } from "../reducer/message";
-import { SignupTypes } from "../reducer/signup";
-import { UserTypes } from "../reducer/user";
-import { StickerTypes } from "../reducer/sticker";
-import { AuthSaga } from "./authSaga";
-import { ConversationSaga } from "./conversationSaga";
-import { MessageSaga } from "./messageSaga";
-import { UserSaga } from "./userSaga";
-import { StickerSaga } from "./stickerSaga";
+import { all, debounce, takeEvery, takeLatest } from 'redux-saga/effects';
+import { AuthTypes } from '../reducer/auth';
+import { ConversationTypes } from '../reducer/conversation';
+import { MessageTypes } from '../reducer/message';
+import { SignupTypes } from '../reducer/signup';
+import { UserTypes } from '../reducer/user';
+import { StickerTypes } from '../reducer/sticker';
+import { AuthSaga } from './authSaga';
+import { ConversationSaga } from './conversationSaga';
+import { MessageSaga } from './messageSaga';
+import { UserSaga } from './userSaga';
+import { StickerSaga } from './stickerSaga';
+import { NotificationTypes } from '../reducer/notification';
+import { NotificationSaga } from './notificationSaga';
 export default function* rootSaga() {
   yield all([
     //auth
@@ -22,6 +24,7 @@ export default function* rootSaga() {
     //user
     takeLatest(UserTypes.GET_LIST_FRIEND, UserSaga.getListFriend),
     debounce(500, UserTypes.SEARCH_USER, UserSaga.searchUser),
+    takeEvery(UserTypes.SEND_REQUEST_ADD_FRIEND, UserSaga.sendRequestAddFriend),
 
     //conversation
     takeLatest(
@@ -53,6 +56,14 @@ export default function* rootSaga() {
     takeLatest(
       StickerTypes.GET_LIST_STICKER_BY_CATEGORY,
       StickerSaga.getStickerByCategory
+    ),
+    takeLatest(
+      NotificationTypes.GET_ALL_NOTIFICATION,
+      NotificationSaga.getAllNotification
+    ),
+    takeLatest(
+      NotificationTypes.ANSWER_FRIEND_REQUEST,
+      NotificationSaga.answerFriendRequest
     ),
   ]);
 }

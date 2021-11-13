@@ -1,28 +1,27 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
-import SpinLoading from "../../shared/SpinLoading";
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   StickerActions,
   StickerSelectors,
-} from "../../../redux/reducer/sticker";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "../../shared/Grid";
-import { IconList } from "./IconList";
+} from '../../../redux/reducer/sticker';
+import Grid from '../../shared/Grid';
+import SpinLoading from '../../shared/SpinLoading';
+import { IconList } from './IconList';
 export const IconCategoryList = () => {
   const dispatch = useDispatch();
   const [selectedStickerCategory, setSelectedStickerCategory] = useState(null);
-  const listSticketCategoryLoading = useSelector(
+  const listStickerCategoryLoading = useSelector(
     StickerSelectors.selectGetListStickerCategoryLoading
   );
   const listStickerCategory = useSelector(
     StickerSelectors.selectListStickerCategory
   );
-
   // console.log(listSticker);
 
   useEffect(() => {
     if (
       listStickerCategory.length === 0 &&
-      listSticketCategoryLoading === "idle"
+      listStickerCategoryLoading === 'idle'
     ) {
       dispatch(StickerActions.getListStickerCategory());
     }
@@ -36,21 +35,22 @@ export const IconCategoryList = () => {
 
   return (
     <>
-      <section className="iconContainer">
+      <section className='iconContainer'>
         {selectedStickerCategory === null ? (
           <>
-            {listSticketCategoryLoading === "idle" ? (
+            {listStickerCategoryLoading === 'idle' ? (
               <SpinLoading />
             ) : (
               <Grid col={2}>
-                {listStickerCategory.map((sticketCategory) => (
+                {listStickerCategory.map((stickerCategory) => (
                   <div
-                    className="iconCategoryItem"
+                    key={stickerCategory.id}
+                    className='iconCategoryItem'
                     onClick={() => {
-                      handleChooseStickerCategory(sticketCategory.id);
+                      handleChooseStickerCategory(stickerCategory.id);
                     }}
                   >
-                    {sticketCategory.name}
+                    {stickerCategory.name}
                   </div>
                 ))}
               </Grid>

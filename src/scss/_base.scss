@@ -88,3 +88,9 @@ img {
     border: 1px solid $color-primary-dark;
     color: $color-primary-dark;
 }
+.btn--grey {
+    background-color: #ccc;
+    &:hover {
+        background-color: #bbb !important;
+    }
+}

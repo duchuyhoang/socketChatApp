@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import SVGIcon from "../shared/SVGIcon";
-import Chip from "../shared/Chip";
+import React, { useState, useRef, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import SVGIcon from '../shared/SVGIcon';
+import Chip from '../shared/Chip';
 
-import { ConversationAction } from "../../redux/reducer/conversation";
-import { useRouteMatch } from "react-router";
+import { ConversationAction } from '../../redux/reducer/conversation';
+import { useRouteMatch } from 'react-router';
 export const SearchFriend = (props) => {
   const listSearchUserField = useRef(null);
   const [searchedUser, setSearchedUser] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const dispatch = useDispatch();
   const listFriend = useSelector((state) => state.user.listFriend) || [];
   const listUserInRoom =
@@ -38,11 +38,11 @@ export const SearchFriend = (props) => {
     const searchUser = listFriend
       .filter(
         (friend) =>
-          (friend.phone || "").toLowerCase().indexOf(keyword.toLowerCase()) !==
+          (friend.phone || '').toLowerCase().indexOf(keyword.toLowerCase()) !==
             -1 ||
-          (friend.name || "").toLowerCase().indexOf(keyword.toLowerCase()) !==
+          (friend.name || '').toLowerCase().indexOf(keyword.toLowerCase()) !==
             -1 ||
-          (friend.email || "").toLowerCase().indexOf(keyword.toLowerCase()) !==
+          (friend.email || '').toLowerCase().indexOf(keyword.toLowerCase()) !==
             -1
       )
       .filter((friend) => existSearchUserId.indexOf(friend.id_user) === -1)
@@ -65,9 +65,9 @@ export const SearchFriend = (props) => {
       ...selectedUsers.filter((_user) => _user.id_user !== user.id_user),
     ]);
     if (
-      (user.phone || "").toLowerCase().indexOf(keyword.toLowerCase()) !== -1 ||
-      (user.name || "").toLowerCase().indexOf(keyword.toLowerCase()) !== -1 ||
-      (user.email || "").toLowerCase().indexOf(keyword.toLowerCase()) !== -1
+      (user.phone || '').toLowerCase().indexOf(keyword.toLowerCase()) !== -1 ||
+      (user.name || '').toLowerCase().indexOf(keyword.toLowerCase()) !== -1 ||
+      (user.email || '').toLowerCase().indexOf(keyword.toLowerCase()) !== -1
     ) {
       setSearchedUser((prev) => [...prev, user]);
     }
@@ -77,36 +77,36 @@ export const SearchFriend = (props) => {
 
   return (
     <>
-      <div className="tabs__top__search">
+      <div className='tabs__top__search'>
         <input
-          type="text"
-          id=""
-          placeholder="Tìm kiếm"
+          type='text'
+          id=''
+          placeholder='Tìm kiếm'
           onChange={(e) => handleSearchChange(e.target.value)}
           //   value={}
           value={keyword}
           //   style={{ marginLeft: 5 }}
         />
-        <SVGIcon name="search" width="25" height="25" />
+        <SVGIcon name='search' width='25' height='25' />
       </div>
 
-      <div className="search_friend">
+      <div className='search_friend'>
         {searchedUser.map((user) => (
           <div
-            className="search_friend__item"
-            key={"search_" + user.id_user}
+            className='search_friend__item'
+            key={'search_' + user.id_user}
             onClick={() => handleAddUser(user)}
           >
-            <img className="avatar" src={user.avatar} />
-            <div className="search_friend__item__name">{user.name}</div>
+            <img className='avatar' src={user.avatar} />
+            <div className='search_friend__item__name'>{user.name}</div>
           </div>
         ))}
       </div>
 
-      <div className="searcWrapper">
+      <div className='searcWrapper'>
         {selectedUsers.map((user) => (
           <Chip
-            key={"snackbar_" + user.id_user}
+            key={'snackbar_' + user.id_user}
             content={user.name}
             handleDelete={() => {
               handleDeleteUser(user);
@@ -118,8 +118,8 @@ export const SearchFriend = (props) => {
         <Chip content={"Hòa ngô"} />
         <Chip content={""} /> */}
       </div>
-      <div style={{ width: "100%", textAlign: "center", marginTop: 10 }}>
-        <button className="addUserBtn" onClick={handleAddUsers}>
+      <div style={{ width: '100%', textAlign: 'center', marginTop: 10 }}>
+        <button className='addUserBtn' onClick={handleAddUsers}>
           Submit
         </button>
       </div>

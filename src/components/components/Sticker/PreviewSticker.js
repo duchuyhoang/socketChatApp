@@ -1,9 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useStickerAnimation } from "./useStickerAnimation";
+import React, { useState, useRef, useEffect } from 'react';
+import { useStickerAnimation } from './useStickerAnimation';
 
 export const PreviewSticker = (props) => {
-  const { framesPerRow, framesPerColumn, src, width, height, totalFrames } =
-    props;
+  const {
+    framesPerRow,
+    framesPerColumn,
+    src,
+    width,
+    height,
+    totalFrames,
+    onClick = () => {},
+  } = props;
   //   const [animationBegin, setAnimationBegin] = useState(false);
 
   const imgRef = useRef(null);
@@ -27,14 +34,14 @@ export const PreviewSticker = (props) => {
     // animation:`${animationName} 5s`,
     width: width / framesPerColumn,
     backgroundImage: `url(${src})`,
-    animationTimingFunction: "steps(4)",
+    animationTimingFunction: 'steps(4)',
     // animationFillMode: "forwards",
     // animationIterationCount:"infinite",
     // backgroundSize: `${width}px ${height}px`,
     height: height / Math.ceil(totalFrames / framesPerColumn),
     // height: height / framesPerRow,
     // height: "64px",
-    imageRendering: "-webkit-optimize-contrast",
+    imageRendering: '-webkit-optimize-contrast',
     // backgroundPosition:`-0px -0px`
 
     backgroundPosition: `-${translateX}px -${translateY}px`,
@@ -53,15 +60,10 @@ export const PreviewSticker = (props) => {
       {imgRef !== null ? (
         <div
           style={{ ...styles }}
-          onMouseOver={() => {
-            setStopAnimation(false);
-            // setAnimationBegin(true);
-          }}
-          onMouseLeave={() => {
-            setStopAnimation(true);
-            // setAnimationBegin(false);
-          }}
+          onMouseOver={() => setStopAnimation(false)}
+          onMouseLeave={() => setStopAnimation(true)}
           ref={imgRef}
+          onClick={onClick}
         ></div>
       ) : (
         <p>Halo</p>
