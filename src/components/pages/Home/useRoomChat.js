@@ -8,6 +8,7 @@ export const useRoomChat = (id_room) => {
 
   useEffect(() => {
     if (id_room) {
+      // Listen someone join current room
       CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.USERS_JOIN_ROOM, (data) => {
           dispatch(ConversationAction.onUserAdd({
               id_room:id_room,

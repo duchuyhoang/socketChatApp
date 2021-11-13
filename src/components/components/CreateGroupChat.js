@@ -5,12 +5,14 @@ import Chip from "../shared/Chip";
 
 import { ConversationAction } from "../../redux/reducer/conversation";
 import { useRouteMatch } from "react-router";
-export const SearchFriend = (props) => {
+import TextField from "../shared/TextField";
+export const CreateGroupChat = (props) => {
   const listSearchUserField = useRef(null);
   const [searchedUser, setSearchedUser] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [keyword, setKeyword] = useState("");
   const dispatch = useDispatch();
+  const [roomName, setRoomName] = useState("");
   const listFriend = useSelector((state) => state.user.listFriend) || [];
   const listUserInRoom =
     useSelector((state) => state.conversation.mainConversationInfo?.listUser) ||
@@ -20,13 +22,14 @@ export const SearchFriend = (props) => {
   };
 
   const match = useRouteMatch();
-  //
 
-  const handleAddUsers = () => {
+  const handleCreateRoom = () => {
     const listUser = selectedUsers.map((user) => user.id_user);
+
     dispatch(
-      ConversationAction.addUserToConversation({
-        id_room: match.params.idConversation,
+      ConversationAction.createGroupChat({
+        // id_room: match.params.idConversation,
+        title:roomName,
         list_user: listUser,
       })
     );
@@ -77,7 +80,14 @@ export const SearchFriend = (props) => {
 
   return (
     <>
-      <div className="tabs__top__search">
+      <TextField
+        label={"Title"}
+        value={roomName}
+        inputChange={(e) => {
+          setRoomName(e.target.value);
+        }}
+      />
+      <div className="tabs__top__search" style={{ marginTop: 10 }}>
         <input
           type="text"
           id=""
@@ -87,7 +97,7 @@ export const SearchFriend = (props) => {
           value={keyword}
           //   style={{ marginLeft: 5 }}
         />
-        <SVGIcon name="search" width="25" height="25" />
+        <SVGIcon name="search" width="17" height="17" />
       </div>
 
       <div className="search_friend">
@@ -113,13 +123,9 @@ export const SearchFriend = (props) => {
             }}
           />
         ))}
-
-        {/* 
-        <Chip content={"Hòa ngô"} />
-        <Chip content={""} /> */}
       </div>
       <div style={{ width: "100%", textAlign: "center", marginTop: 10 }}>
-        <button className="addUserBtn" onClick={handleAddUsers}>
+        <button className="addUserBtn" onClick={handleCreateRoom}>
           Submit
         </button>
       </div>

@@ -1,41 +1,63 @@
 .tabs {
-    padding: 2rem 0;
+  padding: 2rem 0;
+  width: 100%;
+  border-right: 1px solid $color-gray;
+  height: 100%;
+  // overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $color-blue-light;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color-primary-light;
+  }
+
+  &__top {
+    padding: 0 1rem;
     width: 100%;
-    border-right: 1px solid $color-gray;
-    height: 100%;
-    overflow-y: auto;
-    &::-webkit-scrollbar {
-        width: 5px;
+    @include flex(center);
+    padding-bottom: 2rem;
+    border-bottom: 1px solid $color-gray;
+
+    & > * ~ * {
+      margin-left: 5px;
     }
 
-    &::-webkit-scrollbar-track {
-        background: $color-blue-light;
+    &__item {
+      @include box(3rem);
+      border-radius: 100rem;
+      @include flex(center, center);
+      cursor: pointer;
+      transition: 0.3s ease;
+
+      &:hover {
+        background-color: $color-gray;
+      }
     }
-    &::-webkit-scrollbar-thumb {
-        background: $color-primary-light;
-    }
+  }
+}
 
-    &__top {
-        padding: 0 1rem;
-        width: 100%;
-        @include flex(center);
-        padding-bottom: 2rem;
-        border-bottom: 1px solid $color-gray;
+.addGroupWrapper {
+  background-color: #e9f8ff !important;
+  padding: 10px;
+  border-radius: 5px;
+  @include flex(center, flex-start);
+  flex-direction: column;
+  width: 300px;
+  height: 400px;
+  left: -900%;
+  top: 200%;
+  & .title {
+    @include flex(center, center);
+    font-size: 16px;
+  }
 
-        & > * ~ * {
-            margin-left: 5px;
-        }
-
-        &__item {
-            @include box(3rem);
-            border-radius: 100rem;
-            @include flex(center, center);
-            cursor: pointer;
-            transition: 0.3s ease;
-
-            &:hover {
-                background-color: $color-gray;
-            }
-        }
-    }
+  & .closeIcon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
 }

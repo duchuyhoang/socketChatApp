@@ -1,32 +1,46 @@
 .message {
+  margin-top: 1rem;
+  &__filter {
+    @include flex(center, space-between);
+    font-size: 13px;
+    padding: 0 1rem;
+    p {
+      flex-shrink: 0;
+      cursor: pointer;
+      display: inline-block;
+      color: #777;
+
+      &:hover {
+        color: $color-primary-dark;
+      }
+    }
+  }
+
+  &__content {
     margin-top: 1rem;
-    &__filter {
-        @include flex(center, space-between);
-        font-size: 13px;
-        padding: 0 1rem;
-        p {
-            flex-shrink: 0;
-            cursor: pointer;
-            display: inline-block;
-            color: #777;
+    max-height: 84vh;
+    overflow-y: auto;
 
-            &:hover {
-                color: $color-primary-dark;
-            }
-        }
+    &::-webkit-scrollbar {
+      width: 5px;
     }
 
-    &__content {
-        margin-top: 1rem;
-        ul {
-            li {
-                a {
-                    display: block;
-                }
-                a:active {
-                    color: inherit;
-                }
-            }
-        }
+    &::-webkit-scrollbar-track {
+      background: $color-blue-light;
     }
+    &::-webkit-scrollbar-thumb {
+      background: $color-primary-light;
+    }
+
+    ul {
+      li {
+        a {
+          display: block;
+        }
+        a:active {
+          color: inherit;
+        }
+      }
+    }
+  }
 }
