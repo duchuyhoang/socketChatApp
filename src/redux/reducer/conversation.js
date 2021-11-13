@@ -3,7 +3,7 @@ import { createSelector } from "reselect";
 import { transformListMessages } from "../../common/functions";
 
 const CONVERSATION_INITIAL_STATE = {
-  listConversation: null,
+  listConversation: [],
   mainConversationInfo: null,
   isLoading: false,
   currentConversation: null,
@@ -19,9 +19,12 @@ const { Types, Creators } = createActions({
   addUserToConversationSucceed: ["payload"],
 
   onUserAdd: ["payload"],
+  onAddedToConversation: ["payload"],
 
   setConversationLoading: ["payload"],
   setCurrentConversation: ["payload"],
+
+  createGroupChat: ["payload"],
 });
 
 //selector
@@ -77,9 +80,28 @@ const handleAddUserToConversation = (state, { payload }) => {
   return state;
 };
 
-const onAddUserHandle=(state,{payload})=>{
-  return {...state,mainConversationInfo:{...state.mainConversationInfo,listUser:[...state.mainConversationInfo.listUser,...payload.listUser]}}
-}
+const onAddUserHandle = (state, { payload }) => {
+  if (state.currentConversation?.toString() !== payload.id_room.toString())
+    return state;
+
+  return {
+    ...state,
+    mainConversationInfo: {
+      ...state.mainConversationInfo,
+      listUser: [...state.mainConversationInfo.listUser, ...payload.listUser],
+    },
+  };
+};
+
+const onAddedToConversation = (state, { payload }) => {
+  return {
+    ...state,
+    listConversation: [...state.listConversation, payload.newConversation],
+  };
+};
+const handleAddGroupChat = (state, payload) => {
+  return state;
+};
 
 export const ConversationTypes = Types;
 export const ConversationAction = Creators;
@@ -93,5 +115,7 @@ export const ConversationReducer = createReducer(CONVERSATION_INITIAL_STATE, {
   [Types.SET_CURRENT_CONVERSATION]: handleSetCurrentConversation,
   [Types.ADD_USER_TO_CONVERSATION]: handleAddUserToConversation,
   [Types.ADD_USER_TO_CONVERSATION_SUCCEED]: handleAddUserToConversation,
-  [Types.ON_USER_ADD]:onAddUserHandle
+  [Types.ON_USER_ADD]: onAddUserHandle,
+  [Types.ON_ADDED_TO_CONVERSATION]: onAddedToConversation,
+  [Types.CREATE_GROUP_CHAT]: handleAddGroupChat,
 });

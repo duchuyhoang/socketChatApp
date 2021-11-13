@@ -64,6 +64,7 @@ const Main = ({ match }) => {
     // dispatch(ConversationAction.setCurrentConversation({}))
   }, [idConversation]);
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("submit");
@@ -116,7 +117,11 @@ const Main = ({ match }) => {
         <div className="main__top__title">
           <Avatar img={avatar} isOnline={true} />
           <div className="main__top__title__sub">
-            <h3>{conversationInfo.creator_name}</h3>
+            <h3>
+              {conversationInfo.type === CONVERSATION_TYPE.GROUP
+                ? conversationInfo.title
+                : conversationInfo.creator_name}
+            </h3>
             <small>Truy cập 4 giờ trước</small>
           </div>
         </div>

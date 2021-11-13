@@ -40,9 +40,13 @@ export const getSpecificConversation = (payload) => {
 };
 
 export const addUsersToConversation=(payload)=>{
-  console.log(payload);
   return post(`conversation/addUsersToConversation`,payload);
 }
+
+export const createGroupChat=(payload)=>{
+  return post(`conversation/createGroupChat`,payload)
+}
+
 
 //message
 export const sendMessage = (payload) => {

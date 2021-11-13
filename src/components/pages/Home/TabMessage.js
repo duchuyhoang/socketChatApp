@@ -55,7 +55,7 @@ const transformListMessage = (list) => {
       id: id_room,
       avatar:creator_avatar,
       name: creator_name,
-      listAvatar: listAvatar.split("****"),
+      listAvatar: listAvatar?.split("****")||[],
       nextUserName:nextUserName
     };
   });

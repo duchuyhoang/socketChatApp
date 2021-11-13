@@ -4,8 +4,10 @@ import {
   getConversations,
   getSpecificConversation,
   addUsersToConversation,
+  createGroupChat,
 } from "../../services/apiMap";
 import { ConversationAction } from "../reducer/conversation";
+import { UiActions } from "../reducer/ui";
 import { MessageSaga } from "./messageSaga";
 
 export const ConversationSaga = {
@@ -44,13 +46,30 @@ export const ConversationSaga = {
   },
 
   *addUsersToConversation({ payload }) {
-    console.log(payload);
     try {
       const response = yield call(() => addUsersToConversation({ ...payload }));
       if (response.status === HttpStatusCode.SUCCESS) {
+        yield put(
+          UiActions.notificationSuccess({ message: "Thêm thành công" })
+        );
       }
     } catch (err) {
+      yield put(UiActions.notificationFailed({ message: "Thêm thất bại" }));
+    }
+  },
 
+  *createGroupChat({ payload }) {
+    try {
+      const response = yield call(() => createGroupChat({ ...payload }));
+      if (response.status === HttpStatusCode.SUCCESS) {
+        yield put(
+          UiActions.notificationSuccess({ message: "Tạo phòng thành công" })
+        );
+      }
+    } catch (err) {
+      yield put(
+        UiActions.notificationFailed({ message: "Tạo phòng thất bại" })
+      );
     }
   },
 };
