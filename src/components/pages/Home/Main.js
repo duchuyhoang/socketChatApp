@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import man from "../../../assets/images/man.png";
 import woman from "../../../assets/images/woman.png";
@@ -22,9 +22,15 @@ import { useHistory } from "react-router";
 import { useRoomChat } from "./useRoomChat";
 import { IconCategoryList } from "../../components/Icon/IconCategoryList";
 import Popup from "../../shared/Popup";
-import { CONVERSATION_TYPE } from "../../../common/constant";
+import {
+  CONVERSATION_TYPE,
+  SOCKET_EMIT_ACTIONS,
+} from "../../../common/constant";
 import { SearchFriend } from "../../components/SearchFriend";
+import { CONVERSATION_SOCKET } from "../../../socket/socket";
+
 const Main = ({ match }) => {
+  const userInfo = useSelector((state) => state.auth.user);
   const {
     params: { idConversation },
   } = match;
@@ -50,12 +56,20 @@ const Main = ({ match }) => {
 
   const callVideo = () => {
     const newIdRoom = v4();
+    CONVERSATION_SOCKET.emit(SOCKET_EMIT_ACTIONS.ON_CALL_VIDEO_INFO, {
+      idRoom: idConversation,
+      callUser: userInfo,
+      newIdRoom
+    });
     history.push(`/call/${newIdRoom}`);
   };
 
-  const avatar =
-    conversationInfo.creator_avatar ||
-    (conversationInfo.creator_sex ? man : woman);
+  const avatar = useMemo(
+    () =>
+      conversationInfo.creator_avatar ||
+      (conversationInfo.creator_sex ? man : woman),
+    [conversationInfo]
+  );
 
   useEffect(() => {
     dispatch(
@@ -64,10 +78,8 @@ const Main = ({ match }) => {
     // dispatch(ConversationAction.setCurrentConversation({}))
   }, [idConversation]);
 
-  
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submit");
     const content = inputRef.current.value.trim();
     const type = getTypeMessage(content, listImages);
     if (type === -1) return;
