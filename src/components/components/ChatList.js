@@ -12,12 +12,13 @@ const ChatList = ({ author }) => {
   const contentRef = useRef();
   let listMessages = useSelector(selectMessages);
   const dispatch = useDispatch();
-
+console.log(author);
   //listen socket
   useEffect(() => {
     const listener = (response) => {
       const { data } = response;
-      if (+data.id_user === author) return;
+      const id_sender=Array.isArray(data) ? +data[0].id_user : +data.id_user;
+      if (id_sender === author) return;
       dispatch(
         MessageActions.insertListenMessages({
           data,

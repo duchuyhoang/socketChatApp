@@ -1,0 +1,45 @@
+.message_notification {
+  display: flex;
+  //   width: 100%;
+  flex-direction: column;
+  &__header {
+    @include flex(center, space-between);
+    width: 100%;
+    color: #6c757d;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    a {
+      font-weight: bold !important;
+      font-size: 16px;
+      max-width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        color: #212529;
+      }
+    }
+    small {
+      font-size: 80%;
+      font-weight: 400;
+    }
+  }
+
+  &__content {
+    margin-top: 5px;
+    color: #212529;
+    font-weight: 400;
+    // padding:0.75rem;
+  }
+}
+
+#messageNotification {
+  padding-bottom: 0px;
+  .Toastify__toast-body {
+    padding-top: 0px;
+    margin-top: 0px;
+  }
+  .Toastify__close-button {
+    margin-top: 5px;
+  }
+}

@@ -111,7 +111,13 @@ const handleInsertPreviewMessages = (state, { payload }) => {
 };
 
 const handleInsertListenMessages = (state, { payload }) => {
-  state.messages.push(payload.data);
+  if(Array.isArray(payload.data)){
+    state.messages=[...state.messages,...payload.data]
+  }
+  else{
+    state.messages.push(payload.data);
+  }
+
   return {
     ...state,
     messages: [...state.messages],
