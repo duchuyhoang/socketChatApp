@@ -4,25 +4,34 @@ import man from '../../assets/images/man.png';
 import woman from '../../assets/images/woman.png';
 import { SOCKET_ON_ACTIONS } from '../../common/constant';
 import { MessageActions, selectMessages } from '../../redux/reducer/message';
+import { ConversationAction } from '../../redux/reducer/conversation';
 import { CONVERSATION_SOCKET } from '../../socket/socket';
 import Avatar from '../shared/Avatar';
 import CardChat from './CardChat';
+// import { useParams } from "react-router";
+import { useRouteMatch } from "react-router";
+
 
 const ChatList = ({ author }) => {
   const contentRef = useRef();
   let listMessages = useSelector(selectMessages);
   const dispatch = useDispatch();
+  const match = useRouteMatch();
 
   //listen socket
   useEffect(() => {
     const listener = (response) => {
-      const { data } = response;
-      if (+data.id_user === author) return;
+      const id_conversation=match.params.idConversation;
+      const { messageData:{data} } = response;
+      const id_sender=Array.isArray(data) ? +data[0].id_user : +data.id_user;
+      const id_room=Array.isArray(data) ? +data[0].id_conversation : +data.id_conversation;
+      if (id_sender === author||id_conversation?.toString()!==id_room.toString()) return;
       dispatch(
         MessageActions.insertListenMessages({
           data,
         })
       );
+     
     };
     CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_MESSAGE, listener);
 
@@ -59,7 +68,7 @@ const ChatList = ({ author }) => {
                     return (
                       <li key={message.idMessage}>
                         <CardChat
-                          type={message.type}
+                          type={message._type}
                           createTime={time}
                           img={message.url}
                           status={message.status}

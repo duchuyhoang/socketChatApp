@@ -1,0 +1,46 @@
+.confirmWrapper {
+  border-radius: 10px;
+  padding: 10px 20px;
+  background-color: $color-primary-main;
+  min-width: 300px;
+  svg {
+    cursor: pointer;
+  }
+  & .callUserName {
+    @include flex(center, space-between);
+    .nameContainer {
+      @include flex(center);
+      p {
+        max-width: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  & .callButtonContainer {
+    @include flex(center, space-between);
+    width: 100%;
+    margin-top: 20px;
+
+    & button {
+      @include flex(center, space-between);
+      cursor: pointer;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      min-width: 80px;
+      height: 30px;
+      box-sizing: border-box;
+      svg {
+        fill: #fff;
+      }
+    }
+    .confirmButton {
+      background-color: $color-primary-dark;
+    }
+    .rejectButton {
+      background-color: gray;
+    }
+  }
+}

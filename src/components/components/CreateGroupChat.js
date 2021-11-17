@@ -53,7 +53,7 @@ export const CreateGroupChat = (props) => {
         (friend) =>
           !listUserInRoom.find((_friend) => _friend.id_user === friend.id_user)
       );
-    //   console.log(searchUser);
+
     setSearchedUser([...searchUser]);
   }, [keyword]);
 
