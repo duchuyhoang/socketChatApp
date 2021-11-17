@@ -88,7 +88,7 @@ const Main = ({ match }) => {
     const idPreview = v4();
     dispatch(
       MessageActions.insertPreviewMessages({
-        type: type,
+        _type: type,
         content: content,
         listImages: listImages.map((item) => item.previewSrc),
         idUser: +user.id_user,

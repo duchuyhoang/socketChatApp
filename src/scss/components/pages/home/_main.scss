@@ -47,6 +47,17 @@
     flex-grow: 1;
     width: 100%;
     overflow-y: auto;
+    position: relative;
+
+    & .loadMoreMessageBreakPoint {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 20px;
+      width: 100%;
+      visibility: hidden;
+      background: transparent;
+    }
   }
 
   &__bottom {
@@ -144,28 +155,24 @@
     }
   }
 
-.popover_add_user_box{
-  padding:10px;
-  border-radius:5px;
-  @include flex(center,flex-start);
-  flex-direction: column;
-  max-width: 300px;
-  min-height:400px;
-  left:-750%;
+  .popover_add_user_box {
+    padding: 10px;
+    border-radius: 5px;
+    @include flex(center, flex-start);
+    flex-direction: column;
+    max-width: 300px;
+    min-height: 400px;
+    left: -750%;
 
-& .title{
-  @include flex(center,center);
-  font-size: 16px;
-}
+    & .title {
+      @include flex(center, center);
+      font-size: 16px;
+    }
 
-& .closeIcon{
-  position: absolute;
-  right:10px;
-  top:10px;
-}
-
-
-
-}
-
+    & .closeIcon {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+  }
 }
