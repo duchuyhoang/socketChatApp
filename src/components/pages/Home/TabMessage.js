@@ -11,41 +11,6 @@ import {
 import MessageItem from '../../components/MessageItem';
 import Select from '../../shared/Select';
 import SpinLoading from '../../shared/SpinLoading';
-// const listMessage = [
-//   {
-//     id: 1,
-//     name: 'Hoa Ngo',
-//     avatar: man,
-//     lassMessage: {
-//       form: '',
-//       content: 'I love u 💕',
-//     },
-//     sendingTime: Date.now(),
-//     countUnreadMessage: 5,
-//   },
-//   {
-//     id: 2,
-//     name: 'Hoàng Đức Huy',
-//     avatar: woman,
-//     lassMessage: {
-//       form: '',
-//       content: 'I love u 💕',
-//     },
-//     sendingTime: Date.now(),
-//     countUnreadMessage: 1,
-//   },
-//   {
-//     id: 3,
-//     name: 'Hoa Ngo 2',
-//     avatar: man,
-//     lassMessage: {
-//       form: 'You:',
-//       content: 'I love u 💕',
-//     },
-//     sendingTime: Date.now(),
-//     countUnreadMessage: 0,
-//   },
-// ];
 
 const transformListMessage = (list) => {
   return list.map((item) => {
@@ -64,10 +29,10 @@ const transformListMessage = (list) => {
 const TabMessage = () => {
   const { url } = useRouteMatch();
   // const match=useRouteMatch();
-  // console.log(match);
   const listMessage = transformListMessage(
     useSelector(selectListConversation) || []
   );
+
   const isLoading = useSelector(selectConversationLoading);
 
   return (

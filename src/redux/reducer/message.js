@@ -43,8 +43,7 @@ const handleGetMessagesSucceed = (state, { payload }) => {
 
 const handleInsertPreviewMessages = (state, { payload }) => {
   const newMessage = [];
-
-  if (payload.type === MESSAGE_TYPE.TEXT) {
+  if (payload._type === MESSAGE_TYPE.TEXT) {
     newMessage.push({
       type: payload.type,
       id_user: payload.idUser,
@@ -58,7 +57,7 @@ const handleInsertPreviewMessages = (state, { payload }) => {
     });
   }
 
-  if (payload.type === MESSAGE_TYPE.IMAGE) {
+  if (payload._type === MESSAGE_TYPE.IMAGE) {
     payload.listImages.forEach((item) => {
       newMessage.push({
         type: payload.type,
@@ -74,7 +73,7 @@ const handleInsertPreviewMessages = (state, { payload }) => {
     });
   }
 
-  if (payload.type === MESSAGE_TYPE.TEXT_AND_IMAGE) {
+  if (payload._type === MESSAGE_TYPE.TEXT_AND_IMAGE) {
     newMessage.push({
       type: MESSAGE_TYPE.TEXT,
       id_user: payload.idUser,
@@ -111,7 +110,13 @@ const handleInsertPreviewMessages = (state, { payload }) => {
 };
 
 const handleInsertListenMessages = (state, { payload }) => {
-  state.messages.push(payload.data);
+  if(Array.isArray(payload.data)){
+    state.messages=[...state.messages,...payload.data]
+  }
+  else{
+    state.messages.push(payload.data);
+  }
+
   return {
     ...state,
     messages: [...state.messages],
