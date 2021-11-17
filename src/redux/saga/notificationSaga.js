@@ -14,10 +14,8 @@ export const NotificationSaga = {
   },
 
   *answerFriendRequest({ payload }) {
-    console.log('🚀 ~ payload', payload);
     try {
       const response = yield call(() => answerFriendRequest(payload));
-      console.log('🚀 ~ response', response);
       if (response.status === HttpStatusCode.SUCCESS) {
         yield put(
           NotificationActions.answerFriendRequestSucceed(

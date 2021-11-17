@@ -1,26 +1,26 @@
-import { createActions, createReducer } from "reduxsauce";
-import { createSelector } from "reselect";
-import { v4 } from "uuid";
-import { MESSAGE_STATUS, MESSAGE_TYPE } from "../../common/constant";
-import { transformListMessages } from "../../common/functions";
+import { createActions, createReducer } from 'reduxsauce';
+import { createSelector } from 'reselect';
+import { v4 } from 'uuid';
+import { MESSAGE_STATUS, MESSAGE_TYPE } from '../../common/constant';
+import { transformListMessages } from '../../common/functions';
 
 const MESSAGE_INIT_STATE = {
   messages: [],
   previewMessages: [],
   error: null,
-  status: "idle",
+  status: 'idle',
   offset: 0,
   total: 0,
 };
 
 const { Types, Creators } = createActions({
-  getMessages: ["payload"],
-  getMessagesSucceed: ["payload"],
-  insertPreviewMessages: ["payload"],
-  insertListenMessages: ["payload"],
-  sendMessage: ["payload"],
-  sendMessageSucceed: ["payload"],
-  sendMessageFailed: ["payload"],
+  getMessages: ['payload'],
+  getMessagesSucceed: ['payload'],
+  insertPreviewMessages: ['payload'],
+  insertListenMessages: ['payload'],
+  sendMessage: ['payload'],
+  sendMessageSucceed: ['payload'],
+  sendMessageFailed: ['payload'],
 });
 
 //selector
@@ -61,7 +61,7 @@ const handleInsertPreviewMessages = (state, { payload }) => {
   const newMessage = [];
   if (payload._type === MESSAGE_TYPE.TEXT) {
     newMessage.push({
-      type: payload.type,
+      _type: payload._type,
       id_user: payload.idUser,
       avatar: payload.avatar,
       sex: payload.sex,
@@ -76,7 +76,7 @@ const handleInsertPreviewMessages = (state, { payload }) => {
   if (payload._type === MESSAGE_TYPE.IMAGE) {
     payload.listImages.forEach((item) => {
       newMessage.push({
-        type: payload.type,
+        _type: payload._type,
         id_user: payload.idUser,
         avatar: payload.avatar,
         sex: payload.sex,
@@ -91,7 +91,7 @@ const handleInsertPreviewMessages = (state, { payload }) => {
 
   if (payload._type === MESSAGE_TYPE.TEXT_AND_IMAGE) {
     newMessage.push({
-      type: MESSAGE_TYPE.TEXT,
+      _type: MESSAGE_TYPE.TEXT,
       id_user: payload.idUser,
       avatar: payload.avatar,
       sex: payload.sex,
@@ -103,7 +103,7 @@ const handleInsertPreviewMessages = (state, { payload }) => {
     });
     payload.listImages.forEach((item) => {
       newMessage.push({
-        type: MESSAGE_TYPE.IMAGE,
+        _type: MESSAGE_TYPE.IMAGE,
         id_user: payload.idUser,
         avatar: payload.avatar,
         sex: payload.sex,
@@ -118,7 +118,7 @@ const handleInsertPreviewMessages = (state, { payload }) => {
 
   if (payload.type === MESSAGE_TYPE.ICON) {
     newMessage.push({
-      type: payload.type,
+      _type: payload._type,
       id_user: payload.idUser,
       avatar: payload.avatar,
       sex: payload.sex,

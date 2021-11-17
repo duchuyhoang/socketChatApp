@@ -21,11 +21,10 @@ const ListAvatar = ({ listAvatar }) => {
 
 const MessageItem = (props) => {
   const { item } = props;
+  console.log('🚀 ~ item', item);
   const active = item.countUnreadMessage > 0;
-  const avatar = useMemo(
-    () => (item.avatar ? item.avatar : item.sex === 0 ? man : woman),
-    [item.avatar]
-  );
+  const avatar = item.avatar ? item.avatar : item.sex === 0 ? man : woman;
+
   // console.log(props);
   const listAvatar = useMemo(() => {
     const listAvatar =

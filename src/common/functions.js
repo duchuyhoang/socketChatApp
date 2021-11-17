@@ -1,4 +1,9 @@
-import { FRIEND_STATUS, MESSAGE_STATUS, MESSAGE_TYPE } from './constant';
+import {
+  FRIEND_STATUS,
+  MESSAGE_STATUS,
+  MESSAGE_TYPE,
+  NOTIFICATION_STATUS,
+} from './constant';
 
 export function setCookie(cname, cvalue, exdays) {
   var d = new Date();
@@ -55,7 +60,7 @@ export const transformListMessages = (listMessages) => {
       const lastPrev = prev.at(-1);
       if (lastPrev && +cur.id_user === lastPrev.idUser) {
         lastPrev.messages.push({
-          type: +cur.type,
+          _type: +cur._type,
           idMessage: +cur.id_message,
           content: cur.content,
           url: cur.url,
@@ -70,7 +75,7 @@ export const transformListMessages = (listMessages) => {
           gender: +cur.sex,
           messages: [
             {
-              type: +cur.type,
+              _type: +cur._type,
               idMessage: +cur.id_message,
               content: cur.content,
               url: cur.url,
@@ -108,4 +113,64 @@ export const getFriendStatus = (can_make_friend, friendStatus) => {
   if ((can_make_friend === 0 || can_make_friend === 1) && friendStatus === -1)
     return FRIEND_STATUS.BLOCK;
   return 1;
+};
+
+export const getContentNotification = (author, dataNotification) => {
+  //Author
+  // if (author.id_user === dataNotification.id_owner) {
+  //   if (dataNotification.status === NOTIFICATION_STATUS.FULFILLED) {
+  //     return {
+  //       content: `${dataNotification.ownerName} đã chấp nhận lời mời kết bạn của bạn 💕`,
+  //       imgSrc: dataNotification.ownerAvatar,
+  //       createAt: dataNotification.createAt,
+  //     };
+  //   }
+  // }
+
+  // //from other users
+  // if (author.id_user !== dataNotification.id_receiver) {
+  //   if (dataNotification.status === NOTIFICATION_STATUS.PENDING)
+  //     return {
+  //       content: `${dataNotification.ownerName} đã gửi cho bạn lời mời kết bạn 👏`,
+  //       imgSrc: dataNotification.ownerAvatar,
+  //       createAt: dataNotification.createAt,
+  //     };
+  //   else if (dataNotification.status === NOTIFICATION_STATUS.FULFILLED)
+  //     return {
+  //       content: `Bạn đã chấp nhận lời mời kết bạn của ${dataNotification.ownerName} 💕`,
+  //       imgSrc: dataNotification.ownerAvatar,
+  //       createAt: dataNotification.createAt,
+  //     };
+  // }
+
+  //add friend
+  if (dataNotification.type === 1) {
+    if (dataNotification.status === 0)
+      return {
+        content: `${dataNotification.ownerName} đã gửi cho bạn lời mời kết bạn 👏`,
+        imgSrc: dataNotification.ownerAvatar,
+        createAt: dataNotification.createAt,
+      };
+
+    if (dataNotification.status === 1) {
+      if (author.id_user === dataNotification.id_receiver)
+        return {
+          content: `${dataNotification.ownerName} đã chấp nhận lời mời kết bạn của bạn 💕`,
+          imgSrc: dataNotification.ownerAvatar,
+          createAt: dataNotification.createAt,
+        };
+      else
+        return {
+          content: `Bạn đã chấp nhận lời mời kết bạn của ${dataNotification.receiverName} 💕`,
+          imgSrc: dataNotification.receiverAvatar,
+          createAt: dataNotification.createAt,
+        };
+    }
+  }
+
+  return {
+    content: 'Bạn có một thông báo mới 🎁',
+    imgSrc: dataNotification.ownerAvatar,
+    createAt: dataNotification.createAt,
+  };
 };

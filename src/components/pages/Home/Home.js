@@ -39,6 +39,9 @@ function Home(props) {
   const conversationSocketState = useSelector(
     (state) => state.socket.socketReadyFlags.conversation
   );
+  const notificationSocketState = useSelector(
+    (state) => state.socket.socketReadyFlags.notification
+  );
 
   const handleCloseCall = () => {
     setCurrentCallInfo(null);
@@ -46,8 +49,7 @@ function Home(props) {
 
   useEffect(() => {
     if (conversationSocketState) {
-      // detect if someone add to new conversation
-      CONVERSATION_SOCKET.on(
+      CONVERSATION_SOCKET.off(SOCKET_ON_ACTIONS.JOIN_NEW_ROOM).on(
         SOCKET_ON_ACTIONS.JOIN_NEW_ROOM,
         ({ newConversation }) => {
           if (newConversation)
@@ -142,6 +144,20 @@ function Home(props) {
       );
     }
   }, [CONVERSATION_SOCKET]);
+  useEffect(() => {
+    if (notificationSocketState) {
+      NOTIFICATION_SOCKET.on(
+        SOCKET_ON_ACTIONS.EMIT_NOTIFICATION,
+        (newNotification) => {
+          console.log('🚀 ~ newNotification', newNotification);
+          if (newNotification)
+            dispatch(
+              NotificationActions.addNewNotification({ newNotification })
+            );
+        }
+      );
+    }
+  }, [notificationSocketState]);
 
   useEffect(() => {
     dispatch(UserAction.getListFriend());

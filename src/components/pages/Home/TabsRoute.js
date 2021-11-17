@@ -5,6 +5,7 @@ import SVGIcon from '../../shared/SVGIcon';
 import Search from './Search';
 import TabListFriend from './TabListFriend';
 import TabMessage from './TabMessage';
+import TabNotification from './TabNotification';
 
 const TabsRoute = (props) => {
   const [newGroupChatPopupOpen, setNewGroupChatPopupOpen] = useState(false);
@@ -15,6 +16,7 @@ const TabsRoute = (props) => {
   let tabSelect;
   if (params.tab === 'message') tabSelect = <TabMessage />;
   if (params.tab === 'list-friend') tabSelect = <TabListFriend />;
+  if (params.tab === 'notification') tabSelect = <TabNotification />;
 
   return (
     <div className='tabs'>

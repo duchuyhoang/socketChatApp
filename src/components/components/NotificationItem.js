@@ -1,14 +1,19 @@
 import React from 'react';
 import Moment from 'react-moment';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import man from '../../assets/images/man.png';
 import woman from '../../assets/images/woman.png';
-import { NOTIFICATION_STATUS, NOTIFICATION_TYPE } from '../../common/constant';
+import { NOTIFICATION_STATUS } from '../../common/constant';
+import { getContentNotification } from '../../common/functions';
+import { selectUser } from '../../redux/reducer/auth';
 import { NotificationActions } from '../../redux/reducer/notification';
 import Avatar from '../shared/Avatar';
 
 const NotificationItem = ({ item, ...rest }) => {
   console.log('🚀 ~ item', item);
+  const author = useSelector(selectUser);
+  console.log('🚀 ~ author', author);
+  const contentNotification = getContentNotification(author, item);
   const dispatch = useDispatch();
 
   const active = true;
@@ -18,8 +23,8 @@ const NotificationItem = ({ item, ...rest }) => {
   } else if (item.status === NOTIFICATION_STATUS.FULFILLED) {
     contentName = `Bạn đã chấp nhận lời mời kết bạn của ${item.ownerName} 💕`;
   }
-  const avatar = item.ownerAvatar
-    ? item.ownerAvatar
+  const avatar = contentNotification.imgSrc
+    ? contentNotification.imgSrc
     : item.ownerSex === 0
     ? man
     : woman;
@@ -47,16 +52,16 @@ const NotificationItem = ({ item, ...rest }) => {
             }`}
           >
             <div className='notification-item__content__name'>
-              {contentName}
+              {contentNotification.content}
             </div>
             <div className='notification-item__content__message'>
               <span>{item.message}</span>
             </div>
           </div>
           <div className='notification-item__time'>
-            {item.createAt && (
+            {contentNotification.createAt && (
               <span>
-                <Moment toNow>{item.createAt}</Moment>
+                <Moment toNow>{contentNotification.contentNotification}</Moment>
               </span>
             )}
           </div>

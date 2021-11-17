@@ -119,9 +119,11 @@ const onAddUserHandle = (state, { payload }) => {
 };
 
 const onAddedToConversation = (state, { payload }) => {
+  const newConversation = state.listConversation.reverse();
+  newConversation.push(payload.newConversation);
   return {
     ...state,
-    listConversation: [...state.listConversation, payload.newConversation],
+    listConversation: newConversation.reverse(),
   };
 };
 const handleAddGroupChat = (state, payload) => {
