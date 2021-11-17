@@ -132,7 +132,7 @@ const Main = ({ match }) => {
             <h3>
               {conversationInfo.type === CONVERSATION_TYPE.GROUP
                 ? conversationInfo.title
-                : conversationInfo.creator_name}
+                : conversationInfo.nextUserName}
             </h3>
             <small>Truy cập 4 giờ trước</small>
           </div>

@@ -1,5 +1,6 @@
 import { createActions, createReducer } from "reduxsauce";
 import { createSelector } from "reselect";
+import { MESSAGE_TYPE } from "../../common/constant";
 import { transformListMessages } from "../../common/functions";
 
 const CONVERSATION_INITIAL_STATE = {
@@ -25,6 +26,8 @@ const { Types, Creators } = createActions({
   setCurrentConversation: ["payload"],
 
   createGroupChat: ["payload"],
+
+  updateLastMessage:["payload"]
 });
 
 //selector
@@ -80,6 +83,26 @@ const handleAddUserToConversation = (state, { payload }) => {
   return state;
 };
 
+const handleUpdateLastMessage=(state,{payload})=>{
+  const {data}=payload;
+console.log("d",data);
+  let listConversation=[...state.listConversation];
+  listConversation=listConversation.map((conversation)=>{
+    if(conversation?.id_room?.toString()===data?.id_conversation?.toString()||""){
+      return {
+        ...conversation,
+        message_count:parseInt(conversation.message_count)+1,
+        last_message_type:data.type,        
+        last_message:(data.type===MESSAGE_TYPE.ICON || data.type===MESSAGE_TYPE.IMAGE) ? "Ảnh mới" : data.content
+      }
+    }
+    else return conversation
+  })
+  return {...state,listConversation};
+}
+
+
+
 const onAddUserHandle = (state, { payload }) => {
   if (state.currentConversation?.toString() !== payload.id_room.toString())
     return state;
@@ -118,4 +141,5 @@ export const ConversationReducer = createReducer(CONVERSATION_INITIAL_STATE, {
   [Types.ON_USER_ADD]: onAddUserHandle,
   [Types.ON_ADDED_TO_CONVERSATION]: onAddedToConversation,
   [Types.CREATE_GROUP_CHAT]: handleAddGroupChat,
+  [Types.UPDATE_LAST_MESSAGE]:handleUpdateLastMessage
 });

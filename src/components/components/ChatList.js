@@ -4,6 +4,7 @@ import man from '../../assets/images/man.png';
 import woman from '../../assets/images/woman.png';
 import { SOCKET_ON_ACTIONS } from '../../common/constant';
 import { MessageActions, selectMessages } from '../../redux/reducer/message';
+import { ConversationAction } from '../../redux/reducer/conversation';
 import { CONVERSATION_SOCKET } from '../../socket/socket';
 import Avatar from '../shared/Avatar';
 import CardChat from './CardChat';
@@ -24,6 +25,7 @@ console.log(author);
           data,
         })
       );
+     
     };
     CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_MESSAGE, listener);
 
