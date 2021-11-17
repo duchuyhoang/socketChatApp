@@ -46,7 +46,10 @@ export default function* rootSaga() {
 
     //message
     takeLatest(MessageTypes.GET_MESSAGES, MessageSaga.getMessages),
+    takeEvery(MessageTypes.CONTINUE_GET_MESSAGE, MessageSaga.continueGetMessages),
     takeEvery(MessageTypes.SEND_MESSAGE, MessageSaga.sendMessage),
+  
+
 
     // sticker
     takeLatest(

@@ -49,6 +49,17 @@
     overflow-y: auto;
     position: relative;
 
+    & .loading-new-message-container {
+      position: relative;
+      height: 50px;
+    }
+
+    & .dashed-loading {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+    }
+
     & .loadMoreMessageBreakPoint {
       position: absolute;
       top: 0;

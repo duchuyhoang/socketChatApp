@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import man from "../../assets/images/man.png";
 import woman from "../../assets/images/woman.png";
@@ -7,6 +7,10 @@ import {
   MessageActions,
   selectMessages,
   selectLatestMessage,
+  selectListMessageOffset,
+  selectListMessageTotal,
+  selectManualMessage,
+  selectContinueLoadMessageStatus,
 } from "../../redux/reducer/message";
 import { ConversationAction } from "../../redux/reducer/conversation";
 import { CONVERSATION_SOCKET } from "../../socket/socket";
@@ -14,17 +18,38 @@ import Avatar from "../shared/Avatar";
 import CardChat from "./CardChat";
 // import { useParams } from "react-router";
 import { useRouteMatch } from "react-router";
+import SpinLoading from "../shared/SpinLoading";
 
 const ChatList = ({ author }) => {
   const contentRef = useRef();
   const newMessageBreakPointRef = useRef();
-  // console.log();
+  const [currentLatestMessageIndex, setCurrentLatestMessageIndex] =
+    useState(null);
   let listMessages = useSelector(selectMessages);
-  // console.log(listMessages);
+  let listManualMessage = useSelector(selectManualMessage);
+
   const latestMessage = useSelector(selectLatestMessage);
+  const offset = useSelector(selectListMessageOffset);
+  const total = useSelector(selectListMessageTotal);
+  const continueLoadMessageStatus = useSelector(
+    selectContinueLoadMessageStatus
+  );
+
   const dispatch = useDispatch();
   const match = useRouteMatch();
-  console.log(latestMessage);
+
+  useEffect(() => {
+    if (currentLatestMessageIndex) {
+      let rootElement = document.querySelector(".main__content");
+
+      setTimeout(function () {
+        rootElement.scrollTop =
+          document.querySelector(`#${currentLatestMessageIndex.id}`).offsetTop -
+          document.querySelector(".card-chat").offsetTop-20;
+      }, 100);
+    }
+  }, [currentLatestMessageIndex]);
+
   //listen socket
   useEffect(() => {
     const listener = (response) => {
@@ -55,11 +80,9 @@ const ChatList = ({ author }) => {
   }, []);
 
   useEffect(() => {
-    let listMessageNode = document.querySelectorAll(".chat-list__item");
-    let rootElement = document.querySelector("#chatList");
-    console.log(rootElement);
+    let listMessageNode = document.querySelectorAll(".card-chat");
     let observer = null;
-
+    const id_conversation = match.params.idConversation;
     if (
       "IntersectionObserver" in window &&
       "IntersectionObserverEntry" in window &&
@@ -67,12 +90,28 @@ const ChatList = ({ author }) => {
     ) {
       observer = new IntersectionObserver(
         (entries, observer) => {
-          console.log(entries[0]);
-          // console.log("entries", entries[0].target);
+          if (entries[0].isIntersecting) {
+            if (listManualMessage.length < total) {
+              dispatch(
+                MessageActions.continueGetMessage({
+                  id_conversation,
+                  limit: 10,
+                  offset: offset + 10,
+                  callback: () => {
+                    setCurrentLatestMessageIndex(entries[0].target);
+                  },
+                })
+              );
+
+              observer.unobserve(listMessageNode[0]);
+            }
+            // console.log(entries[0].target.getAttribute("data-id"));
+          }
+          // console.log("entries", entries[0]);
         },
         {
           // root: rootElement,
-          rootMargin: "0px 0px 95% 0px",
+          rootMargin: "0px 0px 90% 0px",
           threshold: 0.2,
         }
       );
@@ -81,15 +120,14 @@ const ChatList = ({ author }) => {
 
         observer.observe(listMessageNode[0]);
       }
-      // observer.observe(document.getElementById("loadMoreMessageBreakPoint"));
     }
 
     return () => {
-      if (observer&&listMessageNode.length>0) {
+      if (observer && listMessageNode.length > 0) {
         observer.unobserve(listMessageNode[0]);
       }
     };
-  }, [listMessages]);
+  }, [listManualMessage]);
 
   useEffect(() => {
     contentRef.current.scrollTop = contentRef.current.scrollHeight;
@@ -97,11 +135,14 @@ const ChatList = ({ author }) => {
 
   return (
     <div className="main__content" ref={contentRef}>
-      <div
-        className="loadMoreMessageBreakPoint"
-        id="loadMoreMessageBreakPoint"
-        ref={newMessageBreakPointRef}
-      ></div>
+      {continueLoadMessageStatus === "loading" ||
+      continueLoadMessageStatus === "failed" ? (
+        <div className="loading-new-message-container">
+        <SpinLoading />
+          </div>
+      ) : (
+        <></>
+      )}
       <ul className="chat-list" id="chatList">
         {listMessages &&
           listMessages.map((item, index) => (
@@ -129,6 +170,7 @@ const ChatList = ({ author }) => {
                           img={message.url}
                           status={message.status}
                           icon={message.icon}
+                          id_message={message.idMessage}
                         >
                           {message.content}
                         </CardChat>

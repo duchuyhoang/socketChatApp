@@ -13,7 +13,7 @@ const ListAvatar = ({ listAvatar }) => {
     <>
       <div className='list-avatar-wrapper'>
         <img className='avatar avatar--sm' src={listAvatar[0]} />
-        <img className='avatar avatar--sm' src={userInfo.avatar} />
+        <img className='avatar avatar--sm' src={listAvatar[1]} />
       </div>
     </>
   );
@@ -21,7 +21,6 @@ const ListAvatar = ({ listAvatar }) => {
 
 const MessageItem = (props) => {
   const { item } = props;
-  console.log('🚀 ~ item', item);
   const active = item.countUnreadMessage > 0;
   const avatar = item.avatar ? item.avatar : item.sex === 0 ? man : woman;
 

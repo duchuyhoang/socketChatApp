@@ -35,7 +35,7 @@ export const ConversationSaga = {
         yield call(MessageSaga.getMessages, {
           payload: {
             offset: 0,
-            limit: 20,
+            limit: 10,
             id_conversation: response.data.conversationInfo.id_room,
           },
         });
