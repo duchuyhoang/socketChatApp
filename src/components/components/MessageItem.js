@@ -41,7 +41,7 @@ const MessageItem = (props) => {
     <div className={`message-item ${active ? "active" : ""}`}>
       <div className="message-item__avatar">
         {item.type === CONVERSATION_TYPE.SINGLE ? (
-          <Avatar img={listAvatar[0]} isOnline={true} />
+          <Avatar img={item.next_user_avatar||(item.next_user_sex?.toString()==="0" ? man : woman)} isOnline={true} />
         ) : (
           <ListAvatar listAvatar={listAvatar} />
         )}

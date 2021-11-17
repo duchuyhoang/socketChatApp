@@ -1,24 +1,26 @@
-import { createActions, createReducer } from 'reduxsauce';
-import { createSelector } from 'reselect';
-import { v4 } from 'uuid';
-import { MESSAGE_STATUS, MESSAGE_TYPE } from '../../common/constant';
-import { transformListMessages } from '../../common/functions';
+import { createActions, createReducer } from "reduxsauce";
+import { createSelector } from "reselect";
+import { v4 } from "uuid";
+import { MESSAGE_STATUS, MESSAGE_TYPE } from "../../common/constant";
+import { transformListMessages } from "../../common/functions";
 
 const MESSAGE_INIT_STATE = {
   messages: [],
   previewMessages: [],
   error: null,
-  status: 'idle',
+  status: "idle",
+  offset: 0,
+  total: 0,
 };
 
 const { Types, Creators } = createActions({
-  getMessages: ['payload'],
-  getMessagesSucceed: ['payload'],
-  insertPreviewMessages: ['payload'],
-  insertListenMessages: ['payload'],
-  sendMessage: ['payload'],
-  sendMessageSucceed: ['payload'],
-  sendMessageFailed: ['payload'],
+  getMessages: ["payload"],
+  getMessagesSucceed: ["payload"],
+  insertPreviewMessages: ["payload"],
+  insertListenMessages: ["payload"],
+  sendMessage: ["payload"],
+  sendMessageSucceed: ["payload"],
+  sendMessageFailed: ["payload"],
 });
 
 //selector
@@ -33,11 +35,25 @@ export const selectMessages = createSelector(selectSelf, (state) => {
   return transformListMessages(state.messages.concat(...flatPreviewMessage));
 });
 
+export const selectLatestMessage = createSelector(selectSelf, (state) => {
+  return state.messages.length > 0 ? state.messages[0] : null;
+});
+
+export const selectListMessageOffset = createSelector(selectSelf, (state) => {
+  return state.offset;
+});
+export const selectListMessageTotal = createSelector(selectSelf, (state) => {
+  return state.total;
+});
+
 //reducer
 const handleGetMessagesSucceed = (state, { payload }) => {
+  console.log(payload);
   return {
     ...state,
     messages: payload.data,
+    total: payload.total,
+    offset: payload.offset,
   };
 };
 
@@ -110,10 +126,9 @@ const handleInsertPreviewMessages = (state, { payload }) => {
 };
 
 const handleInsertListenMessages = (state, { payload }) => {
-  if(Array.isArray(payload.data)){
-    state.messages=[...state.messages,...payload.data]
-  }
-  else{
+  if (Array.isArray(payload.data)) {
+    state.messages = [...state.messages, ...payload.data];
+  } else {
     state.messages.push(payload.data);
   }
 

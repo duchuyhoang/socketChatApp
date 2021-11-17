@@ -1,37 +1,51 @@
-import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import man from '../../assets/images/man.png';
-import woman from '../../assets/images/woman.png';
-import { SOCKET_ON_ACTIONS } from '../../common/constant';
-import { MessageActions, selectMessages } from '../../redux/reducer/message';
-import { ConversationAction } from '../../redux/reducer/conversation';
-import { CONVERSATION_SOCKET } from '../../socket/socket';
-import Avatar from '../shared/Avatar';
-import CardChat from './CardChat';
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import man from "../../assets/images/man.png";
+import woman from "../../assets/images/woman.png";
+import { SOCKET_ON_ACTIONS } from "../../common/constant";
+import {
+  MessageActions,
+  selectMessages,
+  selectLatestMessage,
+} from "../../redux/reducer/message";
+import { ConversationAction } from "../../redux/reducer/conversation";
+import { CONVERSATION_SOCKET } from "../../socket/socket";
+import Avatar from "../shared/Avatar";
+import CardChat from "./CardChat";
 // import { useParams } from "react-router";
 import { useRouteMatch } from "react-router";
 
-
 const ChatList = ({ author }) => {
   const contentRef = useRef();
+  const newMessageBreakPointRef = useRef();
+  // console.log();
   let listMessages = useSelector(selectMessages);
+  // console.log(listMessages);
+  const latestMessage = useSelector(selectLatestMessage);
   const dispatch = useDispatch();
   const match = useRouteMatch();
-
+  console.log(latestMessage);
   //listen socket
   useEffect(() => {
     const listener = (response) => {
-      const id_conversation=match.params.idConversation;
-      const { messageData:{data} } = response;
-      const id_sender=Array.isArray(data) ? +data[0].id_user : +data.id_user;
-      const id_room=Array.isArray(data) ? +data[0].id_conversation : +data.id_conversation;
-      if (id_sender === author||id_conversation?.toString()!==id_room.toString()) return;
+      const id_conversation = match.params.idConversation;
+      const {
+        messageData: { data },
+      } = response;
+      const id_sender = Array.isArray(data) ? +data[0].id_user : +data.id_user;
+      const id_room = Array.isArray(data)
+        ? +data[0].id_conversation
+        : +data.id_conversation;
+      if (
+        id_sender === author ||
+        id_conversation?.toString() !== id_room.toString()
+      )
+        return;
       dispatch(
         MessageActions.insertListenMessages({
           data,
         })
       );
-     
     };
     CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_MESSAGE, listener);
 
@@ -41,17 +55,59 @@ const ChatList = ({ author }) => {
   }, []);
 
   useEffect(() => {
+    let listMessageNode = document.querySelectorAll(".chat-list__item");
+    let rootElement = document.querySelector("#chatList");
+    console.log(rootElement);
+    let observer = null;
+
+    if (
+      "IntersectionObserver" in window &&
+      "IntersectionObserverEntry" in window &&
+      "intersectionRatio" in window.IntersectionObserverEntry.prototype
+    ) {
+      observer = new IntersectionObserver(
+        (entries, observer) => {
+          console.log(entries[0]);
+          // console.log("entries", entries[0].target);
+        },
+        {
+          // root: rootElement,
+          rootMargin: "0px 0px 95% 0px",
+          threshold: 0.2,
+        }
+      );
+      if (listMessageNode.length > 0) {
+        // observer.observe(document.querySelector("#loadMoreMessageBreakPoint"));
+
+        observer.observe(listMessageNode[0]);
+      }
+      // observer.observe(document.getElementById("loadMoreMessageBreakPoint"));
+    }
+
+    return () => {
+      if (observer&&listMessageNode.length>0) {
+        observer.unobserve(listMessageNode[0]);
+      }
+    };
+  }, [listMessages]);
+
+  useEffect(() => {
     contentRef.current.scrollTop = contentRef.current.scrollHeight;
   });
 
   return (
-    <div className='main__content' ref={contentRef}>
-      <ul className='chat-list'>
+    <div className="main__content" ref={contentRef}>
+      <div
+        className="loadMoreMessageBreakPoint"
+        id="loadMoreMessageBreakPoint"
+        ref={newMessageBreakPointRef}
+      ></div>
+      <ul className="chat-list" id="chatList">
         {listMessages &&
           listMessages.map((item, index) => (
             <li
               className={`chat-list__item ${
-                author === item.idUser ? 'chat-list__item--me' : ''
+                author === item.idUser ? "chat-list__item--me" : ""
               }`}
               key={index}
             >
