@@ -56,70 +56,70 @@ function Home(props) {
         }
       );
 
-      CONVERSATION_SOCKET.off(SOCKET_ON_ACTIONS.EMIT_MESSAGE).on(
-        SOCKET_ON_ACTIONS.EMIT_MESSAGE,
-        (res) => {
-          const { data } = res;
-          dispatch(
-            ConversationAction.updateLastMessage({
-              data,
-            })
-          );
-          let _data=Array.isArray(data) ? data[data.length-1] : data;
-          // console.log(data);
-          if (_data.id_user.toString() != userInfo?.id_user.toString()) {
-            newMessageAudio.play();
-            let selectedConversation = null;
+      CONVERSATION_SOCKET.on(SOCKET_ON_ACTIONS.EMIT_MESSAGE, (res) => {
+        const {
+          messageData: { data },
+        } = res;
+        dispatch(
+          ConversationAction.updateLastMessage({
+            data,
+          })
+        );
+        let _data = Array.isArray(data) ? data[data.length - 1] : data;
+        let _type = Array.isArray(data)
+          ? data[data.length - 1]._type
+          : res.messageData.messageType;
+    
+        if (_data.id_user.toString() != userInfo?.id_user.toString()) {
+          newMessageAudio.play();
+          let selectedConversation = null;
 
-            for (let i = 0; i < listConversation.length; i++) {
-              if (
-                listConversation[i].id_room.toString() ===
-                _data.id_conversation.toString()
-              ) {
-                selectedConversation = listConversation[i];
-                break;
-              }
+          for (let i = 0; i < listConversation.length; i++) {
+            if (
+              listConversation[i].id_room.toString() ===
+              _data.id_conversation.toString()
+            ) {
+              selectedConversation = listConversation[i];
+              break;
             }
-
-            toast(
-              <MessageNotification
-                id_room={
-                  selectedConversation ? selectedConversation.id_room : ""
-                }
-                room_name={
-                  selectedConversation
-                    ? selectedConversation.type.toString() ===
-                      CONVERSATION_TYPE.GROUP
-                      ? selectedConversation.title
-                      : selectedConversation.nextUserName
-                    : ""
-                }
-                content={
-                  data.type == MESSAGE_TYPE.ICON ||
-                  data.type == MESSAGE_TYPE.IMAGE
-                    ? "Ảnh mới"
-                    : (data.type = MESSAGE_TYPE.TEXT ? data.content : "")
-                }
-              />,
-              {
-                position: "top-center",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: false,
-                pauseOnHover: true,
-                toastId: "messageNotification",
-                // draggable: true,
-                // progress: undefined,
-              }
-            );
           }
+
+          toast(
+            <MessageNotification
+              id_room={selectedConversation ? selectedConversation.id_room : ""}
+              room_name={
+                selectedConversation
+                  ? selectedConversation.type.toString() ===
+                    CONVERSATION_TYPE.GROUP
+                    ? selectedConversation.title
+                    : selectedConversation.nextUserName
+                  : ""
+              }
+              content={
+                _type == MESSAGE_TYPE.ICON || _type == MESSAGE_TYPE.IMAGE
+                  ? "Ảnh mới"
+                  : (_type == MESSAGE_TYPE.TEXT ? _data.content : "")
+              }
+            />,
+            {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: true,
+              toastId: "messageNotification",
+              // draggable: true,
+              // progress: undefined,
+            }
+          );
         }
-      );
+      });
     }
 
     return () => {
       if (conversationSocketState)
         CONVERSATION_SOCKET.off(SOCKET_ON_ACTIONS.JOIN_NEW_ROOM);
+      CONVERSATION_SOCKET.off(SOCKET_ON_ACTIONS.EMIT_MESSAGE);
     };
   }, [conversationSocketState]);
 

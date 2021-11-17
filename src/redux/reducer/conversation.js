@@ -85,15 +85,14 @@ const handleAddUserToConversation = (state, { payload }) => {
 
 const handleUpdateLastMessage=(state,{payload})=>{
   const {data}=payload;
-console.log("d",data);
   let listConversation=[...state.listConversation];
   listConversation=listConversation.map((conversation)=>{
     if(conversation?.id_room?.toString()===data?.id_conversation?.toString()||""){
       return {
         ...conversation,
         message_count:parseInt(conversation.message_count)+1,
-        last_message_type:data.type,        
-        last_message:(data.type===MESSAGE_TYPE.ICON || data.type===MESSAGE_TYPE.IMAGE) ? "Ảnh mới" : data.content
+        last_message_type:data._type,        
+        last_message:(data._type===MESSAGE_TYPE.ICON || data._type===MESSAGE_TYPE.IMAGE) ? "Ảnh mới" : data.content
       }
     }
     else return conversation

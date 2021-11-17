@@ -55,7 +55,7 @@ export const transformListMessages = (listMessages) => {
       const lastPrev = prev.at(-1);
       if (lastPrev && +cur.id_user === lastPrev.idUser) {
         lastPrev.messages.push({
-          type: +cur.type,
+          _type: +cur._type,
           idMessage: cur.id_message,
           content: cur.content,
           url: cur.url,
@@ -70,7 +70,7 @@ export const transformListMessages = (listMessages) => {
           gender: +cur.sex,
           messages: [
             {
-              type: +cur.type,
+              _type: +cur._type,
               idMessage: cur.id_message,
               content: cur.content,
               url: cur.url,

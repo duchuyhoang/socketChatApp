@@ -8,18 +8,24 @@ import { ConversationAction } from '../../redux/reducer/conversation';
 import { CONVERSATION_SOCKET } from '../../socket/socket';
 import Avatar from '../shared/Avatar';
 import CardChat from './CardChat';
+// import { useParams } from "react-router";
+import { useRouteMatch } from "react-router";
+
 
 const ChatList = ({ author }) => {
   const contentRef = useRef();
   let listMessages = useSelector(selectMessages);
   const dispatch = useDispatch();
-console.log(author);
+  const match = useRouteMatch();
+
   //listen socket
   useEffect(() => {
     const listener = (response) => {
-      const { data } = response;
+      const id_conversation=match.params.idConversation;
+      const { messageData:{data} } = response;
       const id_sender=Array.isArray(data) ? +data[0].id_user : +data.id_user;
-      if (id_sender === author) return;
+      const id_room=Array.isArray(data) ? +data[0].id_conversation : +data.id_conversation;
+      if (id_sender === author||id_conversation?.toString()!==id_room.toString()) return;
       dispatch(
         MessageActions.insertListenMessages({
           data,
@@ -62,7 +68,7 @@ console.log(author);
                     return (
                       <li key={message.idMessage}>
                         <CardChat
-                          type={message.type}
+                          type={message._type}
                           createTime={time}
                           img={message.url}
                           status={message.status}
