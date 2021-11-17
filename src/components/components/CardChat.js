@@ -9,6 +9,7 @@ const CardChat = ({
   img,
   status,
   icon,
+  id_message,
   ...rest
 }) => {
   return (
@@ -16,6 +17,8 @@ const CardChat = ({
       className={`card-chat ${
         status === MESSAGE_STATUS.PENDING ? 'pending' : ''
       }${status === MESSAGE_STATUS.ERROR ? 'error' : ''}`}
+      // data-id={id_message}
+      id={"message_"+id_message}
     >
       {type === 0 && <p className='card-chat__text'>{children}</p>}
       {type === 1 && <img src={img} alt='' />}

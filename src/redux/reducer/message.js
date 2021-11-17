@@ -1,26 +1,30 @@
-import { createActions, createReducer } from 'reduxsauce';
-import { createSelector } from 'reselect';
-import { v4 } from 'uuid';
-import { MESSAGE_STATUS, MESSAGE_TYPE } from '../../common/constant';
-import { transformListMessages } from '../../common/functions';
+import { createActions, createReducer } from "reduxsauce";
+import { createSelector } from "reselect";
+import { v4 } from "uuid";
+import { MESSAGE_STATUS, MESSAGE_TYPE } from "../../common/constant";
+import { transformListMessages } from "../../common/functions";
 
 const MESSAGE_INIT_STATE = {
   messages: [],
   previewMessages: [],
   error: null,
-  status: 'idle',
+  status: "idle",
+  continueLoadMessageStatus: "idle",
   offset: 0,
   total: 0,
 };
 
 const { Types, Creators } = createActions({
-  getMessages: ['payload'],
-  getMessagesSucceed: ['payload'],
-  insertPreviewMessages: ['payload'],
-  insertListenMessages: ['payload'],
-  sendMessage: ['payload'],
-  sendMessageSucceed: ['payload'],
-  sendMessageFailed: ['payload'],
+  getMessages: ["payload"],
+  getMessagesSucceed: ["payload"],
+  insertPreviewMessages: ["payload"],
+  insertListenMessages: ["payload"],
+  sendMessage: ["payload"],
+  sendMessageSucceed: ["payload"],
+  sendMessageFailed: ["payload"],
+  continueGetMessage: ["payload"],
+  continueGetMessageSucceed: ["payload"],
+  continueGetMessageFailed: ["payload"],
 });
 
 //selector
@@ -35,6 +39,10 @@ export const selectMessages = createSelector(selectSelf, (state) => {
   return transformListMessages(state.messages.concat(...flatPreviewMessage));
 });
 
+export const selectManualMessage = createSelector(selectSelf, (state) => {
+  return state.messages;
+});
+
 export const selectLatestMessage = createSelector(selectSelf, (state) => {
   return state.messages.length > 0 ? state.messages[0] : null;
 });
@@ -46,15 +54,42 @@ export const selectListMessageTotal = createSelector(selectSelf, (state) => {
   return state.total;
 });
 
+export const selectContinueLoadMessageStatus = createSelector(
+  selectSelf,
+  (state) => {
+    return state.continueLoadMessageStatus;
+  }
+);
+
 //reducer
 const handleGetMessagesSucceed = (state, { payload }) => {
-  console.log(payload);
   return {
     ...state,
     messages: payload.data,
     total: payload.total,
     offset: payload.offset,
   };
+};
+
+const handleContinueGetMessageSucceed = (state, { payload }) => {
+  return {
+    ...state,
+    messages: [...state.messages, ...payload.data],
+    total: payload.total,
+    offset: payload.offset,
+    continueLoadMessageStatus: "fulfilled",
+  };
+};
+
+const handleContinueGetMessageFailed = (state, { payload }) => {
+  return {
+    ...state,
+    continueLoadMessageStatus: "failed",
+  };
+};
+
+const handleContinueGetMessage = (state, { payload }) => {
+  return { ...state, continueLoadMessageStatus: "loading" };
 };
 
 const handleInsertPreviewMessages = (state, { payload }) => {
@@ -115,10 +150,10 @@ const handleInsertPreviewMessages = (state, { payload }) => {
       });
     });
   }
-
+  // console.log(payload);
   if (payload.type === MESSAGE_TYPE.ICON) {
     newMessage.push({
-      _type: payload._type,
+      _type: MESSAGE_TYPE.ICON,
       id_user: payload.idUser,
       avatar: payload.avatar,
       sex: payload.sex,
@@ -150,6 +185,9 @@ const handleInsertListenMessages = (state, { payload }) => {
   return {
     ...state,
     messages: [...state.messages],
+    total: Array.isArray(payload.data)
+      ? state.total + payload.data.length
+      : state.total + 1,
   };
 };
 
@@ -187,9 +225,12 @@ const handleSendMessageFailed = (state, { payload: idPreview }) => {
 
 export const MessageTypes = Types;
 export const MessageActions = Creators;
-
+// continueGetMessageSucceed
 export const MessageReducer = createReducer(MESSAGE_INIT_STATE, {
   [Types.GET_MESSAGES_SUCCEED]: handleGetMessagesSucceed,
+  [Types.CONTINUE_GET_MESSAGE]: handleContinueGetMessage,
+  [Types.CONTINUE_GET_MESSAGE_SUCCEED]: handleContinueGetMessageSucceed,
+  [Types.CONTINUE_GET_MESSAGE_FAILED]: handleContinueGetMessageFailed,
   [Types.INSERT_PREVIEW_MESSAGES]: handleInsertPreviewMessages,
   [Types.INSERT_LISTEN_MESSAGES]: handleInsertListenMessages,
   [Types.SEND_MESSAGE_SUCCEED]: handleSendMessageSucceed,

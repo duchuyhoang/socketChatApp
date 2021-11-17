@@ -86,13 +86,14 @@ function Home(props) {
               break;
             }
           }
-
+// console.log(data);
           toast(
             <MessageNotification
               id_room={selectedConversation ? selectedConversation.id_room : ''}
+              sender_name={data.name}
               room_name={
                 selectedConversation
-                  ? selectedConversation.type.toString() ===
+                  ? +selectedConversation.type ===
                     CONVERSATION_TYPE.GROUP
                     ? selectedConversation.title
                     : selectedConversation.nextUserName
@@ -149,7 +150,6 @@ function Home(props) {
       NOTIFICATION_SOCKET.on(
         SOCKET_ON_ACTIONS.EMIT_NOTIFICATION,
         (newNotification) => {
-          console.log('🚀 ~ newNotification', newNotification);
           if (newNotification)
             dispatch(
               NotificationActions.addNewNotification({ newNotification })
@@ -191,22 +191,6 @@ function Home(props) {
           pauseOnHover
         />
       </div>
-      <button
-        onClick={() => {
-          toast(<MessageNotification />, {
-            position: 'top-center',
-            autoClose: false,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-            toastId: 'messageNotification',
-            // draggable: true,
-            // progress: undefined,
-          });
-        }}
-      >
-        Toast
-      </button>
     </Helmet>
   );
 }

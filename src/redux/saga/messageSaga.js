@@ -25,4 +25,19 @@ export const MessageSaga = {
       }
     } catch (error) {}
   },
+  *continueGetMessages({ payload }) {
+    const {callback,...rest}=payload;
+    try {
+      const queryParams = new URLSearchParams({ ...rest });
+
+      const response = yield call(() => getMessage({ queryParams }));
+      if (response.status === HttpStatusCode.SUCCESS) {
+        yield put(MessageActions.continueGetMessageSucceed(response.data));
+        callback();
+      }
+    } catch (error) {
+      yield put(MessageActions.continueGetMessageFailed());
+
+    }
+  },
 };
