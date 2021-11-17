@@ -14,11 +14,13 @@ import SpinLoading from '../../shared/SpinLoading';
 
 const transformListMessage = (list) => {
   return list.map((item) => {
-    const {id_room,creator_avatar,creator_name,listAvatar,nextUserName,...rest}=item;
+    const {id_room,creator_avatar,creator_name,listAvatar,nextUserName,nextUserAvatar,nextUserSex,...rest}=item;
     return {
       ...rest,
       id: id_room,
       avatar:creator_avatar,
+      next_user_avatar:nextUserAvatar,
+      next_user_sex:nextUserSex,
       name: creator_name,
       listAvatar: listAvatar?.split("****")||[],
       nextUserName:nextUserName
