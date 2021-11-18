@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { CONVERSATION_SOCKET, CALL_SOCKET } from "../../../socket/socket";
 import { useParams } from "react-router";
 import Peer from "peerjs";
@@ -17,38 +17,86 @@ import useWindowUnloadEffect from "../../hooks/useWindowRefresh";
 import SVGIcon from "../../shared/SVGIcon";
 import { useHistory } from "react-router";
 import Grid from "../../shared/Grid";
-const Video = React.memo(
+import { useSelector } from "react-redux";
+import { getCookie, parseJwt } from "../../../common/functions";
+
+const getClassResponsiveByPeople = (amount, isSelectedRepresenting = false) => {
+  if (isSelectedRepresenting) {
+    return {
+      col: 1,
+      myVideoClass: "myVideoWrapper-lg-amount-people",
+      videoClass: "videoContainer-lg-amount-people",
+    };
+  }
+
+  if (amount >= 12) {
+    return {
+      col: 4,
+      myVideoClass: "myVideoWrapper-lg-amount-people",
+      videoClass: "videoContainer-lg-amount-people",
+    };
+  }
+
+  if (amount >= 7) {
+    return {
+      col: 3,
+      myVideoClass: "myVideoWrapper-md-amount-people",
+      videoClass: "videoContainer-md-amount-people",
+    };
+  }
+
+  if (amount >= 3) {
+    return {
+      col: 2,
+      myVideoClass: "myVideoWrapper-sm-amount-people",
+      videoClass: "videoContainer-sm-amount-people",
+    };
+  }
+
+  return {
+    col: 2,
+    myVideoClass: "myVideoWrapper",
+    videoClass: "videoContainer",
+  };
+};
+
+const Video =
+  // React.memo(
   (props) => {
-    const { socketId, call, socket, changeCount, mic, video, type } =
+    const { socketId, call, socket, mic, video, type, userInfo, stream } =
       props.connection;
+    const { videoClass, setCurrentFullScreenVideo, id, selected } = props;
     const videoRef = useRef(null);
-    const [videoStream, setVideoStream] = useState(null);
-    const [smtChange, setSmtChange] = useState(false);
-    const [videoAudioTrack, setVideoAudioTrack] = useState(null);
-    const [videoScreenTrack, setVideoScreenTrack] = useState(null);
-    const [videoEnable, setVideoEnable] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
+    // const [videoStream, setVideoStream] = useState(null);
+    // useEffect(() => {
+    //   call.on("stream", (remoteStream) => {
+    //     if (videoRef.current) {
+    //       videoRef.current.srcObject = remoteStream;
+    //       // setVideoStream(remoteStream);
+    //     }
+    //   });
+    // }, [call]);
+
     useEffect(() => {
-      call.on("stream", (remoteStream) => {
-        console.log("stream", remoteStream);
-        videoRef.current.srcObject = remoteStream;
-        setVideoStream(remoteStream);
-        console.log(remoteStream.getAudioTracks());
-        console.log(remoteStream.getVideoTracks());
-
-        // if(type==="shareScreen")
-        // setVideoAudioTrack();
-        // else
-        // setVideoAudioTrack(remoteStream.getAudioTracks()[0].muted);
-        // setVideoScreenTrack(remoteStream.getVideoTracks()[0].muted);
-
-        // videoRef.current.play();
-      });
-    }, [call]);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        // setVideoStream(remoteStream);
+      }
+    }, [stream]);
 
     return (
-      <div className="videoContainer">
+      <div
+        className={`${videoClass} ${
+          isFullScreen ? "videoContainerFullScreen" : ""
+        }`}
+        onDoubleClick={() => {
+          setCurrentFullScreenVideo((prev) => (!prev ? id : null));
+          // setIsFullScreen((prev) => !prev);
+        }}
+      >
         <div className="videoControlWrapper">
-          <div>
+          <div className="videoHelper">
             {mic ? (
               <SVGIcon
                 style={{ fill: "#fff" }}
@@ -64,21 +112,67 @@ const Video = React.memo(
                 height={"20"}
               />
             )}
+
+            {video ? (
+              <span className="userInfo">
+                {userInfo.type === "call" ? (
+                  <>{userInfo?.name || ""}</>
+                ) : (
+                  <>{userInfo?.name || ""}'s Screen</>
+                )}
+              </span>
+            ) : (
+              <></>
+            )}
           </div>
-          <div>Video {video ? <>Enable</> : "Disabled"}</div>
+
+          <div className="videoHelper fullscreenIcon">
+            {selected !== id ? (
+              <SVGIcon
+                name="fullscreen"
+                width={"18"}
+                height={"18"}
+                style={{ fill: "#fff" }}
+                onClick={() => {
+                  setCurrentFullScreenVideo(id);
+
+                  // setIsFullScreen(true);
+                }}
+              />
+            ) : (
+              <SVGIcon
+                name="smallscreen"
+                width={"18"}
+                height={"18"}
+                style={{ fill: "#fff" }}
+                onClick={() => {
+                  setCurrentFullScreenVideo(null);
+
+                  // setIsFullScreen(false);
+                }}
+              />
+            )}
+          </div>
         </div>
-        <video ref={videoRef} autoPlay></video>
+        {video ? (
+          <video ref={videoRef} autoPlay></video>
+        ) : (
+          <div className="videoDisabledContainer">
+            <strong className="videoName">{userInfo.name || "Anomyous"}</strong>
+          </div>
+        )}
+        {/* <div>Video {video ? <>Enable</> : "Disabled"}</div> */}
       </div>
     );
-  },
-  (currentProps, nextProps) => {
-    return (
-      currentProps.mic === nextProps.mic &&
-      currentProps.video === nextProps.video &&
-      nextProps.changeCount === currentProps.changeCount
-    );
-  }
-);
+  };
+//   (currentProps, nextProps) => {
+//     return (
+//       currentProps.mic === nextProps.mic &&
+//       currentProps.video === nextProps.video &&
+//       nextProps.changeCount === currentProps.changeCount
+//     );
+//   }
+// );
 
 const ChatVideo = () => {
   const { id_conversation } = useParams();
@@ -97,6 +191,23 @@ const ChatVideo = () => {
   const [iceServer, setIceServer] = useState(null);
   const streamRef = useRef(null);
   const history = useHistory();
+  const [selectedVideoFullScreen, setSelectedVideoFullScreen] = useState(null);
+  console.log(listCallConnection);
+  const classInfoResposive = useMemo(
+    () =>
+      getClassResponsiveByPeople(
+        listCallConnection.length + 1,
+        selectedVideoFullScreen
+      ),
+    [listCallConnection, selectedVideoFullScreen]
+  );
+
+  const _userInfo =
+    useSelector((state) => state.auth.user) ||
+    parseJwt(getCookie("cn11_access_token") || "");
+  useEffect(() => {
+    if (!_userInfo) history.push("/login");
+  }, [_userInfo]);
   const toggleSound = () => {
     // const newAudioTrack = myStream.getAudioTracks()[0].clone();
     // newAudioTrack.enabled = !audioTrack;
@@ -119,6 +230,20 @@ const ChatVideo = () => {
     });
     setAudioTrack(newAudioTrack);
   };
+
+  // handle another user reload page and you are selecting his or her screen
+  useEffect(() => {
+    if (selectedVideoFullScreen !== null) {
+      if (
+        !listCallConnection.find(
+          (callConnection) =>
+            callConnection.type + "_" + callConnection.socketId ===
+            selectedVideoFullScreen
+        )
+      )
+        setSelectedVideoFullScreen(null);
+    }
+  }, [listCallConnection]);
 
   useWindowUnloadEffect(() => {
     CALL_SOCKET.emit("socketLeave", {
@@ -258,7 +383,7 @@ const ChatVideo = () => {
           });
         }, 500);
 
-        myVideoRef.current.classList.toggle("bottomToggleVideo");
+        // myVideoRef.current.classList.toggle("bottomToggleVideo");
       })
       .catch((err) => {
         console.error("Error:" + err);
@@ -270,7 +395,7 @@ const ChatVideo = () => {
 
     const call = myPeer.call(peerId, myStream, {
       metadata: {
-        userInfo,
+        userInfo: _userInfo,
         socketId: CALL_SOCKET.id,
         mic: myStream.getAudioTracks()[0].enabled,
         video: myStream.getVideoTracks()[0].enabled,
@@ -281,9 +406,10 @@ const ChatVideo = () => {
   };
 
   const stopShare = () => {
-    if (myScreenShare && CALL_SOCKET) {
+    if (myScreenShare && CALL_SOCKET && myVideoRef) {
       streamRef.current.textContent = "";
       myScreenShare.getVideoTracks()[0].stop();
+      // myVideoRef.current.classList.toggle("bottomToggleVideo");
       setScreenShare(null);
       CALL_SOCKET.emit("stop share", {
         socketId: CALL_SOCKET.id,
@@ -292,46 +418,42 @@ const ChatVideo = () => {
     }
   };
 
-  useEffect(() => {
-    window.onload = function () {
-      let xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function ($evt) {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          let res = JSON.parse(xhr.responseText);
-          console.log(res);
-          console.log(res.v);
+  // useEffect(() => {
+  //   window.onload = function () {
+  //     let xhr = new XMLHttpRequest();
+  //     xhr.onreadystatechange = function ($evt) {
+  //       if (xhr.readyState == 4 && xhr.status == 200) {
+  //         let res = JSON.parse(xhr.responseText);
+  //         setIceServer(res.v);
+  //       }
+  //     };
+  //     xhr.open(
+  //       "PUT",
+  //       "https://global.xirsys.net/_turn/duchuyhoang.github.io",
+  //       true
+  //     );
+  //     xhr.setRequestHeader(
+  //       "Authorization",
+  //       "Basic " + btoa("huyhoang:41988f64-3b31-11ec-8906-0242ac130002")
+  //     );
+  //     xhr.setRequestHeader("Content-Type", "application/json");
+  //     xhr.send(JSON.stringify({ format: "urls" }));
 
-          setIceServer(res.v);
-        }
-      };
-      xhr.open(
-        "PUT",
-        "https://global.xirsys.net/_turn/duchuyhoang.github.io",
-        true
-      );
-      xhr.setRequestHeader(
-        "Authorization",
-        "Basic " + btoa("huyhoang:41988f64-3b31-11ec-8906-0242ac130002")
-      );
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.send(JSON.stringify({ format: "urls" }));
+  //     // iceServers=
+  //   };
 
-      // iceServers=
-    };
-
-    return () => {
-      // if (myStream) {
-      //   myStream.getTracks()[0].stop();
-      //   stopShare();
-      // }
-    };
-  }, []);
+  //   return () => {
+  //     // if (myStream) {
+  //     //   myStream.getTracks()[0].stop();
+  //     //   stopShare();
+  //     // }
+  //   };
+  // }, []);
 
   useEffect(
     () => {
       // if(iceServer){
       CALL_SOCKET.connect();
-      // console.log(iceServer.iceServers);
       const newPeer = new Peer({
         key: "peerjs",
         host: PEERJS_SERVER,
@@ -362,17 +484,21 @@ const ChatVideo = () => {
         secure: true,
         port: 443,
         config: {
-          username:
-            "Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==",
-          credential: "8e819244-3bf4-11ec-86f5-0242ac120004",
-          urls: [
-            "stun:hk-turn1.xirsys.com",
-            "turn:hk-turn1.xirsys.com:80?transport=udp",
-            "turn:hk-turn1.xirsys.com:3478?transport=udp",
-            "turn:hk-turn1.xirsys.com:80?transport=tcp",
-            "turn:hk-turn1.xirsys.com:3478?transport=tcp",
-            "turns:hk-turn1.xirsys.com:443?transport=tcp",
-            "turns:hk-turn1.xirsys.com:5349?transport=tcp",
+          iceServers: [
+            {
+              username:
+                "Bebl4LMhW9gs7INGS4VxdYtc6nCT6-VBAHXQRpOSekXCI2k9WuA76Oai2HAr5ekyAAAAAGGBXjFodXlob2FuZw==",
+              credential: "8e819244-3bf4-11ec-86f5-0242ac120004",
+              urls: [
+                "stun:hk-turn1.xirsys.com",
+                "turn:hk-turn1.xirsys.com:80?transport=udp",
+                "turn:hk-turn1.xirsys.com:3478?transport=udp",
+                "turn:hk-turn1.xirsys.com:80?transport=tcp",
+                "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+                "turns:hk-turn1.xirsys.com:443?transport=tcp",
+                "turns:hk-turn1.xirsys.com:5349?transport=tcp",
+              ],
+            },
           ],
         },
       });
@@ -428,7 +554,7 @@ const ChatVideo = () => {
 
   // Handle share screen
   useEffect(() => {
-    if (CALL_SOCKET && myStreamPeer) {
+    if (CALL_SOCKET && myStreamPeer && _userInfo) {
       CALL_SOCKET.on("share to", ({ socketList }) => {
         socketList.map((socketId) => {
           CALL_SOCKET.emit("request share screen", {
@@ -439,8 +565,8 @@ const ChatVideo = () => {
             mic: false,
             video: true,
             userInfo: {
-              name: "Huy hoang",
-              age: 100,
+              ..._userInfo,
+              type: "call",
             },
           });
         });
@@ -466,13 +592,13 @@ const ChatVideo = () => {
   }, [CALL_SOCKET, myStreamPeer, myStreamPeerId]);
 
   useEffect(() => {
-    if (CALL_SOCKET && myScreenShare) {
+    if (CALL_SOCKET && myScreenShare && _userInfo) {
       CALL_SOCKET.on("user accepted share screen", ({ socketId, peerId }) => {
         myStreamPeer.call(peerId, myScreenShare, {
           metadata: {
             userInfo: {
-              name: "huy",
-              age: 111,
+              ...(_userInfo || { name: "Anomyous", avatar: null }),
+              type: "screen",
             },
             socketId: CALL_SOCKET.id,
             mic: false,
@@ -501,18 +627,22 @@ const ChatVideo = () => {
       myStreamPeer.on("call", (call) => {
         // Just one way connection
         call.answer();
-        setListCallConnection((oldList) => [
-          ...oldList,
-          {
-            call,
-            mic: false,
-            video: true,
-            type: "shareScreen",
-            userInfo: call.metadata.userInfo,
-            changeCount: 0,
-            socketId: call.metadata.socketId,
-          },
-        ]);
+
+        call.on("stream", (remoteStream) => {
+          setListCallConnection((oldList) => [
+            ...oldList,
+            {
+              call,
+              stream: remoteStream,
+              mic: false,
+              video: true,
+              type: "shareScreen",
+              userInfo: call.metadata.userInfo,
+              changeCount: 0,
+              socketId: call.metadata.socketId,
+            },
+          ]);
+        });
 
         // call.on("stream",remoteStream=>{
         //   console.log("remoteStream",remoteStream);
@@ -566,7 +696,7 @@ const ChatVideo = () => {
   }, [listCallConnection, CALL_SOCKET]);
 
   useEffect(() => {
-    if (myPeerId && myStream && myStreamPeer) {
+    if (myPeerId && myStream && myStreamPeer && _userInfo) {
       CALL_SOCKET.emit(SOCKET_EMIT_ACTIONS.ON_GET_LIST_USER_IN_ROOM, {
         id_conversation,
       });
@@ -583,8 +713,8 @@ const ChatVideo = () => {
             mic: myStream.getAudioTracks()[0].enabled,
             video: myStream.getVideoTracks()[0].enabled,
             userInfo: {
-              name: "Huy hoang",
-              age: 100,
+              ..._userInfo,
+              type: "call",
             },
           });
         });
@@ -608,27 +738,32 @@ const ChatVideo = () => {
             userInfo,
             type
           );
-          setListCallConnection((oldList) => [
-            ...oldList.filter(
-              (connection) => connection.socketId !== callerSocketId
-            ),
-            {
-              socketId: callerSocketId,
-              call,
-              userInfo,
-              mic,
-              video,
-              type,
-              changeCount: 0,
-            },
-          ]);
+
+          call.on("stream", (remoteStream) => {
+            setListCallConnection((oldList) => [
+              ...oldList.filter(
+                (connection) => connection.socketId !== callerSocketId
+              ),
+              {
+                socketId: callerSocketId,
+                stream: remoteStream,
+                call,
+                userInfo,
+                mic,
+                video,
+                type,
+                changeCount: 0,
+              },
+            ]);
+          });
+
           // if other join and this user is currently streaming
-          if (myScreenShare && myStreamPeer) {
+          if (myScreenShare && myStreamPeer && _userInfo) {
             myStreamPeer.call(streamPeerId, myScreenShare, {
               metadata: {
                 userInfo: {
-                  name: "huy",
-                  age: 111,
+                  ..._userInfo,
+                  type: "screen",
                 },
                 socketId: CALL_SOCKET.id,
                 mic: false,
@@ -653,22 +788,25 @@ const ChatVideo = () => {
     if (myPeerId && myPeer && myStream) {
       myPeer.on("call", (call) => {
         call.answer(myStream);
-        setListCallConnection((oldList) => {
-          const newList = oldList.filter(
-            (connection) => connection.socketId !== call.metadata.socketId
-          );
-          return [
-            ...newList,
-            {
-              socketId: call.metadata?.socketId || "",
-              call,
-              userInfo: call.metadata.userInfo || { name: "", age: 0 },
-              mic: call.metadata.mic,
-              video: call.metadata.video,
-              type: "videoChat",
-              changeCount: 0,
-            },
-          ];
+        call.on("stream", (remoteStream) => {
+          setListCallConnection((oldList) => {
+            const newList = oldList.filter(
+              (connection) => connection.socketId !== call.metadata.socketId
+            );
+            return [
+              ...newList,
+              {
+                socketId: call.metadata?.socketId || "",
+                call,
+                stream: remoteStream,
+                userInfo: call.metadata.userInfo || { name: "", age: 0 },
+                mic: call.metadata.mic,
+                video: call.metadata.video,
+                type: "videoChat",
+                changeCount: 0,
+              },
+            ];
+          });
         });
       });
     }
@@ -680,50 +818,191 @@ const ChatVideo = () => {
   }, [myPeerId, myPeer, myStream]);
 
   return (
-    <>
-      <div className="myVideoWrapper" ref={myVideoRef}></div>
-      <div ref={streamRef}></div>
-      {/* {audioTrack ? ( */}
-      <div>{audioTrack ? "Mic on" : "Mic off"}</div>
-      {/* ) : ( */}
-      {/* "Dont see any mic plug in" */}
-      {/* )} */}
-
-      <button onClick={toggleSound}>Audio</button>
-
-      {myStream ? (
-        <>
-          {myStream.getVideoTracks()[0].enabled ? (
-            <button onClick={toggleVideo}>Off Video</button>
+    <section className="chatVideoWrapperContainer">
+      {/* {!selectedVideoFullScreen ? ( */}
+      <section
+        className={`${
+          !selectedVideoFullScreen ? "intialWrapper" : "listUserVideoWrapper"
+        }`}
+      >
+        <Grid col={!selectedVideoFullScreen ? classInfoResposive.col : 1}>
+          <div
+            className={
+              selectedVideoFullScreen !== "call_myStream"
+                ? classInfoResposive.videoClass
+                : "videoSelectedContainer"
+            }
+            ref={myVideoRef}
+          ></div>
+          {myScreenShare ? (
+            <div
+              ref={streamRef}
+              className={
+                selectedVideoFullScreen !== "stream_myStream"
+                  ? classInfoResposive.videoClass
+                  : "videoSelectedContainer"
+              }
+            ></div>
           ) : (
-            <button onClick={makeNew}>On video</button>
+            <></>
           )}
-        </>
-      ) : (
-        <></>
-      )}
 
-      {myScreenShare ? (
-        <button onClick={stopShare}>Stop share</button>
-      ) : (
-        <button onClick={screenShare}>Share screen</button>
-      )}
-      <Grid col="2">
-        {listCallConnection.map((callConnection, index) => (
-          <Video
-            connection={callConnection}
-            key={callConnection.type + "_" + callConnection.socketId}
-            socket={CALL_SOCKET}
-            mic={callConnection.mic}
-            video={callConnection.video}
-          />
-        ))}
-      </Grid>
+          {listCallConnection.map((callConnection, index) => (
+            <Video
+              connection={callConnection}
+              key={callConnection.type + "_" + callConnection.socketId}
+              socket={CALL_SOCKET}
+              mic={callConnection.mic}
+              video={callConnection.video}
+              userInfo={callConnection.callConnection}
+              videoClass={
+                selectedVideoFullScreen !==
+                callConnection.type + "_" + callConnection.socketId
+                  ? classInfoResposive.videoClass
+                  : "videoSelectedContainer"
+              }
+              setCurrentFullScreenVideo={(id) => {
+                setSelectedVideoFullScreen(id);
+              }}
+              selected={selectedVideoFullScreen}
+              id={callConnection.type + "_" + callConnection.socketId}
+              // id={callConnection.type + "_" + callConnection.socketId}
+            />
+          ))}
+        </Grid>
+      </section>
+
+      {/* ) 
+      : ( */}
+      {/* <section className="listUserVideoWrapper">
+          <div className="myVideoWrapper" ref={myVideoRef}></div> */}
+      {/* {listCallConnection.map((callConnection, index) => (
+            <div style={{ marginTop: 10 }}>
+              <Video
+                connection={callConnection}
+                key={callConnection.type + "_" + callConnection.socketId}
+                socket={CALL_SOCKET}
+                mic={callConnection.mic}
+                video={callConnection.video}
+                userInfo={callConnection.callConnection}
+                setCurrentFullScreenVideo={(id) => {
+                  setSelectedVideoFullScreen(id);
+                }}
+                id={callConnection.type + "_" + callConnection.socketId}
+              />
+            </div>
+          ))} */}
+      {/* </section>
+      )} */}
 
       {/* <div>
   
 </div> */}
-    </>
+
+      <section className="videoChatActionContainer">
+        <div
+          className="_iconContainer"
+          onClick={() => {
+            if (myStream) {
+              if (myStream.getVideoTracks()[0].enabled) toggleVideo();
+              else makeNew();
+            }
+          }}
+        >
+          {myStream ? (
+            <>
+              {myStream.getVideoTracks()[0].enabled ? (
+                <SVGIcon
+                  name="callcamera"
+                  style={{ fill: "#fff" }}
+                  width={"30"}
+                  height={"30"}
+                />
+              ) : (
+                <SVGIcon
+                  name="offvideo"
+                  style={{ fill: "#fff" }}
+                  width={"30"}
+                  height={"30"}
+                />
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div
+          className="_iconContainer"
+          onClick={() => {
+            if (myScreenShare) stopShare();
+            else screenShare();
+          }}
+        >
+          {myScreenShare ? (
+            <SVGIcon
+              name="stopshare"
+              style={{ fill: "#fff" }}
+              width={"30"}
+              height={"30"}
+            />
+          ) : (
+            <SVGIcon
+              name="sharescreen"
+              style={{ fill: "#fff" }}
+              width={"30"}
+              height={"30"}
+            />
+          )}
+        </div>
+
+        <div className="_iconContainer" onClick={toggleSound}>
+          {audioTrack ? (
+            <SVGIcon
+              name="microphone"
+              style={{ fill: "#fff" }}
+              width={"30"}
+              height={"30"}
+            />
+          ) : (
+            <SVGIcon
+              name="micoff"
+              style={{ fill: "red" }}
+              width={"30"}
+              height={"30"}
+            />
+          )}
+        </div>
+
+        <div
+          className="_iconContainer disconnectIcon"
+          onClick={() => {
+            CALL_SOCKET.emit("socketLeave", {
+              id_room: id_conversation,
+              socketId: CALL_SOCKET.id,
+            });
+            history.push("/home/message");
+          }}
+        >
+          <SVGIcon
+            name="calldisconnect"
+            style={{ fill: "#fff" }}
+            width={"30"}
+            height={"30"}
+          />
+        </div>
+      </section>
+
+      {/* <div>{audioTrack ? "Mic on" : "Mic off"}</div> */}
+
+      {/* <button onClick={toggleSound}>Audio</button> */}
+
+      {/* {myScreenShare ? (
+        <button onClick={stopShare}>Stop share</button>
+      ) : (
+        <button onClick={screenShare}>Share screen</button>
+      )} */}
+    </section>
   );
 };
 

@@ -135,6 +135,7 @@ function Home(props) {
       CONVERSATION_SOCKET.on(
         SOCKET_ON_ACTIONS.EMIT_SOMEONE_CALL,
         ({ idRoom, callUser, newIdRoom }) => {
+          console.log("call");
           if (callUser.id_user.toString() !== userInfo.id_user.toString()) {
             setCurrentCallInfo({
               userInfo: callUser,

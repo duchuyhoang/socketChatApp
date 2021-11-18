@@ -29,6 +29,7 @@ export function getCookie(cname) {
 
 export function parseJwt(token) {
   var base64Url = token.split('.')[1];
+  if(!base64Url) return null;
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   var jsonPayload = decodeURIComponent(
     atob(base64)

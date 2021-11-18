@@ -1,22 +1,111 @@
-.myVideoWrapper{
-  width: 500px;
-  & video{
-    border-radius: 5px;
-    width: 100%;
-    transition:all 2s;
+// .myVideoWrapper {
+//   height: 130px;
+//   width: 220px;
+//   cursor: pointer;
+
+// }
+.chatVideoWrapperContainer {
+  height: 100vh;
+  width: 100vw;
+  // background-color: black;
+}
+@mixin bsvideo() {
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  transition: all 2s;
+  object-fit: cover;
+}
+
+.intialWrapper,
+.listUserVideoWrapper {
+  @include flex(center, center);
+  & .myVideoWrapper,
+  .videoContainer {
+    margin: 20px 30px 0px;
+    width: 480px;
+    height: 290px;
+  }
+
+  & .myVideoWrapper-sm-amount-people,
+  .videoContainer-sm-amount-people {
+    margin: 20px 30px 0px;
+    width: 370px;
+    height: 210px;
+  }
+
+  & .myVideoWrapper-md-amount-people,
+  .videoContainer-md-amount-people {
+    margin: 20px 30px 0px;
+    width: 290px;
+    height: 180px;
+  }
+
+  & .myVideoWrapper-lg-amount-people,
+  .videoContainer-lg-amount-people {
+    margin: 20px 30px 0px;
+    width: 220px;
+    height: 125px;
+  }
+
+  .myVideoWrapper-sm-amount-people video {
+    @include bsvideo();
+  }
+  .myVideoWrapper video {
+    @include bsvideo();
+  }
+  .myVideoWrapper-md-amount-people video {
+    @include bsvideo();
+  }
+  .myVideoWrapper-lg-amount-people video {
+    @include bsvideo();
+  }
+
+  .videoSelectedContainer {
+    width: 55%;
+    position: fixed !important;
+    top: 15%;
+    left: 10%;
+    height: 70%;
+  }
+
+  .videoSelectedContainer video {
+    @include bsvideo();
   }
 }
 
-.videoContainer {
+.listUserVideoWrapper {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  top: 0px;
+  right: 10px;
+  position: fixed;
+}
+
+.videoContainer,
+.videoContainer-sm-amount-people,
+.videoContainer-md-amount-people,
+.videoContainer-lg-amount-people,
+.videoSelectedContainer {
+  box-sizing: border-box;
   position: relative;
-  height: 250px;
-  width: 350px;
+  border: 5px solid #fff;
+  // height: 130px;
+  // width: 220px;
   border-radius: 10px;
+  cursor: pointer;
   & video {
     height: 100%;
-    // width: 100%;
+    width: 100%;
+    object-fit: cover;
     border-radius: 5px;
   }
+
   .videoControlWrapper {
     position: absolute;
     visibility: hidden;
@@ -28,8 +117,38 @@
     cursor: pointer;
     transition: 0.5s all;
     color: red;
-    z-index:100;
-    @include flex(flex-start);
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.4);
+    @include flex(center, space-between);
+
+    .videoHelper {
+      @include flex(flex-start, center);
+    }
+    .fullscreenIcon svg {
+      fill: gray !important;
+    }
+    .fullscreenIcon:hover svg {
+      fill: #fff !important;
+    }
+    .userInfo {
+      color: #fff;
+    }
+  }
+
+  & .videoDisabledContainer {
+    height: 100%;
+    background-color: black;
+    @include flex(center, center);
+    border-radius: 5px;
+    color: #fff;
+    & .videoName {
+      font-size: 18px;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80%;
+    }
   }
 
   &:hover .videoControlWrapper {
@@ -41,10 +160,51 @@
   // }
 }
 
-.bottomToggleVideo{
+.videoContainer,
+.videoContainer-sm-amount-people,
+.videoContainer-md-amount-people,
+.videoContainer-lg-amount-people,
+.videoSelectedContainer {
+  &:hover {
+    border: 5px solid green;
+  }
+}
+
+.videoContainerFullScreen {
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  position: fixed;
+  top: 5%;
+}
+
+.bottomToggleVideo {
   width: 280px;
   position: fixed;
   bottom: 5px;
   right: 0px;
   // he
+}
+.videoChatActionContainer {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  padding: 10px 0px;
+  @include flex(center, center);
+
+  & ._iconContainer {
+    background-color: #2f3136;
+    padding: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    @include flex(center, center);
+    margin: 0px 10px;
+    &:hover {
+      background-color: #202225;
+    }
+  }
+  & .disconnectIcon{
+    background-color: #ED4245!important;
+  }
 }

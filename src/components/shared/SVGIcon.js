@@ -25,6 +25,13 @@ import { ReactComponent as MicroPhoneOff } from '../../assets/icons/micoff.svg';
 import { ReactComponent as Phone } from '../../assets/icons/phone.svg';
 import { ReactComponent as Video } from '../../assets/icons/video.svg';
 import { ReactComponent as Bell } from '../../assets/icons/bell.svg';
+import { ReactComponent as Fullscreen } from '../../assets/icons/full-screen.svg';
+import { ReactComponent as Smallscreen } from '../../assets/icons/small-screen.svg';
+import { ReactComponent as ShareScreen } from '../../assets/icons/share-screen.svg';
+import { ReactComponent as CallCamera } from '../../assets/icons/call-camera.svg';
+import { ReactComponent as OffVideo } from '../../assets/icons/off-video.svg';
+import { ReactComponent as CallDisconnect } from '../../assets/icons/call-disconnect.svg';
+import { ReactComponent as StopShare } from '../../assets/icons/stop-share.svg';
 
 const mapIcon = {
   google: Google,
@@ -51,6 +58,13 @@ const mapIcon = {
   phone: Phone,
   video: Video,
   bell: Bell,
+  fullscreen:Fullscreen,
+  smallscreen:Smallscreen,
+  sharescreen:ShareScreen,
+  callcamera:CallCamera,
+  offvideo:OffVideo,
+  calldisconnect:CallDisconnect,
+  stopshare:StopShare
 };
 
 const SVGIcon = ({ name, width = '16px', height = width, ...rest }) => {

@@ -2,7 +2,7 @@
   "name": "app-chat",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://ngotrihoa.github.io/AppChat",
+  "homepage": "https://duchuyhoang.github.io/socketChatApp/",
   "dependencies": {
     "@hookform/resolvers": "^2.8.2",
     "@testing-library/jest-dom": "^5.14.1",
