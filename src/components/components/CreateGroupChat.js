@@ -14,9 +14,9 @@ export const CreateGroupChat = (props) => {
   const dispatch = useDispatch();
   const [roomName, setRoomName] = useState("");
   const listFriend = useSelector((state) => state.user.listFriend) || [];
-  const listUserInRoom =
-    useSelector((state) => state.conversation.mainConversationInfo?.listUser) ||
-    [];
+  // const listUserInRoom =
+  //   useSelector((state) => state.conversation.mainConversationInfo?.listUser) ||
+  //   [];
   const handleSearchChange = (keyword) => {
     setKeyword(keyword);
   };
@@ -49,10 +49,10 @@ export const CreateGroupChat = (props) => {
             -1
       )
       .filter((friend) => existSearchUserId.indexOf(friend.id_user) === -1)
-      .filter(
-        (friend) =>
-          !listUserInRoom.find((_friend) => _friend.id_user === friend.id_user)
-      );
+      // .filter(
+      //   (friend) =>
+      //     !listUserInRoom.find((_friend) => _friend.id_user === friend.id_user)
+      // );
 
     setSearchedUser([...searchUser]);
   }, [keyword]);
