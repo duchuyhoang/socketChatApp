@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/socketChatApp/static/css/main.c3dd3dd3.chunk.css",
-    "main.js": "/socketChatApp/static/js/main.d870a7eb.chunk.js",
-    "main.js.map": "/socketChatApp/static/js/main.d870a7eb.chunk.js.map",
+    "main.css": "/socketChatApp/static/css/main.2aa4cb75.chunk.css",
+    "main.js": "/socketChatApp/static/js/main.4840eff4.chunk.js",
+    "main.js.map": "/socketChatApp/static/js/main.4840eff4.chunk.js.map",
     "runtime-main.js": "/socketChatApp/static/js/runtime-main.fd9c2fd8.js",
     "runtime-main.js.map": "/socketChatApp/static/js/runtime-main.fd9c2fd8.js.map",
     "static/css/2.f4c56af9.chunk.css": "/socketChatApp/static/css/2.f4c56af9.chunk.css",
@@ -10,8 +10,9 @@
     "static/js/2.a246ec9d.chunk.js.map": "/socketChatApp/static/js/2.a246ec9d.chunk.js.map",
     "index.html": "/socketChatApp/index.html",
     "static/css/2.f4c56af9.chunk.css.map": "/socketChatApp/static/css/2.f4c56af9.chunk.css.map",
-    "static/css/main.c3dd3dd3.chunk.css.map": "/socketChatApp/static/css/main.c3dd3dd3.chunk.css.map",
+    "static/css/main.2aa4cb75.chunk.css.map": "/socketChatApp/static/css/main.2aa4cb75.chunk.css.map",
     "static/js/2.a246ec9d.chunk.js.LICENSE.txt": "/socketChatApp/static/js/2.a246ec9d.chunk.js.LICENSE.txt",
+    "static/media/index.scss": "/socketChatApp/static/media/Desktop.4e354896.png",
     "static/media/add-user.09121f9f.svg": "/socketChatApp/static/media/add-user.09121f9f.svg",
     "static/media/attachment.756b4227.svg": "/socketChatApp/static/media/attachment.756b4227.svg",
     "static/media/bell.964463a7.svg": "/socketChatApp/static/media/bell.964463a7.svg",
@@ -52,7 +53,7 @@
     "static/js/runtime-main.fd9c2fd8.js",
     "static/css/2.f4c56af9.chunk.css",
     "static/js/2.a246ec9d.chunk.js",
-    "static/css/main.c3dd3dd3.chunk.css",
-    "static/js/main.d870a7eb.chunk.js"
+    "static/css/main.2aa4cb75.chunk.css",
+    "static/js/main.4840eff4.chunk.js"
   ]
 }
